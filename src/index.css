@@ -54,24 +54,29 @@ h2 {
 
 /* Header */
 .header {
-  background-color: var(--bg-header);
-  /* Remove minimal padding to let inner handle it */
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #eaeaea;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-inner {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 1rem 1.5rem;
-  /* Clean vertical spacing */
   display: flex;
   justify-content: flex-end;
-  /* Modern alignment */
-  gap: 1.5rem;
+  gap: 2rem;
+  align-items: center;
 }
 
 .header a {
-  color: #fff;
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .header a:hover {
@@ -80,7 +85,8 @@ h2 {
 }
 
 .header a.active {
-  color: var(--accent);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 /* Main Content */
@@ -88,38 +94,43 @@ h2 {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 3rem 1.5rem;
+  min-height: 80vh;
+  /* Ensure content pushes footer down */
 }
 
 /* Subtitle */
 .subtitle {
   font-size: 1rem;
   color: var(--text-secondary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 /* Profile section with floated image */
 .profile-section {
   overflow: hidden;
-  /* Clear float */
 }
 
 .profile-image {
   float: left;
-  width: 220px;
-  height: 220px;
-  /* Square for circle */
+  width: 200px;
+  height: 200px;
   object-fit: cover;
-  /* Crop to fit */
-  margin-right: 1.5rem;
+  object-position: center 35%;
+  /* Adjust to show top of head */
+  margin-right: 2rem;
   margin-bottom: 1rem;
   border-radius: 50%;
-  /* Circular */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
 }
 
 /* Prose */
 .prose p {
-  margin-bottom: 1rem;
-  text-align: justify;
+  margin-bottom: 1.25rem;
+  text-align: left;
+  /* Justify can sometimes make spacing weird on web, left is often cleaner */
+  line-height: 1.8;
+  color: #444;
 }
 
 .prose p:last-child {
@@ -128,35 +139,94 @@ h2 {
 
 /* Footer & Socials */
 .socials-section {
-  margin-top: 3rem;
+  margin-top: 5rem;
   padding-top: 2rem;
-  border-top: 1px solid #eee;
+  /* border-top: 1px solid #eaeaea; removed border for cleaner fade effect */
+  text-align: center;
 }
 
-.social-links {
-  display: flex;
-  gap: 1.5rem;
+/* Scroll Fade Effect */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Infinite Text */
+.infinite-scroll-container {
+  text-align: center;
+  overflow: hidden;
+  padding-bottom: 2rem;
+  width: 100%;
+  /* Fade effect: transparent at top, opaque at bottom */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+}
+
+.infinite-text-line {
+  color: #f7f7f7;
+  /* Very faint on white bg */
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  user-select: none;
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
+.fade-text {
   margin-bottom: 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: #888;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
 }
 
-.social-links a {
-  font-weight: 500;
-  color: var(--text-primary);
-  border-bottom: 1px solid transparent;
-  transition: all 0.2s ease;
+/* Icon Styling */
+.social-links.icons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
 }
 
-.social-links a:hover {
+.social-links.icons a {
+  color: #aaa;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: none;
+  /* No underline for icons */
+}
+
+.social-links.icons a:hover {
   color: var(--accent);
-  border-bottom-color: var(--accent);
-  text-decoration: none;
+  transform: translateY(-5px) scale(1.1);
+}
+
+.social-links.icons svg {
+  width: 24px;
+  height: 24px;
 }
 
 .footer {
-  text-align: left;
-  /* Align left for academic feel */
-  color: #888;
-  font-size: 0.85rem;
-  margin-top: 0;
-  padding: 0;
+  width: 100%;
+  background-color: transparent;
+  /* Transparent to blend with fade if needed, or keep fa */
+  /* border-top: 1px solid #eaeaea; */
+  padding: 2.5rem 0;
+  margin-top: 2rem;
+  text-align: center;
+  color: #ccc;
+  /* Lighter text for subtle look */
+  font-size: 0.8rem;
 }
