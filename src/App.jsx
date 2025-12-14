@@ -1,56 +1,59 @@
-import { profile, experiences, projects } from './data';
-import { useState, useEffect } from 'react';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Education from './components/Education';
+import { profile } from './data';
 
 const Header = () => (
   <header className="fade-in" style={{ padding: '2rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', fontFamily: 'var(--font-serif)', letterSpacing: '-0.5px' }}>
-      DP<span style={{ color: 'var(--accent)' }}>.</span>
+    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-serif)' }}>
+      Darren Pinto
     </div>
     <nav>
-      <ul style={{ display: 'flex', gap: '2rem' }}>
-        <li><a href="#about">About</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
+      <ul style={{ display: 'flex', gap: '1.5rem', fontSize: '0.95rem' }}>
+        <li><a href={`https://${profile.contact.github}`} target="_blank" rel="noreferrer">GitHub</a></li>
+        <li><a href={`https://${profile.contact.linkedin}`} target="_blank" rel="noreferrer">LinkedIn</a></li>
+        <li><a href={`mailto:${profile.contact.email}`}>Email</a></li>
       </ul>
     </nav>
   </header>
 );
 
 const Hero = ({ data }) => (
-  <section id="about" className="section fade-in" style={{ padding: '8rem 0 6rem' }}>
-    <h1 style={{ fontSize: '4rem', marginBottom: '1rem', letterSpacing: '-1px' }}>
+  <section className="section fade-in" style={{ paddingTop: '6rem', paddingBottom: '2rem' }}>
+    <h1 style={{ fontSize: '2.8rem', marginBottom: '0.5rem', letterSpacing: '-0.5px' }}>
       {data.name}
     </h1>
-    <h2 style={{ fontSize: '1.8rem', color: 'var(--text-secondary)', fontWeight: '300', marginBottom: '2rem' }}>
+    <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '0' }}>
       {data.tagline}
-    </h2>
-    <p style={{ maxWidth: '600px', fontSize: '1.2rem', color: '#ccc', lineHeight: '1.8' }}>
-      Passionate about <span style={{ color: 'var(--accent-blue)' }}>robotics</span>, <span style={{ color: 'var(--accent-blue)' }}>reinforcement learning</span>, and <span style={{ color: 'var(--accent-blue)' }}>software engineering</span>.
-      Merging electrical engineering with computer science to build intelligent systems.
     </p>
-    <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem' }}>
-      <a href={`mailto:${data.contact.email}`} className="btn">Email</a>
-      <a href={`https://${data.contact.github}`} target="_blank" rel="noreferrer" className="btn">GitHub</a>
-      <a href={`https://${data.contact.linkedin}`} target="_blank" rel="noreferrer" className="btn">LinkedIn</a>
-    </div>
-    <style jsx>{`
-      .btn {
-        border: 1px solid var(--text-secondary);
-        padding: 0.7rem 1.5rem;
-        border-radius: 4px;
-        transition: all 0.2s ease;
-      }
-      .btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: rgba(212, 175, 55, 0.1);
-      }
-    `}</style>
+  </section>
+);
+
+const About = () => (
+  <section className="section prose fade-in" style={{ paddingTop: '1rem' }}>
+    <p>
+      Hello! I'm an incoming Electrical and Computer Engineering student at{' '}
+      <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>.
+      I'm passionate about building intelligent systems at the intersection of hardware and software,
+      with a focus on <strong>robotics</strong> and <strong>reinforcement learning</strong>.
+    </p>
+    <p>
+      Currently, I'm an undergraduate researcher at CMU's{' '}
+      <a href="https://www.cmu.edu/robotics/" target="_blank" rel="noreferrer">Biorobotics Lab</a>,
+      where I work on integrating depth perception with ROS for robotic learning experiments.
+      Previously, I interned at <a href="https://www.cadreresearch.com/" target="_blank" rel="noreferrer">Cadre Research</a> (Cadre Forensics),
+      where I designed low-power PCBs, developed stepper motor control systems, and built an HPC prototype on Azure.
+    </p>
+    <p>
+      For four years, I led the software team for the <a href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</a> robotics team,
+      building libraries for control theory, state-space modeling, and computer vision. Our work was showcased to 15,000+ professionals
+      at the Rockwell Industrial Automation Fair, and we went on to become 3x Illinois State Champions and World Championship Finalists.
+    </p>
+    <p>
+      Outside of engineering, I've built and released games on Roblox that have garnered over 6 million play sessions and a
+      community of 175,000 players. It's a creative outlet that lets me explore game design and data-driven development.
+    </p>
+    <p>
+      In my free time, I enjoy working on side projects, tinkering with electronics, and exploring new ideas.
+      Feel free to reach out—I'm always open to chatting about interesting problems.
+    </p>
   </section>
 );
 
@@ -59,39 +62,10 @@ function App() {
     <div className="container">
       <Header />
       <Hero data={profile} />
+      <About />
 
-      <section id="experience" className="section">
-        <h2 className="section-title">Experience</h2>
-        <Experience data={experiences} />
-      </section>
-
-      <section id="projects" className="section">
-        <h2 className="section-title">Selected Projects</h2>
-        <Projects data={projects} />
-      </section>
-
-      <section id="skills" className="section">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem' }}>
-          <div>
-            <h2 className="section-title">Technical Skills</h2>
-            <Skills data={profile.skills} />
-          </div>
-          <div>
-            <h2 className="section-title">Education</h2>
-            <Education data={profile.education} />
-          </div>
-        </div>
-      </section>
-
-      <footer id="contact" style={{ padding: '6rem 0', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem', borderTop: '1px solid #222', marginTop: '4rem' }}>
-        <div>
-          <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Get In Touch</h2>
-          <p style={{ marginBottom: '2rem' }}>Currently open to new opportunities.</p>
-          <a href={`mailto:${profile.contact.email}`} style={{ fontSize: '1.2rem', color: 'var(--accent)' }}>{profile.contact.email}</a>
-        </div>
-        <div style={{ marginTop: '4rem' }}>
-          &copy; {new Date().getFullYear()} {profile.name}. All rights reserved.
-        </div>
+      <footer style={{ padding: '4rem 0 2rem', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.85rem', borderTop: '1px solid #ddd', marginTop: '2rem' }}>
+        &copy; {new Date().getFullYear()} {profile.name}
       </footer>
     </div>
   );
