@@ -36,7 +36,7 @@ function App() {
         window.requestAnimationFrame(() => {
           // Check if we're near bottom
           if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-            const baseText = "building intelligent systems • ";
+            const baseText = "engineer • researcher • builder • ";
             const text = baseText.repeat(8); // Repeat to fill border-to-border
             setInfiniteLines(prev => {
               // Truly infinite: no limit
@@ -64,7 +64,7 @@ function App() {
       <main className="container">
         <h1><strong>Darren</strong> Pinto</h1>
         <p className="subtitle">
-          ECE Student at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
+          Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
         </p>
 
         <div className="profile-section prose">
@@ -83,7 +83,7 @@ function App() {
           <p>
             I am an Electrical and Computer Engineering student at{' '}
             <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>.
-            At CMU, I conduct research at the <a href="https://www.cmu.edu/robotics/" target="_blank" rel="noreferrer">Biorobotics Lab</a>,
+            At CMU, I conduct research at the <a href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</a>,
             exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
             depth perception for robotic learning experiments.
           </p>
@@ -92,7 +92,7 @@ function App() {
             Previously, I interned at <a href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</a>,
             where I designed embedded systems and high-performance computing prototypes. My background also includes
             leading a World Championship Finalist <a href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</a> team,
-            developing control theory libraries and computer vision systems showcased to industry professionals.
+            where my team was a Control Award Finalist for the custom software libraries I developed.
           </p>
 
           <p>

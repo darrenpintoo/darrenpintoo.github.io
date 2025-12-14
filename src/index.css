@@ -115,7 +115,7 @@ h2 {
   width: 200px;
   height: 200px;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center 15%;
   /* Adjust to show top of head */
   margin-right: 2rem;
   margin-bottom: 1rem;
@@ -170,15 +170,18 @@ h2 {
 }
 
 .infinite-text-line {
-  color: #f7f7f7;
-  /* Very faint on white bg */
+  color: #f4f4f4;
+  /* More transparent/subtle */
   font-family: var(--font-sans);
   font-size: 1.5rem;
+  font-weight: 700;
   line-height: 1.2;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
   user-select: none;
   margin: 0;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
 }
 
 .fade-text {
