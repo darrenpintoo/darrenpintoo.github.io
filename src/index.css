@@ -19,10 +19,6 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
@@ -59,16 +55,18 @@ h2 {
 /* Header */
 .header {
   background-color: var(--bg-header);
-  padding: 0.75rem 0;
+  /* Remove minimal padding to let inner handle it */
 }
 
 .header-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 1rem 1.5rem;
+  /* Clean vertical spacing */
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: flex-end;
+  /* Modern alignment */
+  gap: 1.5rem;
 }
 
 .header a {
@@ -108,9 +106,14 @@ h2 {
 .profile-image {
   float: left;
   width: 220px;
+  height: 220px;
+  /* Square for circle */
+  object-fit: cover;
+  /* Crop to fit */
   margin-right: 1.5rem;
   margin-bottom: 1rem;
-  border-radius: 4px;
+  border-radius: 50%;
+  /* Circular */
 }
 
 /* Prose */
@@ -123,16 +126,37 @@ h2 {
   margin-bottom: 0;
 }
 
-/* Footer */
-.footer {
-  background-color: var(--bg-header);
-  color: #aaa;
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
+/* Footer & Socials */
+.socials-section {
   margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
 }
 
-.footer a {
-  color: #aaa;
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.social-links a {
+  font-weight: 500;
+  color: var(--text-primary);
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.social-links a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+.footer {
+  text-align: left;
+  /* Align left for academic feel */
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 0;
+  padding: 0;
 }
