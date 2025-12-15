@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import FadeIn from './FadeIn';
 
 function Footer() {
     return (
-        <footer className="footer fade-in-section is-visible" style={{ animationDelay: '0.5s', opacity: 0.25, fontStyle: 'italic', fontSize: '0.7rem' }}>
-            <p>Designed & Built by Darren Pinto</p>
-        </footer>
+        <FadeIn>
+            <footer className="footer" style={{ opacity: 0.4, fontStyle: 'italic', fontSize: '0.7rem' }}>
+                <p>Designed & Built by Darren Pinto</p>
+            </footer>
+        </FadeIn>
     );
 }
 
