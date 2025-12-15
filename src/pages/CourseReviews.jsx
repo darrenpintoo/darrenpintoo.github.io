@@ -4,26 +4,7 @@ import Footer from '../components/Footer';
 import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
-// Modern star rating component with filled gradient
-function StarRating({ rating }) {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(rating)) {
-            stars.push(<span key={i} className="star filled">★</span>);
-        } else if (i - rating < 1 && i - rating > 0) {
-            stars.push(<span key={i} className="star half">★</span>);
-        } else {
-            stars.push(<span key={i} className="star empty">★</span>);
-        }
-    }
 
-    return (
-        <div className="star-rating" title={`${rating}/5`}>
-            {stars}
-            <span className="rating-number">{rating.toFixed(1)}</span>
-        </div>
-    );
-}
 
 // Fall 2025 CMU courses with ratings and instructor info
 const courses = [
@@ -35,7 +16,7 @@ const courses = [
                 name: "Matrices and Linear Transformations",
                 instructor: "Riley Thornton",
                 units: "11",
-                rating: 3,
+
                 hoursPerWeek: "6-8",
                 difficulty: "Medium",
                 description: `To be completed`
@@ -45,7 +26,7 @@ const courses = [
                 name: "Introduction to Electrical and Computer Engineering",
                 instructor: "Jian-Gang (Jimmy) Zhu",
                 units: "12",
-                rating: 3.5,
+
                 hoursPerWeek: "6-8",
                 difficulty: "Easy",
                 description: `To be completed`
@@ -55,7 +36,7 @@ const courses = [
                 name: "Concepts of Mathematics",
                 instructor: "Gregory Johnson",
                 units: "12",
-                rating: 4.5,
+
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
                 description: `To be completed`
@@ -65,7 +46,7 @@ const courses = [
                 name: "Interpretation and Argument",
                 instructor: "Peter Mayshle",
                 units: "9",
-                rating: 3,
+
                 hoursPerWeek: "4-6",
                 difficulty: "Easy",
                 description: `To be completed`
@@ -75,7 +56,7 @@ const courses = [
                 name: "CIT First Year Seminar",
                 instructor: "Kaz Shindle & Alaine Allen",
                 units: "1",
-                rating: 1,
+
                 hoursPerWeek: "1",
                 difficulty: "Very Easy",
                 description: `To be completed`
@@ -84,11 +65,7 @@ const courses = [
     }
 ];
 
-// Sort courses within each semester by rating (highest first)
-const sortedCourses = courses.map(semester => ({
-    ...semester,
-    items: [...semester.items].sort((a, b) => b.rating - a.rating)
-}));
+
 
 const departmentNames = {
     "18": "Electrical & Computer Engineering",
@@ -156,7 +133,7 @@ function CourseReviews() {
         <PageLayout>
             <Helmet>
                 <title>Coursework & Grades | Darren Pinto</title>
-                <meta name="description" content="A list of my computer science and engineering coursework at CMU, including ratings, reviews, and project links." />
+                <meta name="description" content="A list of my computer science and engineering coursework at CMU, including reviews and project links." />
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main className="container">
@@ -202,7 +179,7 @@ function CourseReviews() {
                 </div>
 
                 <div className="course-reviews animate-blur-fade delay-350">
-                    {sortedCourses.map((semester) => (
+                    {courses.map((semester) => (
                         <div key={semester.semester} className="semester-section">
                             <h2 className="semester-title">{semester.semester}</h2>
                             <div className="course-list">
@@ -224,7 +201,7 @@ function CourseReviews() {
                                                     </div>
                                                 </div>
                                                 <div className="course-meta">
-                                                    <StarRating rating={course.rating} />
+
                                                     <span className="course-units">{course.units} units</span>
                                                     <span className="course-expand-icon">
                                                         {expandedCourse === course.code ? '−' : '+'}

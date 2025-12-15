@@ -10,8 +10,7 @@
   --accent: #f25c54;
   --border-color: #eaeaea;
   --infinite-text: #f4f4f4;
-  --star-filled: #f59e0b;
-  --star-empty: #d1d5db;
+
   --stat-bg: #f3f4f6;
 
   --font-serif: "Merriweather", "Georgia", serif;
@@ -31,8 +30,7 @@
   --text-muted: #b0b0b0;
   --border-color: #2a2a2a;
   --infinite-text: #2a2a2a;
-  --star-filled: #fbbf24;
-  --star-empty: #4b5563;
+
   --stat-bg: #2a2a2a;
 }
 
@@ -560,53 +558,7 @@ h2 {
   color: white;
 }
 
-/* Modern Star Rating */
-.star-rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
 
-.star {
-  font-size: 0.95rem;
-  line-height: 1;
-  transition: transform 0.2s ease;
-}
-
-.star.filled {
-  color: var(--star-filled);
-  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
-}
-
-.star.empty {
-  color: var(--star-empty);
-}
-
-.star.half {
-  position: relative;
-  color: var(--star-empty);
-}
-
-.star.half::before {
-  content: '★';
-  position: absolute;
-  left: 0;
-  width: 50%;
-  overflow: hidden;
-  color: var(--star-filled);
-  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
-}
-
-.rating-number {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-left: 6px;
-  background: var(--stat-bg);
-  padding: 0.15rem 0.5rem;
-  border-radius: 8px;
-  transition: color 0.3s, background 0.3s;
-}
 
 /* Smooth Expansion Wrapper */
 .course-expand-wrapper {
