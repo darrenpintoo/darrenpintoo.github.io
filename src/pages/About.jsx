@@ -53,12 +53,14 @@ function About() {
     return (
         <>
             <main className="container">
-                <h1><strong>Darren</strong> Pinto</h1>
-                <p className="subtitle">
-                    Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
-                </p>
+                <div className="animate-blur-fade">
+                    <h1><strong>Darren</strong> Pinto</h1>
+                    <p className="subtitle">
+                        Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
+                    </p>
+                </div>
 
-                <div className="profile-section prose">
+                <div className="profile-section prose animate-blur-fade delay-100">
                     <img
                         src="/darren.jpg"
                         alt="Darren Pinto"
