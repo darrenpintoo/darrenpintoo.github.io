@@ -173,6 +173,9 @@ function CourseReviews() {
                         Below you'll find my honest reviews of courses I've taken, organized by semester.
                         Use the index below to jump to specific topics.
                     </p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '1rem' }}>
+                        Last updated: December 2024
+                    </p>
                 </FadeIn>
 
                 {/* Course Index Section */}
