@@ -1,9 +1,9 @@
 import { profile } from '../data';
 import { useState, useEffect, useRef } from 'react';
+import PageLayout from '../components/PageLayout';
 
 function About() {
     const [isVisible, setIsVisible] = useState(false);
-    const [infiniteLines, setInfiniteLines] = useState([]);
     const footerRef = useRef(null);
 
     useEffect(() => {
@@ -27,31 +27,8 @@ function About() {
         };
     }, []);
 
-    useEffect(() => {
-        let ticking = false;
-
-        const handleScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-                        const baseText = "engineer • researcher • builder • ";
-                        const text = baseText.repeat(8);
-                        setInfiniteLines(prev => {
-                            return [...prev, text, text];
-                        });
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     return (
-        <>
+        <PageLayout>
             <main className="container">
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>
@@ -116,15 +93,7 @@ function About() {
                     </div>
                 </div>
             </main>
-
-            <div className="infinite-scroll-container">
-                {
-                    infiniteLines.map((line, i) => (
-                        <p key={i} className="infinite-text-line">{line}</p>
-                    ))
-                }
-            </div>
-        </>
+        </PageLayout>
     );
 }
 
