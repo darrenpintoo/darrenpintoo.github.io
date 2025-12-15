@@ -1,16 +1,29 @@
 /* Global Vars & Reset */
 :root {
   --bg-primary: #fff;
-  --bg-header: #333;
+  --bg-header: rgba(255, 255, 255, 0.95);
   --text-primary: #333;
   --text-secondary: #555;
+  --text-muted: #444;
   --accent: #f25c54;
-  /* Coral red like Fan Pu's site */
+  --border-color: #eaeaea;
+  --infinite-text: #f4f4f4;
 
   --font-serif: "Merriweather", "Georgia", serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --max-width: 900px;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-header: rgba(18, 18, 18, 0.95);
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --text-muted: #b0b0b0;
+  --border-color: #2a2a2a;
+  --infinite-text: #2a2a2a;
 }
 
 * {
@@ -26,6 +39,7 @@ body {
   line-height: 1.7;
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 a {
@@ -54,12 +68,13 @@ h2 {
 
 /* Header */
 .header {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--bg-header);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-inner {
@@ -70,6 +85,22 @@ h2 {
   justify-content: flex-end;
   gap: 2rem;
   align-items: center;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease, color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  transform: scale(1.1);
 }
 
 .header a {
@@ -128,9 +159,8 @@ h2 {
 .prose p {
   margin-bottom: 1.25rem;
   text-align: left;
-  /* Justify can sometimes make spacing weird on web, left is often cleaner */
   line-height: 1.8;
-  color: #444;
+  color: var(--text-muted);
 }
 
 .prose p:last-child {
@@ -163,25 +193,29 @@ h2 {
   text-align: center;
   overflow: hidden;
   padding-bottom: 2rem;
-  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   /* Fade effect: transparent at top, opaque at bottom */
   mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
 }
 
 .infinite-text-line {
-  color: #f4f4f4;
-  /* More transparent/subtle */
+  color: var(--infinite-text);
   font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: normal;
-  overflow-wrap: break-word;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   margin: 0;
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.15rem;
   text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
 .fade-text {
@@ -224,14 +258,53 @@ h2 {
 .footer {
   width: 100%;
   background-color: transparent;
-  /* Transparent to blend with fade if needed, or keep fa */
+  /* Transparent to blend with fade if needed */
   /* border-top: 1px solid #eaeaea; */
   padding: 2.5rem 0;
   margin-top: 2rem;
   text-align: center;
   color: #ccc;
-  /* Lighter text for subtle look */
   font-size: 0.8rem;
+}
+
+/* Animations */
+@keyframes blurFadeIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Base animation class */
+.animate-blur-fade {
+  opacity: 0;
+  animation: blurFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered delays */
+.delay-100 {
+  animation-delay: 0.15s;
+}
+
+.delay-200 {
+  animation-delay: 0.3s;
+}
+
+.delay-350 {
+  animation-delay: 0.5s;
+}
+
+/* Profile image entrance */
+.profile-image {
+  opacity: 0;
+  animation: blurFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
 
 /* Course Reviews */
