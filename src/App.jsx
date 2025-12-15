@@ -6,9 +6,9 @@ import CourseReviews from './pages/CourseReviews';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Initialize from localStorage, default to false (light mode)
+    // Initialize from localStorage, default to true (dark mode)
     const saved = localStorage.getItem('theme');
-    return saved === 'dark';
+    return saved ? saved === 'dark' : true;
   });
 
   // Apply theme to document and save to localStorage
