@@ -36,7 +36,7 @@ function App() {
         window.requestAnimationFrame(() => {
           // Check if we're near bottom
           if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-            const baseText = "engineer • researcher • builder • ";
+            const baseText = "Building • ";
             const text = baseText.repeat(8); // Repeat to fill border-to-border
             setInfiniteLines(prev => {
               // Truly infinite: no limit
