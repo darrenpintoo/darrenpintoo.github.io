@@ -2,9 +2,16 @@ import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 
+import { Helmet } from 'react-helmet-async';
+
 function Blog() {
     return (
         <PageLayout>
+            <Helmet>
+                <title>Blog | Darren Pinto</title>
+                <meta name="description" content="Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto." />
+                <link rel="canonical" href="https://darrenpinto.me/blog" />
+            </Helmet>
             <main className="container">
                 <div className="animate-blur-fade">
                     <h1>Blog</h1>

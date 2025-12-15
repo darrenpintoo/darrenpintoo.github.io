@@ -2,6 +2,7 @@ import { profile } from '../data';
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
+import { Helmet } from 'react-helmet-async';
 
 function About() {
     const [isVisible, setIsVisible] = useState(false);
@@ -28,8 +29,15 @@ function About() {
         };
     }, []);
 
+
+
     return (
         <PageLayout>
+            <Helmet>
+                <title>Darren Pinto | Robotics Researcher & Engineer</title>
+                <meta name="description" content="Darren Pinto's Personal Portfolio. Undergraduate Student & Robotics Researcher at Carnegie Mellon University building intelligent systems." />
+                <link rel="canonical" href="https://darrenpinto.me/" />
+            </Helmet>
             <main className="container">
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>

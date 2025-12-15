@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet-async';
 
 // Modern star rating component with filled gradient
 function StarRating({ rating }) {
@@ -148,8 +149,15 @@ function CourseReviews() {
         }
     };
 
+
+
     return (
         <PageLayout>
+            <Helmet>
+                <title>Coursework & Grades | Darren Pinto</title>
+                <meta name="description" content="A list of my computer science and engineering coursework at CMU, including ratings, reviews, and project links." />
+                <link rel="canonical" href="https://darrenpinto.me/courses" />
+            </Helmet>
             <main className="container">
                 <div className="animate-blur-fade">
                     <h1>CMU Course Reviews</h1>
