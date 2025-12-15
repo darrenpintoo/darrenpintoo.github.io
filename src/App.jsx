@@ -16,6 +16,11 @@ function App() {
     const theme = isDarkMode ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+    // Update theme-color meta for iOS status bar
+    const metaThemeColor = document.getElementById('theme-color-meta');
+    if (metaThemeColor) {
+      metaThemeColor.content = isDarkMode ? '#121212' : '#ffffff';
+    }
   }, [isDarkMode]);
 
   return (

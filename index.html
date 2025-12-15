@@ -1,16 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" id="theme-color-meta" content="#121212" />
     <title>Darren Pinto</title>
+    <script>
+        // Apply theme immediately before React loads
+        (function () {
+            const saved = localStorage.getItem('theme');
+            const theme = saved ? saved : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            const meta = document.getElementById('theme-color-meta');
+            if (meta) meta.content = theme === 'dark' ? '#121212' : '#ffffff';
+        })();
+    </script>
 </head>
 
 <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 </body>
+
+</html>
