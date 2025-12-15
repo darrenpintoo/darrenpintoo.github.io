@@ -1,4 +1,5 @@
 import PageLayout from '../components/PageLayout';
+import Footer from '../components/Footer';
 
 function Blog() {
     return (
@@ -31,6 +32,7 @@ function Blog() {
                     </div>
                 </div>
             </main>
+            <Footer />
         </PageLayout>
     );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PageLayout from '../components/PageLayout';
+import Footer from '../components/Footer';
 
 // Modern star rating component with filled gradient
 function StarRating({ rating }) {
@@ -166,6 +167,7 @@ function CourseReviews() {
                     ))}
                 </div>
             </main>
+            <Footer />
         </PageLayout>
     );
 }
