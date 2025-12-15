@@ -233,3 +233,38 @@ h2 {
   /* Lighter text for subtle look */
   font-size: 0.8rem;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+
+  /* Un-float the image and center it */
+  .profile-image {
+    float: none;
+    display: block;
+    margin: 0 auto 2rem auto;
+    width: 180px;
+    height: 180px;
+  }
+
+  /* Adjust container spacing */
+  .container {
+    padding: 2rem 1.5rem;
+  }
+
+  /* Center headers for better mobile balance */
+  h1,
+  .subtitle {
+    text-align: center;
+  }
+
+  /* Infinite Scroll Text smaller on mobile */
+  .infinite-text-line {
+    font-size: 1.1rem;
+    letter-spacing: 0.1rem;
+  }
+
+  /* Icons spacing */
+  .socials-section {
+    margin-top: 3rem;
+  }
+}
