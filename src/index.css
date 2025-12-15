@@ -606,6 +606,24 @@ h2 {
   transition: color 0.3s, background 0.3s;
 }
 
+/* Smooth Expansion Wrapper */
+.course-expand-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+}
+
+.course-expand-wrapper.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.course-expand-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
 /* Expanded Course Content */
 .course-expanded {
   margin-top: 1.25rem;

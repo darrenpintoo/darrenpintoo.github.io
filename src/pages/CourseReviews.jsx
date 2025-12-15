@@ -231,23 +231,25 @@ function CourseReviews() {
                                                     </span>
                                                 </div>
                                             </div>
-                                            {expandedCourse === course.code && (
-                                                <div className="course-expanded">
-                                                    <div className="course-description">
-                                                        <p>{course.description}</p>
-                                                    </div>
-                                                    <div className="course-stats">
-                                                        <div className="stat-item">
-                                                            <span className="stat-label">Hours/Week</span>
-                                                            <span className="stat-value">{course.hoursPerWeek}</span>
+                                            <div className={`course-expand-wrapper ${expandedCourse === course.code ? 'open' : ''}`}>
+                                                <div className="course-expand-inner">
+                                                    <div className="course-expanded">
+                                                        <div className="course-description">
+                                                            <p>{course.description}</p>
                                                         </div>
-                                                        <div className="stat-item">
-                                                            <span className="stat-label">Difficulty</span>
-                                                            <span className="stat-value">{course.difficulty}</span>
+                                                        <div className="course-stats">
+                                                            <div className="stat-item">
+                                                                <span className="stat-label">Hours/Week</span>
+                                                                <span className="stat-value">{course.hoursPerWeek}</span>
+                                                            </div>
+                                                            <div className="stat-item">
+                                                                <span className="stat-label">Difficulty</span>
+                                                                <span className="stat-value">{course.difficulty}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            )}
+                                            </div>
                                         </div>
                                     </FadeIn>
                                 ))}
