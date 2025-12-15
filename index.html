@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" id="theme-color-meta" content="#121212" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Darren Pinto</title>
     <script>
         // Apply theme immediately before React loads
         (function () {
-            const saved = localStorage.getItem('theme');
-            const theme = saved ? saved : 'dark';
+            var saved = localStorage.getItem('theme');
+            var theme = saved ? saved : 'dark';
             document.documentElement.setAttribute('data-theme', theme);
-            const meta = document.getElementById('theme-color-meta');
-            if (meta) meta.content = theme === 'dark' ? '#121212' : '#ffffff';
+            var meta = document.getElementById('theme-color-meta');
+            if (meta) meta.setAttribute('content', theme === 'dark' ? '#121212' : '#ffffff');
         })();
     </script>
 </head>

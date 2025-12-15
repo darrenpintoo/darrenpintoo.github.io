@@ -19,7 +19,7 @@ function App() {
     // Update theme-color meta for iOS status bar
     const metaThemeColor = document.getElementById('theme-color-meta');
     if (metaThemeColor) {
-      metaThemeColor.content = isDarkMode ? '#121212' : '#ffffff';
+      metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
     }
   }, [isDarkMode]);
 
