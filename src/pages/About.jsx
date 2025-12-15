@@ -1,5 +1,6 @@
 import { profile } from '../data';
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 
 function About() {
@@ -73,6 +74,10 @@ function About() {
 
                     <p>
                         I'm always exploring new ideas and working on creative problems. Feel free to reach out—I'm happy to chat.
+                    </p>
+
+                    <p style={{ marginTop: '2rem', fontStyle: 'italic', fontSize: '0.95rem' }}>
+                        Check out my <Link to="/blog">blogs</Link> or <Link to="/courses">CMU course reviews</Link>.
                     </p>
                 </div>
 

@@ -1,5 +1,6 @@
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 function Blog() {
     return (
@@ -26,7 +27,7 @@ function Blog() {
                             tutorials, and insights on robotics, embedded systems, and engineering projects.
                         </p>
                         <p className="coming-soon-hint">
-                            In the meantime, feel free to check out my <a href="/courses">course reviews</a> or
+                            In the meantime, feel free to check out my <Link to="/courses">course reviews</Link> or
                             connect with me on social media.
                         </p>
                     </div>
