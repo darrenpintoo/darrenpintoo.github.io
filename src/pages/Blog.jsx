@@ -1,10 +1,11 @@
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
-
+import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
 function Blog() {
+
     return (
         <PageLayout>
             <Helmet>
@@ -13,12 +14,12 @@ function Blog() {
                 <link rel="canonical" href="https://darrenpinto.me/blog" />
             </Helmet>
             <main className="container">
-                <div className="animate-blur-fade">
+                <FadeIn>
                     <h1>Blog</h1>
                     <p className="subtitle">Thoughts on robotics, engineering, and more.</p>
-                </div>
+                </FadeIn>
 
-                <div className="blog-content animate-blur-fade delay-100">
+                <FadeIn delay="100" className="blog-content">
                     <div className="blog-coming-soon">
                         <div className="coming-soon-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -38,7 +39,7 @@ function Blog() {
                             connect with me on social media.
                         </p>
                     </div>
-                </div>
+                </FadeIn>
             </main>
             <Footer />
         </PageLayout>

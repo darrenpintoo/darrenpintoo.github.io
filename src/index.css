@@ -1,9 +1,9 @@
 /* Global Vars & Reset */
 :root {
   --bg-primary: #fff;
-  --bg-header: rgba(255, 255, 255, 0.95);
-  --bg-card: #fafafa;
-  --bg-card-hover: #fff;
+  --bg-header: rgba(255, 255, 255, 0.75);
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #333;
   --text-secondary: #555;
   --text-muted: #444;
@@ -23,9 +23,9 @@
 /* Dark Mode */
 [data-theme="dark"] {
   --bg-primary: #121212;
-  --bg-header: rgba(18, 18, 18, 0.95);
-  --bg-card: #1e1e1e;
-  --bg-card-hover: #252525;
+  --bg-header: rgba(18, 18, 18, 0.75);
+  --bg-card: rgba(30, 30, 30, 0.65);
+  --bg-card-hover: rgba(40, 40, 40, 0.8);
   --text-primary: #e0e0e0;
   --text-secondary: #a0a0a0;
   --text-muted: #b0b0b0;
@@ -51,7 +51,12 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: inherit;
+  background-color: var(--bg-primary);
+  /* Liquid Glass Ambient Background */
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(242, 92, 84, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 25%);
+  background-attachment: fixed;
   color: inherit;
   line-height: 1.7;
   font-size: 15px;
@@ -302,6 +307,10 @@ h2 {
   animation: blurFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+.opacity-0 {
+  opacity: 0;
+}
+
 /* Staggered delays */
 .delay-100 {
   animation-delay: 0.15s;
@@ -433,6 +442,9 @@ h2 {
   cursor: pointer;
   transition: all 0.25s ease;
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .course-card:hover {
@@ -444,7 +456,9 @@ h2 {
 .course-card.expanded {
   background: var(--bg-card-hover);
   border-color: var(--accent);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(242, 92, 84, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: scale(1.02);
+  z-index: 10;
 }
 
 .course-header {
@@ -634,6 +648,8 @@ h2 {
   text-align: center;
   padding: 4rem 2rem;
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   transition: background 0.3s, border-color 0.3s;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
+import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
 // Modern star rating component with filled gradient
@@ -159,23 +160,23 @@ function CourseReviews() {
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main className="container">
-                <div className="animate-blur-fade">
+                <FadeIn>
                     <h1>CMU Course Reviews</h1>
                     <p className="subtitle">
                         My thoughts and experiences with courses at Carnegie Mellon University.
                     </p>
-                </div>
+                </FadeIn>
 
-                <div className="course-intro prose animate-blur-fade delay-100">
+                <FadeIn delay="100" className="course-intro prose">
                     <p>
                         As an ECE student at CMU, I'm documenting my journey through the curriculum.
                         Below you'll find my honest reviews of courses I've taken, organized by semester.
                         Use the index below to jump to specific topics.
                     </p>
-                </div>
+                </FadeIn>
 
                 {/* Course Index Section */}
-                <div className="course-index animate-blur-fade delay-200">
+                <FadeIn delay="200" className="course-index">
                     <h2>Course Index</h2>
                     <div className="course-index-grid">
                         {Object.keys(coursesForIndex).sort().map(dept => (
@@ -195,56 +196,57 @@ function CourseReviews() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </FadeIn>
 
-                <div className="course-reviews animate-blur-fade delay-200">
+                <div className="course-reviews">
                     {sortedCourses.map((semester) => (
                         <div key={semester.semester} className="semester-section">
                             <h2 className="semester-title">{semester.semester}</h2>
                             <div className="course-list">
                                 {semester.items.map((course) => (
-                                    <div
-                                        key={course.code}
-                                        id={course.code}
-                                        className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
-                                        onClick={() => toggleCourse(course.code)}
-                                    >
-                                        <div className="course-header">
-                                            <div className="course-info">
-                                                <div className="course-title-row">
-                                                    <span className="course-code">{course.code}</span>
-                                                    <span className="course-name">{course.name}</span>
+                                    <FadeIn key={course.code}>
+                                        <div
+                                            id={course.code}
+                                            className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
+                                            onClick={() => toggleCourse(course.code)}
+                                        >
+                                            <div className="course-header">
+                                                <div className="course-info">
+                                                    <div className="course-title-row">
+                                                        <span className="course-code">{course.code}</span>
+                                                        <span className="course-name">{course.name}</span>
+                                                    </div>
+                                                    <div className="course-instructor">
+                                                        Instructor: {course.instructor}
+                                                    </div>
                                                 </div>
-                                                <div className="course-instructor">
-                                                    Instructor: {course.instructor}
+                                                <div className="course-meta">
+                                                    <StarRating rating={course.rating} />
+                                                    <span className="course-units">{course.units} units</span>
+                                                    <span className="course-expand-icon">
+                                                        {expandedCourse === course.code ? '−' : '+'}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div className="course-meta">
-                                                <StarRating rating={course.rating} />
-                                                <span className="course-units">{course.units} units</span>
-                                                <span className="course-expand-icon">
-                                                    {expandedCourse === course.code ? '−' : '+'}
-                                                </span>
-                                            </div>
+                                            {expandedCourse === course.code && (
+                                                <div className="course-expanded">
+                                                    <div className="course-description">
+                                                        <p>{course.description}</p>
+                                                    </div>
+                                                    <div className="course-stats">
+                                                        <div className="stat-item">
+                                                            <span className="stat-label">Hours/Week</span>
+                                                            <span className="stat-value">{course.hoursPerWeek}</span>
+                                                        </div>
+                                                        <div className="stat-item">
+                                                            <span className="stat-label">Difficulty</span>
+                                                            <span className="stat-value">{course.difficulty}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                        {expandedCourse === course.code && (
-                                            <div className="course-expanded">
-                                                <div className="course-description">
-                                                    <p>{course.description}</p>
-                                                </div>
-                                                <div className="course-stats">
-                                                    <div className="stat-item">
-                                                        <span className="stat-label">Hours/Week</span>
-                                                        <span className="stat-value">{course.hoursPerWeek}</span>
-                                                    </div>
-                                                    <div className="stat-item">
-                                                        <span className="stat-label">Difficulty</span>
-                                                        <span className="stat-value">{course.difficulty}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
+                                    </FadeIn>
                                 ))}
                             </div>
                         </div>
