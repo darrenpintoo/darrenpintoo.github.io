@@ -1,8 +1,22 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-const About = lazy(() => import('./pages/About'));
-const Blog = lazy(() => import('./pages/Blog'));
-const CourseReviews = lazy(() => import('./pages/CourseReviews'));
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import About from './pages/About';
+import Blog from './pages/Blog';
+import CourseReviews from './pages/CourseReviews';
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <div key={location.pathname}>
+      <Routes location={location}>
+        <Route path="/" element={<About />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/courses" element={<CourseReviews />} />
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -61,13 +75,7 @@ function App() {
         </div>
       </header>
 
-      <Suspense fallback={null}>
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/courses" element={<CourseReviews />} />
-        </Routes>
-      </Suspense>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }

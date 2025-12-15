@@ -1,10 +1,19 @@
+import { useState, useEffect } from 'react';
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
-import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
 function Blog() {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Small timeout to ensure the initial state is painted first
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, 50);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <PageLayout>
@@ -14,12 +23,12 @@ function Blog() {
                 <link rel="canonical" href="https://darrenpinto.me/blog" />
             </Helmet>
             <main className="container">
-                <FadeIn>
+                <div className={`pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
                     <h1>Blog</h1>
                     <p className="subtitle">Thoughts on robotics, engineering, and more.</p>
-                </FadeIn>
+                </div>
 
-                <FadeIn delay="100" className="blog-content">
+                <div className={`blog-content pre-animate delay-100 ${isVisible ? 'fade-in-visible' : ''}`}>
                     <div className="blog-coming-soon">
                         <div className="coming-soon-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -39,7 +48,7 @@ function Blog() {
                             connect with me on social media.
                         </p>
                     </div>
-                </FadeIn>
+                </div>
             </main>
             <Footer />
         </PageLayout>

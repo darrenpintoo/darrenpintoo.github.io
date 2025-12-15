@@ -286,48 +286,70 @@ h2 {
   font-size: 0.8rem;
 }
 
-/* Animations */
-@keyframes blurFadeIn {
+/* Animations - Firefox compatible (no blur filter) */
+@keyframes fadeSlideIn {
   from {
     opacity: 0;
-    filter: blur(8px);
-    transform: translateY(10px) scale(0.98);
+    -webkit-transform: translateY(12px);
+    transform: translateY(12px);
   }
 
   to {
     opacity: 1;
-    filter: blur(0);
-    transform: translateY(0) scale(1);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
   }
 }
 
-/* Base animation class */
+/* Pre-animation state - the hidden state */
+.pre-animate {
+  opacity: 0;
+  -webkit-transform: translateY(12px);
+  transform: translateY(12px);
+  -webkit-transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Animated state - the visible state (add via JS) */
+.fade-in-visible {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/* Animation class - works for all browsers */
 .animate-blur-fade {
   opacity: 0;
-  animation: blurFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  -webkit-transform: translateY(12px);
+  transform: translateY(12px);
+  -webkit-animation: fadeSlideIn 0.6s ease-out forwards;
+  animation: fadeSlideIn 0.6s ease-out forwards;
 }
 
 .opacity-0 {
   opacity: 0;
 }
 
-/* Staggered delays */
+/* Staggered delays for transitions */
 .delay-100 {
-  animation-delay: 0.15s;
+  animation-delay: 0.1s;
+  transition-delay: 0.1s;
 }
 
 .delay-200 {
-  animation-delay: 0.3s;
+  animation-delay: 0.2s;
+  transition-delay: 0.2s;
 }
 
 .delay-350 {
-  animation-delay: 0.5s;
+  animation-delay: 0.35s;
+  transition-delay: 0.35s;
 }
 
 /* Profile image entrance */
 .profile-image {
   opacity: 0;
-  animation: blurFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+  animation: fadeSlideIn 0.6s ease-out 0.3s forwards;
 }
 
 .course-index {

@@ -160,26 +160,26 @@ function CourseReviews() {
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main className="container">
-                <FadeIn>
+                <div className="animate-blur-fade">
                     <h1>CMU Course Reviews</h1>
                     <p className="subtitle">
                         My thoughts and experiences with courses at Carnegie Mellon University.
                     </p>
-                </FadeIn>
+                </div>
 
-                <FadeIn delay="100" className="course-intro prose">
+                <div className="course-intro prose animate-blur-fade delay-100">
                     <p>
                         As an ECE student at CMU, I'm documenting my journey through the curriculum.
                         Below you'll find my honest reviews of courses I've taken, organized by semester.
                         Use the index below to jump to specific topics.
                     </p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '1rem' }}>
-                        Last updated: December 2024
+                        Last updated: December 2025
                     </p>
-                </FadeIn>
+                </div>
 
                 {/* Course Index Section */}
-                <FadeIn delay="200" className="course-index">
+                <div className="course-index animate-blur-fade delay-200">
                     <h2>Course Index</h2>
                     <div className="course-index-grid">
                         {Object.keys(coursesForIndex).sort().map(dept => (
@@ -199,9 +199,9 @@ function CourseReviews() {
                             </div>
                         ))}
                     </div>
-                </FadeIn>
+                </div>
 
-                <div className="course-reviews">
+                <div className="course-reviews animate-blur-fade delay-350">
                     {sortedCourses.map((semester) => (
                         <div key={semester.semester} className="semester-section">
                             <h2 className="semester-title">{semester.semester}</h2>
