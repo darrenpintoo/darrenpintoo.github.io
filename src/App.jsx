@@ -6,9 +6,12 @@ import CourseReviews from './pages/CourseReviews';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Initialize from localStorage, default to true (dark mode)
+    // Initialize from localStorage or system preference
     const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : true;
+    if (saved) {
+      return saved === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   // Apply theme to document and save to localStorage
@@ -22,6 +25,18 @@ function App() {
       metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    // Easter egg for console inspectors - only show once per session
+    const hasGreeted = sessionStorage.getItem('console_greeted');
+    if (!hasGreeted) {
+      console.log(
+        "%c you shouldn't be looking here.....",
+        'font-weight: bold; font-size: 14px; color: #ff6b6b;'
+      );
+      sessionStorage.setItem('console_greeted', 'true');
+    }
+  }, []);
 
   return (
     <BrowserRouter>
