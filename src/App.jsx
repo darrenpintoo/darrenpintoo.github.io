@@ -55,21 +55,21 @@ function App() {
 
   return (
     <>
-      <header className="header animate-fade-down">
+      <header className="header animate-blur-fade">
         <div className="header-inner">
           <a href="#" className="active">About</a>
         </div>
       </header>
 
       <main className="container">
-        <div className="animate-fade-up delay-200">
+        <div className="animate-blur-fade delay-100">
           <h1><strong>Darren</strong> Pinto</h1>
           <p className="subtitle">
             Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
           </p>
         </div>
 
-        <div className="profile-section prose animate-fade-up delay-400">
+        <div className="profile-section prose animate-blur-fade delay-200">
           <img
             src="/darren.jpg"
             alt="Darren Pinto"
@@ -93,7 +93,7 @@ function App() {
           <p>
             Previously, I interned at <a href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</a>,
             where I designed embedded systems and high-performance computing prototypes. My background also includes
-            leading a World Championship Finalist <a href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</a> team,
+            leading a World Championship Finalist <a href="https://ftc-events.firstinspires.org/team/10091" target="_blank" rel="noreferrer">FIRST Tech Challenge</a> team,
             where my team was a Control Award Finalist for the custom software libraries I developed.
           </p>
 
