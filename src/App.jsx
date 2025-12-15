@@ -55,19 +55,21 @@ function App() {
 
   return (
     <>
-      <header className="header">
+      <header className="header animate-fade-down">
         <div className="header-inner">
           <a href="#" className="active">About</a>
         </div>
       </header>
 
       <main className="container">
-        <h1><strong>Darren</strong> Pinto</h1>
-        <p className="subtitle">
-          Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
-        </p>
+        <div className="animate-fade-up delay-200">
+          <h1><strong>Darren</strong> Pinto</h1>
+          <p className="subtitle">
+            Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
+          </p>
+        </div>
 
-        <div className="profile-section prose">
+        <div className="profile-section prose animate-fade-up delay-400">
           <img
             src="/darren.jpg"
             alt="Darren Pinto"
