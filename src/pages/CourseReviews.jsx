@@ -32,63 +32,50 @@ const courses = [
                 name: "Matrices and Linear Transformations",
                 instructor: "Riley Thornton",
                 units: "11",
-                rating: 4.5,
-                hoursPerWeek: "10-12",
-                difficulty: "Medium-Hard",
-                description: `This course is a rigorous introduction to linear algebra, covering matrix operations, 
-                vector spaces, linear transformations, eigenvalues and eigenvectors, and applications. 
-                The course provides a solid mathematical foundation essential for electrical and computer engineering, 
-                as well as machine learning and computer graphics.`
+                rating: 3,
+                hoursPerWeek: "6-8",
+                difficulty: "Medium",
+                description: `To be completed`
             },
             {
                 code: "18-100",
                 name: "Introduction to Electrical and Computer Engineering",
                 instructor: "Jian-Gang (Jimmy) Zhu",
                 units: "12",
-                rating: 4,
-                hoursPerWeek: "12-15",
-                difficulty: "Medium",
-                description: `A broad introduction to ECE, covering the fundamentals of circuits, signals, 
-                digital logic, and embedded systems. Hands-on labs provide experience with oscilloscopes, 
-                function generators, and building actual circuits. A great starting point for understanding 
-                the hardware side of computing.`
+                rating: 3.5,
+                hoursPerWeek: "6-8",
+                difficulty: "Easy",
+                description: `To be completed`
             },
             {
                 code: "21-127",
                 name: "Concepts of Mathematics",
                 instructor: "Gregory Johnson",
                 units: "12",
-                rating: 4,
-                hoursPerWeek: "10-14",
-                difficulty: "Medium-Hard",
-                description: `Introduction to mathematical reasoning and proof techniques. Topics include 
-                logic, set theory, relations, functions, cardinality, and introductory number theory. 
-                This course develops the rigorous mathematical thinking required for upper-level CS and math courses.`
+                rating: 4.5,
+                hoursPerWeek: "12-15",
+                difficulty: "Hard",
+                description: `To be completed`
             },
             {
                 code: "79-101",
                 name: "Interpretation and Argument",
                 instructor: "Peter Mayshle",
                 units: "9",
-                rating: 3.5,
-                hoursPerWeek: "6-8",
-                difficulty: "Easy-Medium",
-                description: `A writing-intensive course focused on developing critical reading and 
-                argumentation skills. Students analyze texts from various disciplines and learn to 
-                construct well-reasoned arguments. Essential for developing clear communication skills 
-                that are valuable in any field.`
+                rating: 3,
+                hoursPerWeek: "4-6",
+                difficulty: "Easy",
+                description: `To be completed`
             },
             {
                 code: "39-101",
                 name: "CIT First Year Seminar",
                 instructor: "Kaz Shindle & Alaine Allen",
                 units: "1",
-                rating: 3,
-                hoursPerWeek: "1-2",
-                difficulty: "Easy",
-                description: `A seminar designed to help first-year students transition to CMU and the 
-                College of Engineering. Topics include academic success strategies, career exploration, 
-                and introduction to research opportunities within CIT.`
+                rating: 1,
+                hoursPerWeek: "1",
+                difficulty: "Very Easy",
+                description: `To be completed`
             }
         ]
     }

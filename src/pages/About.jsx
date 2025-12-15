@@ -33,7 +33,7 @@ function About() {
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>
                     <p className="subtitle">
-                        Robotics Researcher & Engineer at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
+                        Undergraduate Student & Robotics Researcher at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
                     </p>
                 </div>
 
