@@ -321,7 +321,82 @@ h2 {
   animation: blurFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
 
-/* Course Reviews */
+.course-index {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.course-index h2 {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  margin-top: 0;
+}
+
+.course-index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.index-category h3 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.index-category ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.index-category li {
+  margin-bottom: 0.5rem;
+}
+
+.index-link {
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+
+.index-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.index-code {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.index-name {
+  color: var(--text-secondary);
+  font-family: var(--font-serif);
+}
+
+.index-semester {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  margin-left: auto;
+  white-space: nowrap;
+  font-style: italic;
+}
+
 .course-reviews {
   margin-top: 2rem;
 }

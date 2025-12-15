@@ -88,11 +88,64 @@ const sortedCourses = courses.map(semester => ({
     items: [...semester.items].sort((a, b) => b.rating - a.rating)
 }));
 
+const departmentNames = {
+    "18": "Electrical & Computer Engineering",
+    "21": "Mathematics",
+    "79": "History & Humanities",
+    "39": "Engineering",
+};
+
+const getDepartment = (code) => {
+    const prefix = code.split('-')[0];
+    return departmentNames[prefix] || "Other";
+};
+
+// Extract unique departments for filter
+const allDepartments = ["All", ...new Set(
+    courses.flatMap(sem => sem.items.map(c => getDepartment(c.code)))
+)].sort((a, b) => {
+    if (a === "All") return -1;
+    if (b === "All") return 1;
+    return a.localeCompare(b);
+});
+
+// Helper for sorting semesters chronologically
+const getSemesterValue = (semester) => {
+    const [season, year] = semester.split(' ');
+    const seasonValue = { 'Spring': 0, 'Summer': 1, 'Fall': 2 }[season] || 0;
+    return parseInt(year) * 10 + seasonValue;
+};
+
+// Group all courses by Department for the Index, preserving semester info
+const coursesForIndex = courses.flatMap(sem =>
+    sem.items.map(course => ({ ...course, semester: sem.semester }))
+).reduce((acc, course) => {
+    const dept = getDepartment(course.code);
+    if (!acc[dept]) acc[dept] = [];
+    acc[dept].push(course);
+    return acc;
+}, {});
+
 function CourseReviews() {
     const [expandedCourse, setExpandedCourse] = useState(null);
 
     const toggleCourse = (code) => {
         setExpandedCourse(expandedCourse === code ? null : code);
+    };
+
+    const scrollToCourse = (code) => {
+        const element = document.getElementById(code);
+        if (element) {
+            const headerOffset = 100;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+            // Auto expand the course when navigating to it
+            setExpandedCourse(code);
+        }
     };
 
     return (
@@ -108,10 +161,32 @@ function CourseReviews() {
                 <div className="course-intro prose animate-blur-fade delay-100">
                     <p>
                         As an ECE student at CMU, I'm documenting my journey through the curriculum.
-                        Below you'll find my honest reviews of courses I've taken, including workload,
-                        teaching quality, and key takeaways. Click on any course to expand the review.
-                        Courses are sorted by my personal rating.
+                        Below you'll find my honest reviews of courses I've taken, organized by semester.
+                        Use the index below to jump to specific topics.
                     </p>
+                </div>
+
+                {/* Course Index Section */}
+                <div className="course-index animate-blur-fade delay-200">
+                    <h2>Course Index</h2>
+                    <div className="course-index-grid">
+                        {Object.keys(coursesForIndex).sort().map(dept => (
+                            <div key={dept} className="index-category">
+                                <h3>{dept}</h3>
+                                <ul>
+                                    {coursesForIndex[dept].sort((a, b) => getSemesterValue(a.semester) - getSemesterValue(b.semester)).map(course => (
+                                        <li key={course.code}>
+                                            <a onClick={() => scrollToCourse(course.code)} className="index-link">
+                                                <span className="index-code">{course.code}</span>
+                                                <span className="index-name">{course.name}</span>
+                                                <span className="index-semester">{course.semester}</span>
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="course-reviews animate-blur-fade delay-200">
@@ -122,6 +197,7 @@ function CourseReviews() {
                                 {semester.items.map((course) => (
                                     <div
                                         key={course.code}
+                                        id={course.code}
                                         className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
                                         onClick={() => toggleCourse(course.code)}
                                     >
