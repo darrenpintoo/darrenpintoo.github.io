@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import CourseReviews from './pages/CourseReviews';
+const About = lazy(() => import('./pages/About'));
+const Blog = lazy(() => import('./pages/Blog'));
+const CourseReviews = lazy(() => import('./pages/CourseReviews'));
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -61,11 +61,13 @@ function App() {
         </div>
       </header>
 
-      <Routes>
-        <Route path="/" element={<About />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/courses" element={<CourseReviews />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/courses" element={<CourseReviews />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
