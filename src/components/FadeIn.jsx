@@ -25,12 +25,14 @@ function FadeIn({ children, delay = 0, className = '' }) {
         };
     }, []);
 
-    const delayClass = delay ? `delay-${delay}` : '';
+    // If delay is provided, use it as seconds
+    const style = delay ? { animationDelay: `${delay}s` } : {};
 
     return (
         <div
             ref={domRef}
-            className={`${className} ${isVisible ? `animate-blur-fade ${delayClass}` : 'opacity-0'}`}
+            className={`${className} ${isVisible ? 'animate-blur-fade' : 'opacity-0'}`}
+            style={style}
         >
             {children}
         </div>

@@ -206,8 +206,8 @@ function CourseReviews() {
                         <div key={semester.semester} className="semester-section">
                             <h2 className="semester-title">{semester.semester}</h2>
                             <div className="course-list">
-                                {semester.items.map((course) => (
-                                    <FadeIn key={course.code}>
+                                {semester.items.map((course, index) => (
+                                    <FadeIn key={course.code} delay={index * 0.1}>
                                         <div
                                             id={course.code}
                                             className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
