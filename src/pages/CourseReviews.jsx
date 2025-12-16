@@ -59,7 +59,6 @@ const courses = [
                 name: "Matrices and Linear Transformations",
                 instructor: "Riley Thornton",
                 units: "11",
-
                 hoursPerWeek: "6-8",
                 difficulty: "Medium",
                 description: `To be completed`
@@ -69,7 +68,6 @@ const courses = [
                 name: "Introduction to Electrical and Computer Engineering",
                 instructor: "Jian-Gang (Jimmy) Zhu",
                 units: "12",
-
                 hoursPerWeek: "6-8",
                 difficulty: "Easy",
                 description: `To be completed`
@@ -79,7 +77,6 @@ const courses = [
                 name: "Concepts of Mathematics",
                 instructor: "Gregory Johnson",
                 units: "12",
-
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
                 description: `To be completed`
@@ -89,7 +86,6 @@ const courses = [
                 name: "Interpretation and Argument",
                 instructor: "Peter Mayshle",
                 units: "9",
-
                 hoursPerWeek: "4-6",
                 difficulty: "Easy",
                 description: `To be completed`
@@ -99,7 +95,6 @@ const courses = [
                 name: "CIT First Year Seminar",
                 instructor: "Kaz Shindle & Alaine Allen",
                 units: "1",
-
                 hoursPerWeek: "1",
                 difficulty: "Very Easy",
                 description: `To be completed`
@@ -107,8 +102,6 @@ const courses = [
         ]
     }
 ];
-
-
 
 const departmentNames = {
     "18": "Electrical & Computer Engineering",
@@ -125,83 +118,36 @@ const getDepartment = (code) => {
     return departmentNames[prefix] || "Other";
 };
 
-// Extract unique departments for filter
-const allDepartments = ["All", ...new Set(
-    courses.flatMap(sem => sem.items.map(c => getDepartment(c.code)))
-)].sort((a, b) => {
-    if (a === "All") return -1;
-    if (b === "All") return 1;
-    return a.localeCompare(b);
-});
-
-// Helper for sorting semesters chronologically
-const getSemesterValue = (semester) => {
-    const [season, year] = semester.split(' ');
-    const seasonValue = { 'Spring': 0, 'Summer': 1, 'Fall': 2 }[season] || 0;
-    return parseInt(year) * 10 + seasonValue;
-};
-
-// Group all courses by Department for the Index, preserving semester info
-const coursesForIndex = courses.flatMap(sem =>
+// Flatten courses for search/index
+const allCoursesList = courses.flatMap(sem =>
     sem.items.map(course => ({ ...course, semester: sem.semester }))
-).reduce((acc, course) => {
-    const dept = getDepartment(course.code);
-    if (!acc[dept]) acc[dept] = [];
-    acc[dept].push(course);
-    return acc;
-}, {});
+);
 
 function CourseReviews() {
     const [expandedCourses, setExpandedCourses] = useState(new Set());
+    const [activeSemester, setActiveSemester] = useState("");
 
+    // Toggle logic
     const toggleCourse = (code) => {
         setExpandedCourses(prev => {
             const next = new Set(prev);
-            if (next.has(code)) {
-                next.delete(code);
-            } else {
-                next.add(code);
-            }
+            if (next.has(code)) next.delete(code);
+            else next.add(code);
             return next;
         });
     };
-
-    const scrollToCourse = (code) => {
-        // First expand the course if not already
-        setExpandedCourses(prev => {
-            const next = new Set(prev);
-            if (!next.has(code)) next.add(code);
-            return next;
-        });
-
-        // Then scroll to it after a short delay
-        setTimeout(() => {
-            const element = document.getElementById(code);
-            if (element) {
-                const headerOffset = 100;
-                const elementPosition = element.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
-            }
-        }, 100);
-    };
-
-    const allCourseCodes = courses.flatMap(sem => sem.items.map(c => c.code));
-    const isAllExpanded = allCourseCodes.every(code => expandedCourses.has(code));
 
     const toggleAll = () => {
-        if (isAllExpanded) {
-            setExpandedCourses(new Set());
-        } else {
-            setExpandedCourses(new Set(allCourseCodes));
-        }
+        const allCodes = allCoursesList.map(c => c.code);
+        const isAllExpanded = allCodes.every(code => expandedCourses.has(code));
+        if (isAllExpanded) setExpandedCourses(new Set());
+        else setExpandedCourses(new Set(allCodes));
     };
 
-    const scrollToSemester = (semesterName) => {
-        const id = semesterName.replace(/\s+/g, '-');
+    const isAllExpanded = allCoursesList.every(c => expandedCourses.has(c.code));
+
+    // Scroll helpers
+    const scrollToId = (id) => {
         const element = document.getElementById(id);
         if (element) {
             const headerOffset = 100;
@@ -211,8 +157,46 @@ function CourseReviews() {
                 top: offsetPosition,
                 behavior: "smooth"
             });
+            // Also explicitly set active to avoid jitter during scroll
+            if (!id.includes('-')) setActiveSemester(""); // Basic heuristic
+            else if (id.includes(' ')) setActiveSemester(id);
         }
     };
+
+    const scrollToCourse = (code) => {
+        setExpandedCourses(prev => new Set(prev).add(code));
+        setTimeout(() => scrollToId(code), 100);
+    };
+
+    // ScrollSpy Logic
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // Use the data-semester attribute for stable ID tracking
+                        setActiveSemester(entry.target.getAttribute('data-semester'));
+                    }
+                });
+            },
+            {
+                rootMargin: "-20% 0px -60% 0px", // Trigger when element is near top
+                threshold: 0
+            }
+        );
+
+        courses.forEach(sem => {
+            const id = sem.semester.replace(/\s+/g, '-');
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    // Department grouping
+    const departments = [...new Set(allCoursesList.map(c => getDepartment(c.code)))].sort();
+    const totalUnits = allCoursesList.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0);
 
     return (
         <PageLayout>
@@ -222,64 +206,95 @@ function CourseReviews() {
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main className="container">
-                <div className="animate-blur-fade">
-                    <h1>CMU Course Reviews</h1>
-                    <p className="subtitle">
-                        My thoughts and experiences with courses at Carnegie Mellon University.
-                    </p>
-                </div>
-                <div className="course-intro prose animate-blur-fade delay-100">
-                    <p>
-                        As an ECE student at CMU, I'm documenting my journey through the curriculum.
-                        Below you'll find my honest reviews of courses I've taken, organized by semester.
-                        Use the unified navigation panel below to filter by semester or department.
-                    </p>
-                </div>
-                <div className="course-controls animate-blur-fade delay-200">
-                    <div className="control-header">
-                        <h2>Navigation</h2>
-                        <button onClick={toggleAll} className={`expand-toggle ${isAllExpanded ? 'active' : ''}`}>
-                            {isAllExpanded ? "Collapse All" : "Expand All"}
-                        </button>
+                <div className="animate-blur-fade page-header-flex">
+                    <div>
+                        <h1>CMU Course Reviews</h1>
+                        <p className="subtitle" style={{ marginBottom: 0 }}>
+                            My thoughts and experiences with courses at Carnegie Mellon University.
+                        </p>
                     </div>
+                    <button onClick={toggleAll} className="text-action-btn">
+                        {isAllExpanded ? (
+                            <>
+                                <span style={{ fontSize: '1.2em' }}>−</span> Collapse All
+                            </>
+                        ) : (
+                            <>
+                                <span style={{ fontSize: '1.2em' }}>+</span> Expand All
+                            </>
+                        )}
+                    </button>
+                </div>
 
-                    <div className="controls-section">
-                        <span className="control-label">Jump to Semester</span>
-                        <div className="semester-pills">
-                            {courses.map(sem => (
-                                <button key={sem.semester} onClick={() => scrollToSemester(sem.semester)} className="nav-pill">
-                                    {sem.semester}
-                                </button>
-                            ))}
+                <div className="course-layout">
+                    {/* Sticky Sidebar */}
+                    <aside className="course-sidebar animate-blur-fade delay-100">
+                        <div className="sidebar-section">
+                            <h3 className="sidebar-title">Semesters</h3>
+                            <div className="sidebar-nav">
+                                {courses.map(sem => (
+                                    <button
+                                        key={sem.semester}
+                                        onClick={() => scrollToId(sem.semester.replace(/\s+/g, '-'))}
+                                        className={`sidebar-link ${activeSemester === sem.semester ? 'active' : ''}`}
+                                    >
+                                        {sem.semester}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="controls-section">
-                        <span className="control-label">Browse by Department</span>
-                        <div className="dept-grid-compact">
-                            {Object.keys(coursesForIndex).sort().map(dept => (
-                                <div key={dept} className="dept-compact-group">
-                                    <span className="dept-label">{dept}</span>
-                                    <div className="dept-links">
-                                        {coursesForIndex[dept].sort((a, b) => getSemesterValue(a.semester) - getSemesterValue(b.semester)).map(course => (
-                                            <a key={course.code} onClick={() => scrollToCourse(course.code)} className="compact-link">
-                                                {course.code}
-                                            </a>
-                                        ))}
+
+
+                        <div className="sidebar-section sidebar-dept-section">
+                            <h3 className="sidebar-title">Departments</h3>
+                            <div className="sidebar-nav">
+                                {departments.map(dept => (
+                                    <div key={dept} style={{ marginBottom: '0.5rem' }}>
+                                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
+                                            {dept}
+                                        </div>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                            {allCoursesList.filter(c => getDepartment(c.code) === dept).map(c => (
+                                                <button
+                                                    key={c.code}
+                                                    onClick={() => scrollToCourse(c.code)}
+                                                    style={{
+                                                        fontSize: '0.75rem',
+                                                        padding: '2px 6px',
+                                                        background: 'var(--stat-bg)',
+                                                        border: 'none',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        color: 'var(--accent)'
+                                                    }}
+                                                >
+                                                    {c.code}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
+
+
+                    </aside>
+
+                    {/* Main Content */}
+                    <div className="course-content animate-blur-fade delay-200">
+                        {courses.map((semester) => (
+                            <SemesterGroup
+                                key={semester.semester}
+                                semester={semester}
+                                expandedCourses={expandedCourses}
+                                toggleCourse={toggleCourse}
+                            />
+                        ))}
                     </div>
                 </div>
 
-                <div className="course-reviews animate-blur-fade delay-350">
-                    {courses.map((semester) => (
-                        <SemesterGroup key={semester.semester} semester={semester} expandedCourses={expandedCourses} toggleCourse={toggleCourse} />
-                    ))}
-                </div>
-
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '3rem', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '5rem', textAlign: 'center' }}>
                     Last updated: December 2025
                 </p>
             </main>
@@ -291,8 +306,6 @@ function CourseReviews() {
 function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef(null);
-
-    const totalUnits = semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0);
     const semesterId = semester.semester.replace(/\s+/g, '-');
 
     useEffect(() => {
@@ -314,7 +327,13 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
     }, []);
 
     return (
-        <div id={semesterId} ref={sectionRef} className="semester-section">
+        <div
+            id={semesterId}
+            data-semester={semester.semester}
+            ref={sectionRef}
+            className="semester-section"
+            style={{ scrollMarginTop: '100px' }}
+        >
             <h2 className="semester-title">{semester.semester}</h2>
             <div className={`course-list ${isVisible ? 'visible' : ''}`}>
                 {semester.items.map((course, index) => (
@@ -367,7 +386,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
 
             <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
                 <div className="semester-stats">
-                    <span className="total-units">Total Units: {totalUnits}</span>
+                    <span className="total-units">Units: {semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)}</span>
                 </div>
                 {semester.reflection && (
                     <div className="semester-reflection">
