@@ -31,13 +31,24 @@ function App() {
   // Apply theme to document and save to localStorage
   useEffect(() => {
     const theme = isDarkMode ? 'dark' : 'light';
+
+    // Add transitioning class for smooth synchronized animation
+    document.documentElement.classList.add('theme-transitioning');
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+
     // Update theme-color meta for iOS status bar
     const metaThemeColor = document.getElementById('theme-color-meta');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
     }
+
+    // Remove transitioning class after animation completes
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove('theme-transitioning');
+    }, 500);
+
+    return () => clearTimeout(timeout);
   }, [isDarkMode]);
 
   useEffect(() => {
