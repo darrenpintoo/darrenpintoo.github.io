@@ -1,14 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 
-function FadeIn({ children, delay = 0, className = '' }) {
-    const [isVisible, setIsVisible] = useState(false);
+function FadeIn({ children, delay = 0, className = '', visible = null }) {
+    const [isInternalVisible, setIsInternalVisible] = useState(false);
     const domRef = useRef();
 
     useEffect(() => {
+        // If controlled externally (visible prop is not null), skip internal observer
+        if (visible !== null) return;
+
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    setIsVisible(true);
+                    setIsInternalVisible(true);
                 }
             });
         }, { threshold: 0.1 });
@@ -23,7 +26,10 @@ function FadeIn({ children, delay = 0, className = '' }) {
                 observer.unobserve(currentRef);
             }
         };
-    }, []);
+    }, [visible]);
+
+    // Determine final visibility: external prop takes precedence if provided, otherwise internal state
+    const isVisible = visible !== null ? visible : isInternalVisible;
 
     // If delay is provided, use it as seconds
     const style = delay ? { animationDelay: `${delay}s` } : {};

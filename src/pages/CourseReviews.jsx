@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
 import FadeIn from '../components/FadeIn';
@@ -113,18 +113,22 @@ function CourseReviews() {
     };
 
     const scrollToCourse = (code) => {
-        const element = document.getElementById(code);
-        if (element) {
-            const headerOffset = 100;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-            // Auto expand the course when navigating to it
-            setExpandedCourse(code);
-        }
+        // First expand the course
+        setExpandedCourse(code);
+
+        // Then scroll to it after a short delay to allow layout to settle (or at least start expanding)
+        setTimeout(() => {
+            const element = document.getElementById(code);
+            if (element) {
+                const headerOffset = 100;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }, 100);
     };
 
 
@@ -180,63 +184,89 @@ function CourseReviews() {
 
                 <div className="course-reviews animate-blur-fade delay-350">
                     {courses.map((semester) => (
-                        <div key={semester.semester} className="semester-section">
-                            <h2 className="semester-title">{semester.semester}</h2>
-                            <div className="course-list">
-                                {semester.items.map((course, index) => (
-                                    <FadeIn key={course.code} delay={index < 8 ? index * 0.1 : 0}>
-                                        <div
-                                            id={course.code}
-                                            className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
-                                            onClick={() => toggleCourse(course.code)}
-                                        >
-                                            <div className="course-header">
-                                                <div className="course-info">
-                                                    <div className="course-title-row">
-                                                        <span className="course-code">{course.code}</span>
-                                                        <span className="course-name">{course.name}</span>
-                                                    </div>
-                                                    <div className="course-instructor">
-                                                        Instructor: {course.instructor}
-                                                    </div>
-                                                </div>
-                                                <div className="course-meta">
-
-                                                    <span className="course-units">{course.units} units</span>
-                                                    <span className="course-expand-icon">
-                                                        {expandedCourse === course.code ? '−' : '+'}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className={`course-expand-wrapper ${expandedCourse === course.code ? 'open' : ''}`}>
-                                                <div className="course-expand-inner">
-                                                    <div className="course-expanded">
-                                                        <div className="course-description">
-                                                            <p>{course.description}</p>
-                                                        </div>
-                                                        <div className="course-stats">
-                                                            <div className="stat-item">
-                                                                <span className="stat-label">Hours/Week</span>
-                                                                <span className="stat-value">{course.hoursPerWeek}</span>
-                                                            </div>
-                                                            <div className="stat-item">
-                                                                <span className="stat-label">Difficulty</span>
-                                                                <span className="stat-value">{course.difficulty}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </FadeIn>
-                                ))}
-                            </div>
-                        </div>
+                        <SemesterGroup key={semester.semester} semester={semester} expandedCourse={expandedCourse} toggleCourse={toggleCourse} />
                     ))}
                 </div>
             </main>
             <Footer />
         </PageLayout>
+    );
+}
+
+function SemesterGroup({ semester, expandedCourse, toggleCourse }) {
+    const [isVisible, setIsVisible] = useState(false);
+    const sectionRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div ref={sectionRef} className="semester-section">
+            <h2 className="semester-title">{semester.semester}</h2>
+            <div className={`course-list ${isVisible ? 'visible' : ''}`}>
+                {semester.items.map((course, index) => (
+                    <FadeIn key={course.code} delay={index < 8 ? index * 0.05 : 0} visible={isVisible}>
+                        <div
+                            id={course.code}
+                            className={`course-card ${expandedCourse === course.code ? 'expanded' : ''}`}
+                            onClick={() => toggleCourse(course.code)}
+                        >
+                            <div className="course-header">
+                                <div className="course-info">
+                                    <div className="course-title-row">
+                                        <span className="course-code">{course.code}</span>
+                                        <span className="course-name">{course.name}</span>
+                                    </div>
+                                    <div className="course-instructor">
+                                        Instructor: {course.instructor}
+                                    </div>
+                                </div>
+                                <div className="course-meta">
+                                    <span className="course-units">{course.units} units</span>
+                                    <span className="course-expand-icon">
+                                        {expandedCourse === course.code ? '−' : '+'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className={`course-expand-wrapper ${expandedCourse === course.code ? 'open' : ''}`}>
+                                <div className="course-expand-inner">
+                                    <div className="course-expanded">
+                                        <div className="course-description">
+                                            <p>{course.description}</p>
+                                        </div>
+                                        <div className="course-stats">
+                                            <div className="stat-item">
+                                                <span className="stat-label">Hours/Week</span>
+                                                <span className="stat-value">{course.hoursPerWeek}</span>
+                                            </div>
+                                            <div className="stat-item">
+                                                <span className="stat-label">Difficulty</span>
+                                                <span className="stat-value">{course.difficulty}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </FadeIn>
+                ))}
+            </div>
+        </div>
     );
 }
 
