@@ -52,7 +52,7 @@ const courses = [
     },
     {
         semester: "Fall 2025",
-        reflection: "A challenging but rewarding semester. The workload was significant, especially balancing 18-100 and 21-241, but I learned a ton about linear algebra and electrical engineering fundamentals.",
+        reflection: "21-127 lol",
         items: [
             {
                 code: "21-241",
@@ -228,53 +228,48 @@ function CourseReviews() {
                         My thoughts and experiences with courses at Carnegie Mellon University.
                     </p>
                 </div>
-
                 <div className="course-intro prose animate-blur-fade delay-100">
                     <p>
                         As an ECE student at CMU, I'm documenting my journey through the curriculum.
                         Below you'll find my honest reviews of courses I've taken, organized by semester.
-                        Use the index below to jump to specific topics.
+                        Use the unified navigation panel below to filter by semester or department.
                     </p>
-
-                    <button onClick={toggleAll} className="expand-all-btn">
-                        {isAllExpanded ? "Collapse All Courses" : "Expand All Courses"}
-                    </button>
                 </div>
+                <div className="course-controls animate-blur-fade delay-200">
+                    <div className="control-header">
+                        <h2>Navigation</h2>
+                        <button onClick={toggleAll} className={`expand-toggle ${isAllExpanded ? 'active' : ''}`}>
+                            {isAllExpanded ? "Collapse All" : "Expand All"}
+                        </button>
+                    </div>
 
-                {/* Semester Index Section */}
-                <div className="course-index animate-blur-fade delay-200" style={{ marginBottom: '2rem' }}>
-                    <h2>Semester Index</h2>
-                    <ul className="semester-index-list">
-                        {courses.map(sem => (
-                            <li key={sem.semester}>
-                                <a onClick={() => scrollToSemester(sem.semester)} className="index-link semester-link">
-                                    <span className="index-name" style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>{sem.semester}</span>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                    <div className="controls-section">
+                        <span className="control-label">Jump to Semester</span>
+                        <div className="semester-pills">
+                            {courses.map(sem => (
+                                <button key={sem.semester} onClick={() => scrollToSemester(sem.semester)} className="nav-pill">
+                                    {sem.semester}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
-                {/* Course Index Section */}
-                <div className="course-index animate-blur-fade delay-200">
-                    <h2>Course Index</h2>
-                    <div className="course-index-grid">
-                        {Object.keys(coursesForIndex).sort().map(dept => (
-                            <div key={dept} className="index-category">
-                                <h3>{dept}</h3>
-                                <ul>
-                                    {coursesForIndex[dept].sort((a, b) => getSemesterValue(a.semester) - getSemesterValue(b.semester)).map(course => (
-                                        <li key={course.code}>
-                                            <a onClick={() => scrollToCourse(course.code)} className="index-link">
-                                                <span className="index-code">{course.code}</span>
-                                                <span className="index-name">{course.name}</span>
-                                                <span className="index-semester">{course.semester}</span>
+                    <div className="controls-section">
+                        <span className="control-label">Browse by Department</span>
+                        <div className="dept-grid-compact">
+                            {Object.keys(coursesForIndex).sort().map(dept => (
+                                <div key={dept} className="dept-compact-group">
+                                    <span className="dept-label">{dept}</span>
+                                    <div className="dept-links">
+                                        {coursesForIndex[dept].sort((a, b) => getSemesterValue(a.semester) - getSemesterValue(b.semester)).map(course => (
+                                            <a key={course.code} onClick={() => scrollToCourse(course.code)} className="compact-link">
+                                                {course.code}
                                             </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
