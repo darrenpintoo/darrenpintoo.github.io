@@ -385,13 +385,13 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
             </div>
 
             <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
-                <div className="semester-footer-content">
-                    <span className="total-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
+                <div className="semester-review-card">
+                    <div className="review-header">
+                        <span className="review-label">Semester Review</span>
+                        <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
+                    </div>
                     {semester.reflection && (
-                        <div className="semester-reflection">
-                            <span className="reflection-label">Reflection</span>
-                            <p>{semester.reflection}</p>
-                        </div>
+                        <p className="review-text">{semester.reflection}</p>
                     )}
                 </div>
             </div>

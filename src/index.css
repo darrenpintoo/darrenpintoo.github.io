@@ -873,11 +873,27 @@ h2 {
     white-space: nowrap;
     display: flex;
     align-items: center;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
+    /* Liquid Glass for Mobile */
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
     gap: 0.5rem;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="dark"] .course-sidebar {
+    background: linear-gradient(180deg,
+        rgba(18, 18, 18, 0.9) 0%,
+        rgba(18, 18, 18, 0.75) 100%);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
   .course-sidebar::-webkit-scrollbar {
@@ -1095,49 +1111,44 @@ h2 {
   transform: translateY(0);
 }
 
-.semester-footer-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.total-units {
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--stat-bg);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.semester-reflection {
-  flex: 1;
-  min-width: 200px;
-  /* Liquid Glass Commentary Card */
+.semester-review-card {
+  /* Liquid Glass Review Card */
   background: linear-gradient(135deg,
       rgba(242, 92, 84, 0.08) 0%,
       rgba(242, 92, 84, 0.03) 100%);
   border: 1px solid rgba(242, 92, 84, 0.2);
   border-left: 4px solid var(--accent);
   border-radius: 12px;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
 }
 
-.reflection-label {
-  display: block;
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.review-label {
   font-family: var(--font-sans);
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent);
-  margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.semester-reflection p {
+.review-units {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--stat-bg);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+}
+
+.review-text {
   font-family: var(--font-serif);
   font-size: 0.95rem;
   color: var(--text-secondary);
