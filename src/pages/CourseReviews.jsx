@@ -342,6 +342,10 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                             id={course.code}
                             className={`course-card ${expandedCourses.has(course.code) ? 'expanded' : ''}`}
                             onClick={() => toggleCourse(course.code)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCourse(course.code); } }}
+                            role="button"
+                            tabIndex={0}
+                            aria-expanded={expandedCourses.has(course.code)}
                         >
                             <div className="course-header">
                                 <div className="course-info">
