@@ -463,31 +463,67 @@ h2 {
 }
 
 .course-card {
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   padding: 1.25rem 1.5rem;
   cursor: pointer;
-  transition: all 0.25s ease;
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Liquid Glass Effect */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.15) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .course-card {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.03) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 @media (hover: hover) {
   .course-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    background: var(--bg-card-hover);
+    border-color: rgba(242, 92, 84, 0.4);
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.1),
+      0 4px 12px rgba(242, 92, 84, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  [data-theme="dark"] .course-card:hover {
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(242, 92, 84, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 }
 
 .course-card.expanded {
-  background: var(--bg-card-hover);
   border-color: var(--accent);
-  box-shadow: 0 12px 32px rgba(242, 92, 84, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-  transform: scale(1.02);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 16px 48px rgba(242, 92, 84, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   z-index: 10;
+}
+
+[data-theme="dark"] .course-card.expanded {
+  box-shadow:
+    0 16px 48px rgba(242, 92, 84, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .course-header {
@@ -664,7 +700,30 @@ h2 {
   top: 100px;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
-  padding-right: 1rem;
+  padding: 1.25rem;
+  /* Liquid Glass Effect */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .course-sidebar {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-section {
@@ -689,26 +748,32 @@ h2 {
   font-family: var(--font-sans);
   font-size: 0.9rem;
   color: var(--text-secondary);
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   border-left: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
-  background: none;
+  background: transparent;
   border: none;
-  border-radius: 0 6px 6px 0;
+  border-radius: 10px;
+  position: relative;
 }
 
 .sidebar-link:hover {
   color: var(--accent);
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(242, 92, 84, 0.08);
+  transform: translateX(2px);
 }
 
 .sidebar-link.active {
   color: var(--accent);
-  border-left-color: var(--accent);
-  background: var(--stat-bg);
+  background: linear-gradient(135deg,
+      rgba(242, 92, 84, 0.15) 0%,
+      rgba(242, 92, 84, 0.08) 100%);
   font-weight: 500;
+  box-shadow:
+    0 2px 8px rgba(242, 92, 84, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Mobile Sidebar */
