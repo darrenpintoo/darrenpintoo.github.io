@@ -197,7 +197,7 @@ function CourseReviews() {
 
     // Department grouping
     const departments = [...new Set(allCoursesList.map(c => getDepartment(c.code)))].sort();
-    const totalUnits = allCoursesList.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0);
+
 
     return (
         <PageLayout>
@@ -215,20 +215,24 @@ function CourseReviews() {
                         </p>
                         <div className="course-legend">
                             <span className="legend-item">
-                                <svg className="legend-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <svg className="legend-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                 </svg>
-                                <span className="legend-text">Favorite course of the semester</span>
+                                <span className="legend-text" aria-label="Favorite course of the semester">Favorite course of the semester</span>
                             </span>
                             <span className="legend-item">
-                                <svg className="legend-icon legend-icon-transformative" viewBox="0 0 24 24" fill="currentColor">
+                                <svg className="legend-icon legend-icon-transformative" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                 </svg>
-                                <span className="legend-text">Transformative course</span>
+                                <span className="legend-text" aria-label="Transformative course">Transformative course</span>
                             </span>
                         </div>
                     </div>
-                    <button onClick={toggleAll} className="text-action-btn">
+                    <button
+                        onClick={toggleAll}
+                        className="text-action-btn"
+                        aria-label={isAllExpanded ? "Collapse all courses" : "Expand all courses"}
+                    >
                         {isAllExpanded ? (
                             <>
                                 <span style={{ fontSize: '1.2em' }}>−</span> Collapse All
@@ -274,6 +278,7 @@ function CourseReviews() {
                                                 <button
                                                     key={c.code}
                                                     onClick={() => scrollToCourse(c.code)}
+                                                    aria-label={`Jump to ${c.code}: ${c.name}`}
                                                     style={{
                                                         fontSize: '0.75rem',
                                                         padding: '2px 6px',
@@ -314,7 +319,7 @@ function CourseReviews() {
                 </p>
             </main>
             <Footer />
-        </PageLayout>
+        </PageLayout >
     );
 }
 
@@ -368,12 +373,14 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                         <span className="course-code">{course.code}</span>
                                         <span className="course-name">{course.name}</span>
                                         {course.favorite && (
-                                            <svg className="course-favorite" viewBox="0 0 24 24" fill="currentColor" title="Favorite course of the semester">
+                                            <svg className="course-favorite" viewBox="0 0 24 24" fill="currentColor" aria-label="Favorite course of the semester">
+                                                <title>Favorite course of the semester</title>
                                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                             </svg>
                                         )}
                                         {course.transformative && (
-                                            <svg className="course-transformative" viewBox="0 0 24 24" fill="currentColor" title="Transformative course">
+                                            <svg className="course-transformative" viewBox="0 0 24 24" fill="currentColor" aria-label="Transformative course">
+                                                <title>Transformative course</title>
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                             </svg>
                                         )}
