@@ -215,8 +215,16 @@ function CourseReviews() {
                         </p>
                         <div className="course-legend">
                             <span className="legend-item">
-                                <span className="legend-icon">⭐</span>
+                                <svg className="legend-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
                                 <span className="legend-text">Favorite course of the semester</span>
+                            </span>
+                            <span className="legend-item">
+                                <svg className="legend-icon legend-icon-transformative" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                                <span className="legend-text">Transformative course</span>
                             </span>
                         </div>
                     </div>
@@ -359,7 +367,16 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                     <div className="course-title-row">
                                         <span className="course-code">{course.code}</span>
                                         <span className="course-name">{course.name}</span>
-                                        {course.favorite && <span className="course-favorite" title="Favorite course of the semester">⭐</span>}
+                                        {course.favorite && (
+                                            <svg className="course-favorite" viewBox="0 0 24 24" fill="currentColor" title="Favorite course of the semester">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                            </svg>
+                                        )}
+                                        {course.transformative && (
+                                            <svg className="course-transformative" viewBox="0 0 24 24" fill="currentColor" title="Transformative course">
+                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                            </svg>
+                                        )}
                                     </div>
                                     <div className="course-instructor">
                                         Instructor: {course.instructor}
