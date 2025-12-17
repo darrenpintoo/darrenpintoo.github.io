@@ -4,17 +4,30 @@ import About from './pages/About';
 import Blog from './pages/Blog';
 import CourseReviews from './pages/CourseReviews';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <div key={location.pathname}>
-      <Routes location={location}>
-        <Route path="/" element={<About />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/courses" element={<CourseReviews />} />
-      </Routes>
-    </div>
+    <>
+      <ScrollToTop />
+      <div key={location.pathname}>
+        <Routes location={location}>
+          <Route path="/" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/courses" element={<CourseReviews />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
