@@ -209,10 +209,12 @@ h2 {
   text-decoration: none;
 }
 
-.header a:hover {
-  color: var(--accent);
-  background: rgba(242, 92, 84, 0.08);
-  text-decoration: none;
+@media (hover: hover) {
+  .header a:hover {
+    color: var(--accent);
+    background: rgba(242, 92, 84, 0.08);
+    text-decoration: none;
+  }
 }
 
 .header a:active {
