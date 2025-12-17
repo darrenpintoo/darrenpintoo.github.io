@@ -643,6 +643,66 @@ h2 {
   transition: color 0.3s;
 }
 
+/* Course Legend */
+.course-legend {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .legend-item {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.legend-icon {
+  font-size: 1rem;
+}
+
+.legend-text {
+  font-family: var(--font-sans);
+}
+
+/* Favorite Course Star */
+.course-favorite {
+  font-size: 0.9rem;
+  margin-left: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  animation: starPulse 2s ease-in-out infinite;
+}
+
+@keyframes starPulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(255, 193, 7, 0.4));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.7));
+  }
+}
+
 .course-instructor {
   font-size: 0.85rem;
   color: var(--text-secondary);

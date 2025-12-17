@@ -79,7 +79,8 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
-                description: `To be completed`
+                description: `To be completed`,
+                favorite: true
             },
             {
                 code: "79-101",
@@ -212,6 +213,12 @@ function CourseReviews() {
                         <p className="subtitle" style={{ marginBottom: 0 }}>
                             My thoughts and experiences with courses at Carnegie Mellon University.
                         </p>
+                        <div className="course-legend">
+                            <span className="legend-item">
+                                <span className="legend-icon">⭐</span>
+                                <span className="legend-text">Favorite course of the semester</span>
+                            </span>
+                        </div>
                     </div>
                     <button onClick={toggleAll} className="text-action-btn">
                         {isAllExpanded ? (
@@ -336,7 +343,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
         >
             <h2 className="semester-title">{semester.semester}</h2>
             <div className={`course-list ${isVisible ? 'visible' : ''}`}>
-                {semester.items.map((course, index) => (
+                {[...semester.items].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0)).map((course, index) => (
                     <FadeIn key={course.code} delay={index < 8 ? index * 0.05 : 0} visible={isVisible}>
                         <div
                             id={course.code}
@@ -352,6 +359,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                     <div className="course-title-row">
                                         <span className="course-code">{course.code}</span>
                                         <span className="course-name">{course.name}</span>
+                                        {course.favorite && <span className="course-favorite" title="Favorite course of the semester">⭐</span>}
                                     </div>
                                     <div className="course-instructor">
                                         Instructor: {course.instructor}
