@@ -24,6 +24,7 @@ function AnimatedRoutes() {
         <Routes location={location}>
           <Route path="/" element={<About />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<Blog />} />
           <Route path="/courses" element={<CourseReviews />} />
         </Routes>
       </div>

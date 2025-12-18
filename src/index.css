@@ -1491,3 +1491,362 @@ h2 {
     font-size: 0.9rem;
   }
 }
+
+/* Blog List Styles */
+.blog-list {
+  margin-top: 3rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.post-card {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-card:hover {
+  transform: translateY(-8px);
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(242, 92, 84, 0.1);
+}
+
+[data-theme="dark"] .post-card:hover {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(242, 92, 84, 0.2);
+}
+
+.post-card-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.post-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+}
+
+.post-category {
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-date {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.post-card-title {
+  font-size: 1.4rem;
+  font-family: var(--font-serif);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.post-card-excerpt {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-card-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.read-more {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: gap 0.2s ease;
+}
+
+.post-card:hover .read-more {
+  gap: 0.75rem;
+}
+
+/* Single Post View */
+.blog-post-view {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 3rem;
+  transition: all 0.2s;
+  opacity: 0.8;
+}
+
+.back-link:hover {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateX(-4px);
+}
+
+.post-header {
+  margin-bottom: 3rem;
+}
+
+.post-meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-title {
+  font-size: 2.5rem !important;
+  font-family: var(--font-serif);
+  line-height: 1.2;
+}
+
+/* Markdown Content Styling */
+.markdown-content {
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.markdown-content h2 {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  margin: 2.5rem 0 1.25rem;
+  color: var(--text-primary);
+}
+
+.markdown-content h3 {
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem;
+  color: var(--text-primary);
+}
+
+.markdown-content p {
+  margin-bottom: 1.5rem;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  background: rgba(242, 92, 84, 0.05);
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+}
+
+.markdown-content code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+[data-theme="dark"] .markdown-content code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.markdown-content pre {
+  background: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 16px;
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.markdown-content pre code {
+  background: transparent;
+  padding: 0;
+  color: #e6e6e6;
+  font-size: 0.85rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 5rem 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 2rem !important;
+  }
+
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .post-card-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Improved Blog Styles */
+.post-card {
+  position: relative;
+  border-radius: 28px !important;
+  background: var(--bg-card) !important;
+}
+
+.post-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-radius: 28px 28px 0 0;
+}
+
+.post-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-card:hover .post-card-image {
+  transform: scale(1.05);
+}
+
+.post-card-overlay {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 2;
+}
+
+.post-category {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  color: #fff !important;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.post-card-title {
+  margin-top: 0.5rem;
+  font-size: 1.25rem !important;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s;
+}
+
+.post-card:hover .post-card-title {
+  color: var(--accent);
+}
+
+/* Fix excessive underlines */
+.post-card,
+.post-card:hover,
+.post-card * {
+  text-decoration: none !important;
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+/* Global link fix to avoid random underlines on complex components */
+a:not(.prose a) {
+  text-decoration: none !important;
+}
+
+/* Featured Blog Post Layout */
+.posts-grid {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Refined post content view */
+.blog-post-view {
+  max-width: 850px;
+}
+
+.post-title {
+  font-size: 3rem !important;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+}
+
+.post-meta {
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.markdown-content {
+  font-size: 1.1rem;
+  line-height: 1.9;
+}
+
+.markdown-content h2 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
