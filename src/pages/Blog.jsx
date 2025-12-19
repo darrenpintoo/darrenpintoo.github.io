@@ -1,18 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import PageLayout from '../components/PageLayout';
 import Footer from '../components/Footer';
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { blogPosts } from '../data/blog';
 import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
+
+// Automatically discover all markdown files in src/posts
+const postFiles = import.meta.glob('../posts/*.md', { query: '?raw', eager: true });
+
+function parseFrontmatter(markdown) {
+    const frontmatterRegex = /^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/;
+    const match = markdown.match(frontmatterRegex);
+
+    if (!match) return { metadata: {}, content: markdown };
+
+    const yamlStr = match[1];
+    const content = match[2];
+    const metadata = {};
+
+    yamlStr.split('\n').forEach(line => {
+        const [key, ...valueParts] = line.split(':');
+        if (key && valueParts.length > 0) {
+            const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
+            metadata[key.trim()] = value;
+        }
+    });
+
+    return { metadata, content };
+}
 
 function Blog() {
     const { slug } = useParams();
     const [isVisible, setIsVisible] = useState(false);
-    const [postContent, setPostContent] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+
+    // Process all discovered posts
+    const blogPosts = useMemo(() => {
+        return Object.entries(postFiles).map(([path, module]) => {
+            const fileName = path.split('/').pop().replace('.md', '');
+            const { metadata } = parseFrontmatter(module.default);
+            return {
+                slug: fileName,
+                title: metadata.title || 'Untitled Post',
+                date: metadata.date || 'Unknown Date',
+                category: metadata.category || 'General',
+                excerpt: metadata.excerpt || '',
+                image: metadata.image || '/blog-placeholder.png',
+                content: module.default
+            };
+        }).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -21,34 +59,20 @@ function Blog() {
         return () => clearTimeout(timer);
     }, []);
 
-    useEffect(() => {
-        if (slug) {
-            setIsLoading(true);
-            fetch(`/posts/${slug}.md`)
-                .then(res => {
-                    if (!res.ok) throw new Error('Post not found');
-                    return res.text();
-                })
-                .then(text => {
-                    setPostContent(text);
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setPostContent('# Post Not Found\nSorry, the post you are looking for does not exist.');
-                    setIsLoading(false);
-                });
-        }
-    }, [slug]);
-
-    const activePost = slug ? blogPosts.find(p => p.slug === slug) : null;
+    const activePostData = useMemo(() => {
+        if (!slug) return null;
+        const post = blogPosts.find(p => p.slug === slug);
+        if (!post) return null;
+        const { metadata, content } = parseFrontmatter(post.content);
+        return { ...post, metadata, markdownContent: content };
+    }, [slug, blogPosts]);
 
     return (
         <PageLayout>
             <Helmet>
-                <title>{activePost ? `${activePost.title} | Blog` : 'Blog | Darren Pinto'}</title>
-                <meta name="description" content={activePost ? activePost.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
-                <link rel="canonical" href={activePost ? `https://darrenpinto.me/blog/${slug}` : "https://darrenpinto.me/blog"} />
+                <title>{activePostData ? `${activePostData.title} | Blog` : 'Blog | Darren Pinto'}</title>
+                <meta name="description" content={activePostData ? activePostData.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
+                <link rel="canonical" href={activePostData ? `https://darrenpinto.me/blog/${slug}` : "https://darrenpinto.me/blog"} />
             </Helmet>
             <main className="container">
                 {slug ? (
@@ -59,28 +83,26 @@ function Blog() {
                             Back to Blog
                         </Link>
 
-                        {isLoading ? (
-                            <div className="loading-state">Loading post...</div>
+                        {!activePostData ? (
+                            <div className="loading-state">Post not found</div>
                         ) : (
                             <article className="prose blog-article">
                                 <header className="post-header">
-                                    {activePost && (
-                                        <div className="post-meta">
-                                            <span className="meta-item">
-                                                <Calendar size={14} />
-                                                {activePost.date}
-                                            </span>
-                                            <span className="meta-item">
-                                                <Tag size={14} />
-                                                {activePost.category}
-                                            </span>
-                                        </div>
-                                    )}
-                                    <h1 className="post-title">{activePost?.title || 'Blog Post'}</h1>
+                                    <div className="post-meta">
+                                        <span className="meta-item">
+                                            <Calendar size={14} />
+                                            {activePostData.date}
+                                        </span>
+                                        <span className="meta-item">
+                                            <Tag size={14} />
+                                            {activePostData.category}
+                                        </span>
+                                    </div>
+                                    <h1 className="post-title">{activePostData.title}</h1>
                                 </header>
                                 <div className="markdown-content">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {postContent}
+                                        {activePostData.markdownContent}
                                     </ReactMarkdown>
                                 </div>
                             </article>
@@ -122,23 +144,8 @@ function Blog() {
                                 </div>
                             ) : (
                                 <div className="blog-coming-soon">
-                                    <div className="coming-soon-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                            <path d="M2 2l7.586 7.586"></path>
-                                            <circle cx="11" cy="11" r="2"></circle>
-                                        </svg>
-                                    </div>
-                                    <h2>Coming Soon</h2>
-                                    <p>
-                                        I'm working on some exciting content! Soon I'll be sharing my experiences,
-                                        tutorials, and insights on robotics, embedded systems, and engineering projects.
-                                    </p>
-                                    <p className="coming-soon-hint">
-                                        In the meantime, feel free to check out my <Link to="/courses">course reviews</Link> or
-                                        connect with me on social media.
-                                    </p>
+                                    <h2>No posts found.</h2>
+                                    <p>Check back later!</p>
                                 </div>
                             )}
                         </div>

@@ -1,3 +1,0 @@
-# Testing Blog Post
-
-Just making sure that this works...
