@@ -31,9 +31,28 @@ function parseFrontmatter(markdown) {
     return { metadata, content };
 }
 
+// TOC Generator Helper
+function generateTOC(content) {
+    const headings = [];
+    const lines = content.split('\n');
+    lines.forEach((line) => {
+        // Match ## and ###
+        const match = line.match(/^(#{2,3})\s+(.*)$/);
+        if (match) {
+            const level = match[1].length;
+            const text = match[2].trim();
+            // Create a simple slug
+            const slug = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            headings.push({ level, text, slug });
+        }
+    });
+    return headings;
+}
+
 function Blog() {
     const { slug } = useParams();
     const [isVisible, setIsVisible] = useState(false);
+    const [activeSection, setActiveSection] = useState('');
 
     // Process all discovered posts
     const blogPosts = useMemo(() => {
@@ -64,8 +83,52 @@ function Blog() {
         const post = blogPosts.find(p => p.slug === slug);
         if (!post) return null;
         const { metadata, content } = parseFrontmatter(post.content);
-        return { ...post, metadata, markdownContent: content };
+        return { ...post, metadata, markdownContent: content, toc: generateTOC(content) };
     }, [slug, blogPosts]);
+
+    // Handle scroll for TOC highlighting
+    useEffect(() => {
+        if (!slug || !activePostData?.toc.length) return;
+
+        const handleScroll = () => {
+            const scrollValues = activePostData.toc.map(item => {
+                const element = document.getElementById(item.slug);
+                if (!element) return { id: item.slug, offset: Infinity };
+                return { id: item.slug, offset: Math.abs(element.getBoundingClientRect().top - 150) };
+            });
+
+            const closest = scrollValues.sort((a, b) => a.offset - b.offset)[0];
+            if (closest && closest.offset < 500) {
+                setActiveSection(closest.id);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [slug, activePostData]);
+
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+            window.scrollTo({
+                top: element.offsetTop - 100,
+                behavior: 'smooth'
+            });
+            setActiveSection(id);
+        }
+    };
+
+    // Custom renderer to add IDs to headings
+    const MarkdownComponents = {
+        h2: ({ node, ...props }) => {
+            const id = props.children[0]?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            return <h2 id={id} {...props} />;
+        },
+        h3: ({ node, ...props }) => {
+            const id = props.children[0]?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            return <h3 id={id} {...props} />;
+        }
+    };
 
     return (
         <PageLayout>
@@ -76,7 +139,7 @@ function Blog() {
             </Helmet>
             <main className="container">
                 {slug ? (
-                    // Single Post View
+                    // Single Post View with Sidebar
                     <div className={`blog-post-view pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
                         <Link to="/blog" className="back-link">
                             <ArrowLeft size={18} />
@@ -86,26 +149,51 @@ function Blog() {
                         {!activePostData ? (
                             <div className="loading-state">Post not found</div>
                         ) : (
-                            <article className="prose blog-article">
-                                <header className="post-header">
-                                    <div className="post-meta">
-                                        <span className="meta-item">
-                                            <Calendar size={14} />
-                                            {activePostData.date}
-                                        </span>
-                                        <span className="meta-item">
-                                            <Tag size={14} />
-                                            {activePostData.category}
-                                        </span>
+                            <div className="blog-content-wrapper">
+                                {/* Main Content */}
+                                <article className="prose blog-article">
+                                    <header className="post-header">
+                                        <div className="post-meta">
+                                            <span className="meta-item">
+                                                <Calendar size={14} />
+                                                {activePostData.date}
+                                            </span>
+                                            <span className="meta-item">
+                                                <Tag size={14} />
+                                                {activePostData.category}
+                                            </span>
+                                        </div>
+                                        <h1 className="post-title">{activePostData.title}</h1>
+                                    </header>
+                                    <div className="markdown-content">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={MarkdownComponents}
+                                        >
+                                            {activePostData.markdownContent}
+                                        </ReactMarkdown>
                                     </div>
-                                    <h1 className="post-title">{activePostData.title}</h1>
-                                </header>
-                                <div className="markdown-content">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {activePostData.markdownContent}
-                                    </ReactMarkdown>
-                                </div>
-                            </article>
+                                </article>
+
+                                {/* Sidebar TOC */}
+                                {activePostData.toc && activePostData.toc.length > 0 && (
+                                    <aside className="blog-sidebar">
+                                        <h4 className="toc-title">Table of Contents</h4>
+                                        <ul className="toc-list">
+                                            {activePostData.toc.map((item) => (
+                                                <li key={item.slug} style={{ paddingLeft: item.level === 3 ? '1rem' : '0' }}>
+                                                    <a
+                                                        className={`toc-link ${activeSection === item.slug ? 'active' : ''}`}
+                                                        onClick={() => scrollToSection(item.slug)}
+                                                    >
+                                                        {item.text}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </aside>
+                                )}
+                            </div>
                         )}
                     </div>
                 ) : (
@@ -123,11 +211,13 @@ function Blog() {
                                         <Link to={`/blog/${post.slug}`} key={post.slug} className="post-card">
                                             <div className="post-card-image-wrapper">
                                                 <img src={post.image} alt={post.title} className="post-card-image" />
-                                                <div className="post-card-overlay">
-                                                    <span className="post-category">{post.category}</span>
-                                                </div>
                                             </div>
                                             <div className="post-card-content">
+
+                                                <div className="post-card-tags">
+                                                    <span className="post-tag-pill">{post.category}</span>
+                                                </div>
+
                                                 <div className="post-card-meta">
                                                     <span className="post-date">{post.date}</span>
                                                 </div>
@@ -158,3 +248,4 @@ function Blog() {
 }
 
 export default Blog;
+
