@@ -149,39 +149,14 @@ function Blog() {
                         {!activePostData ? (
                             <div className="loading-state">Post not found</div>
                         ) : (
-                            <div className="blog-content-wrapper">
-                                {/* Main Content */}
-                                <article className="prose blog-article">
-                                    <header className="post-header">
-                                        <div className="post-meta">
-                                            <span className="meta-item">
-                                                <Calendar size={14} />
-                                                {activePostData.date}
-                                            </span>
-                                            <span className="meta-item">
-                                                <Tag size={14} />
-                                                {activePostData.category}
-                                            </span>
-                                        </div>
-                                        <h1 className="post-title">{activePostData.title}</h1>
-                                    </header>
-                                    <div className="markdown-content">
-                                        <ReactMarkdown
-                                            remarkPlugins={[remarkGfm]}
-                                            components={MarkdownComponents}
-                                        >
-                                            {activePostData.markdownContent}
-                                        </ReactMarkdown>
-                                    </div>
-                                </article>
-
-                                {/* Sidebar TOC */}
+                            <div className="blog-post-layout">
+                                {/* Sidebar TOC - Sticky on Left */}
                                 {activePostData.toc && activePostData.toc.length > 0 && (
                                     <aside className="blog-sidebar">
-                                        <h4 className="toc-title">Table of Contents</h4>
+                                        <h4 className="toc-title">On This Page</h4>
                                         <ul className="toc-list">
                                             {activePostData.toc.map((item) => (
-                                                <li key={item.slug} style={{ paddingLeft: item.level === 3 ? '1rem' : '0' }}>
+                                                <li key={item.slug} style={{ paddingLeft: item.level === 3 ? '0.75rem' : '0' }}>
                                                     <a
                                                         className={`toc-link ${activeSection === item.slug ? 'active' : ''}`}
                                                         onClick={() => scrollToSection(item.slug)}
@@ -193,9 +168,36 @@ function Blog() {
                                         </ul>
                                     </aside>
                                 )}
+
+                                <div className="blog-content-wrapper">
+                                    <article className="prose blog-article">
+                                        <header className="post-header">
+                                            <div className="post-meta">
+                                                <span className="meta-item">
+                                                    <Calendar size={14} />
+                                                    {activePostData.date}
+                                                </span>
+                                                <span className="meta-item">
+                                                    <Tag size={14} />
+                                                    {activePostData.category}
+                                                </span>
+                                            </div>
+                                            <h1 className="post-title">{activePostData.title}</h1>
+                                        </header>
+                                        <div className="markdown-content">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={MarkdownComponents}
+                                            >
+                                                {activePostData.markdownContent}
+                                            </ReactMarkdown>
+                                        </div>
+                                    </article>
+                                </div>
                             </div>
                         )}
                     </div>
+
                 ) : (
                     // List View
                     <>
