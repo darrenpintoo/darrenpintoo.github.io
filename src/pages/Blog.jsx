@@ -36,14 +36,12 @@ function generateTOC(content) {
     const headings = [];
     const lines = content.split('\n');
     lines.forEach((line) => {
-        // Match ## and ###
         const match = line.match(/^(#{2,3})\s+(.*)$/);
         if (match) {
             const level = match[1].length;
-            const text = match[2].trim();
-            // Create a simple slug
+            const text = match[2].trim().replace(/\*|_/g, ''); // Strip simple markdown for slug
             const slug = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            headings.push({ level, text, slug });
+            headings.push({ level, text: match[2].trim(), slug });
         }
     });
     return headings;
@@ -110,23 +108,32 @@ function Blog() {
     const scrollToSection = (id) => {
         const element = document.getElementById(id);
         if (element) {
+            const headerOffset = 100;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
             window.scrollTo({
-                top: element.offsetTop - 100,
+                top: offsetPosition,
                 behavior: 'smooth'
             });
             setActiveSection(id);
+
+            // Update URL hash without jumping
+            window.history.pushState(null, null, `#${id}`);
         }
     };
 
     // Custom renderer to add IDs to headings
     const MarkdownComponents = {
-        h2: ({ node, ...props }) => {
-            const id = props.children[0]?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            return <h2 id={id} {...props} />;
+        h2: ({ children, ...props }) => {
+            const text = Array.isArray(children) ? children.join('') : children.toString();
+            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            return <h2 id={id} {...props}>{children}</h2>;
         },
-        h3: ({ node, ...props }) => {
-            const id = props.children[0]?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            return <h3 id={id} {...props} />;
+        h3: ({ children, ...props }) => {
+            const text = Array.isArray(children) ? children.join('') : children.toString();
+            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            return <h3 id={id} {...props}>{children}</h3>;
         }
     };
 
@@ -173,16 +180,6 @@ function Blog() {
                                     <article className="prose blog-article">
                                         <header className="post-header">
                                             <h1 className="post-title">{activePostData.title}</h1>
-                                        </header>
-                                        <div className="markdown-content">
-                                            <ReactMarkdown
-                                                remarkPlugins={[remarkGfm]}
-                                                components={MarkdownComponents}
-                                            >
-                                                {activePostData.markdownContent}
-                                            </ReactMarkdown>
-                                        </div>
-                                        <footer className="post-footer">
                                             <div className="post-meta">
                                                 <span className="meta-item">
                                                     <Calendar size={14} />
@@ -193,7 +190,15 @@ function Blog() {
                                                     {activePostData.category}
                                                 </span>
                                             </div>
-                                        </footer>
+                                        </header>
+                                        <div className="markdown-content">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={MarkdownComponents}
+                                            >
+                                                {activePostData.markdownContent}
+                                            </ReactMarkdown>
+                                        </div>
                                     </article>
                                 </div>
                             </div>
