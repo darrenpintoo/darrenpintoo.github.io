@@ -78,6 +78,131 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Link Preview Popup - Wikipedia-style */
+.link-preview {
+  position: fixed;
+  z-index: 10000;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+/* Position above the link */
+.link-preview-above {
+  transform: translateX(-50%) translateY(-100%);
+  margin-top: -10px;
+  /* Gap between preview and link */
+  animation: previewFadeInAbove 0.2s ease-out;
+}
+
+@keyframes previewFadeInAbove {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-100%);
+  }
+}
+
+/* Position below the link */
+.link-preview-below {
+  transform: translateX(-50%) translateY(10px);
+  margin-top: 0;
+  animation: previewFadeInBelow 0.2s ease-out;
+}
+
+@keyframes previewFadeInBelow {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+.link-preview-image {
+  width: 100%;
+  height: 140px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.link-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.link-preview-content {
+  padding: 12px 14px;
+}
+
+.link-preview-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.link-preview-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.link-preview-url {
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.internal-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 6px;
+  background: rgba(242, 92, 84, 0.08);
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 40px;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .link-preview {
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 h1 {
   font-family: var(--font-serif);
   font-weight: 400;

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 import { Helmet } from 'react-helmet-async';
+import PreviewLink from '../components/PreviewLink';
 
 function About() {
     const [isVisible, setIsVisible] = useState(false);
@@ -43,7 +44,7 @@ function About() {
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>
                     <p className="subtitle">
-                        Undergraduate Student & Robotics Researcher at <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>
+                        Undergraduate Student & Robotics Researcher at <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>
                     </p>
                 </div>
 
@@ -62,21 +63,21 @@ function About() {
 
                     <p>
                         I am an Electrical and Computer Engineering student at{' '}
-                        <a href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</a>.
-                        At CMU, I conduct research at the <a href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</a>,
+                        <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
+                        At CMU, I conduct research at the <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink>,
                         exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
                         depth perception for robotic learning experiments.
                     </p>
 
                     <p>
-                        Previously, I interned at <a href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</a>,
+                        Previously, I interned at <PreviewLink href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</PreviewLink>,
                         where I designed embedded systems and high-performance computing prototypes. My background also includes
-                        leading a World Championship Finalist <a href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</a> team,
+                        leading a World Championship Finalist <PreviewLink href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</PreviewLink> team,
                         where my team was a Control Award Finalist for the custom software libraries I developed.
                     </p>
 
                     <p>
-                        Beyond engineering, I channel my creativity into game development. My <a href="https://www.roblox.com/games/114162328499203/Find-the-Toons" target="_blank" rel="noreferrer">projects on Roblox</a> have
+                        Beyond engineering, I channel my creativity into game development. My <PreviewLink href="https://www.roblox.com/games/114162328499203/Find-the-Toons" target="_blank" rel="noreferrer">projects on Roblox</PreviewLink> have
                         engaged a community of over 175,000 players with more than 6 million play sessions, allowing me to explore
                         large-scale data-driven design.
                     </p>
