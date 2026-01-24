@@ -134,6 +134,7 @@ h2 {
 .nav-links {
   display: flex;
   gap: 0.25rem;
+  position: relative;
   /* Liquid Glass Pill Container */
   background: linear-gradient(135deg,
       rgba(255, 255, 255, 0.25) 0%,
@@ -146,6 +147,33 @@ h2 {
   box-shadow:
     0 2px 10px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Sliding Navigation Indicator */
+.nav-indicator {
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  height: calc(100% - 0.7rem);
+  border-radius: 20px;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.3) 100%);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .nav-indicator {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.08) 100%);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="dark"] .nav-links {
@@ -221,24 +249,25 @@ h2 {
   transform: scale(0.96);
 }
 
+/* Active link - text styling only, indicator provides visual highlight */
 .header a.active {
   color: var(--text-primary);
   font-weight: 600;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0.3) 100%);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  box-shadow: none;
 }
 
 [data-theme="dark"] .header a.active {
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.08) 100%);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Ensure nav links are above indicator */
+.nav-links a {
+  position: relative;
+  z-index: 1;
 }
 
 /* Main Content */
@@ -1667,6 +1696,18 @@ h2 {
 
 .markdown-content p {
   margin-bottom: 1.5rem;
+}
+
+/* Post Footer - Date/Tag at bottom */
+.post-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.post-footer .post-meta {
+  justify-content: flex-start;
+  opacity: 0.8;
 }
 
 /* Premium Image Styling - Contained with outline */

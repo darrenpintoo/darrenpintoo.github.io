@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import About from './pages/About';
 import Blog from './pages/Blog';
@@ -29,6 +29,65 @@ function AnimatedRoutes() {
         </Routes>
       </div>
     </>
+  );
+}
+
+// Navigation component with sliding highlight
+function Navigation() {
+  const location = useLocation();
+  const navRef = useRef(null);
+  const indicatorRef = useRef(null);
+  const linksRef = useRef({});
+
+  // Determine which nav item is active based on pathname
+  const getActiveKey = () => {
+    if (location.pathname === '/') return '/';
+    if (location.pathname.startsWith('/blog')) return '/blog';
+    if (location.pathname.startsWith('/courses')) return '/courses';
+    return '/';
+  };
+
+  // Update indicator position
+  useLayoutEffect(() => {
+    const activeKey = getActiveKey();
+    const activeLink = linksRef.current[activeKey];
+    const nav = navRef.current;
+    const indicator = indicatorRef.current;
+
+    if (activeLink && nav && indicator) {
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+
+      indicator.style.width = `${linkRect.width}px`;
+      indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
+    }
+  }, [location.pathname]);
+
+  return (
+    <nav className="nav-links" ref={navRef}>
+      <div className="nav-indicator" ref={indicatorRef} />
+      <NavLink
+        to="/"
+        ref={(el) => linksRef.current['/'] = el}
+        className={({ isActive }) => isActive ? 'active' : ''}
+      >
+        About
+      </NavLink>
+      <NavLink
+        to="/blog"
+        ref={(el) => linksRef.current['/blog'] = el}
+        className={({ isActive }) => isActive ? 'active' : ''}
+      >
+        Blog
+      </NavLink>
+      <NavLink
+        to="/courses"
+        ref={(el) => linksRef.current['/courses'] = el}
+        className={({ isActive }) => isActive ? 'active' : ''}
+      >
+        Courses
+      </NavLink>
+    </nav>
   );
 }
 
@@ -81,11 +140,7 @@ function App() {
     <BrowserRouter>
       <header className="header animate-blur-fade">
         <div className="header-inner">
-          <nav className="nav-links">
-            <NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>About</NavLink>
-            <NavLink to="/blog" className={({ isActive }) => isActive ? 'active' : ''}>Blog</NavLink>
-            <NavLink to="/courses" className={({ isActive }) => isActive ? 'active' : ''}>Courses</NavLink>
-          </nav>
+          <Navigation />
           <button
             className="theme-toggle"
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -106,3 +161,4 @@ function App() {
 }
 
 export default App;
+

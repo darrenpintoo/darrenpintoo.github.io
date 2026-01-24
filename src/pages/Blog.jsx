@@ -172,16 +172,6 @@ function Blog() {
                                 <div className="blog-content-wrapper">
                                     <article className="prose blog-article">
                                         <header className="post-header">
-                                            <div className="post-meta">
-                                                <span className="meta-item">
-                                                    <Calendar size={14} />
-                                                    {activePostData.date}
-                                                </span>
-                                                <span className="meta-item">
-                                                    <Tag size={14} />
-                                                    {activePostData.category}
-                                                </span>
-                                            </div>
                                             <h1 className="post-title">{activePostData.title}</h1>
                                         </header>
                                         <div className="markdown-content">
@@ -192,6 +182,18 @@ function Blog() {
                                                 {activePostData.markdownContent}
                                             </ReactMarkdown>
                                         </div>
+                                        <footer className="post-footer">
+                                            <div className="post-meta">
+                                                <span className="meta-item">
+                                                    <Calendar size={14} />
+                                                    {activePostData.date}
+                                                </span>
+                                                <span className="meta-item">
+                                                    <Tag size={14} />
+                                                    {activePostData.category}
+                                                </span>
+                                            </div>
+                                        </footer>
                                     </article>
                                 </div>
                             </div>
