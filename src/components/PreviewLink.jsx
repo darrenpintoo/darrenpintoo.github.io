@@ -42,10 +42,12 @@ if (typeof window !== 'undefined') {
 
 function PreviewLink({ href, children, ...props }) {
     const [showPreview, setShowPreview] = useState(false);
+    const [renderPreview, setRenderPreview] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const linkRef = useRef(null);
     const previewRef = useRef(null);
     const timeoutRef = useRef(null);
+    const fadeOutTimeoutRef = useRef(null);
 
     // Normalize URL for lookup
     const normalizedHref = href?.endsWith('/') ? href : href + '/';
@@ -66,6 +68,10 @@ function PreviewLink({ href, children, ...props }) {
 
     const handleMouseEnter = (e) => {
         if (!preview) return;
+
+        if (fadeOutTimeoutRef.current) {
+            clearTimeout(fadeOutTimeoutRef.current);
+        }
 
         // Delay showing preview
         timeoutRef.current = setTimeout(() => {
@@ -92,7 +98,8 @@ function PreviewLink({ href, children, ...props }) {
                     y: fitsAbove ? rect.top : rect.bottom
                 });
             }
-            setShowPreview(true);
+            setRenderPreview(true);
+            setTimeout(() => setShowPreview(true), 10);
         }, 300);
     };
 
@@ -100,13 +107,20 @@ function PreviewLink({ href, children, ...props }) {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
+
         setShowPreview(false);
+        fadeOutTimeoutRef.current = setTimeout(() => {
+            setRenderPreview(false);
+        }, 200); // Match CSS transition duration
     };
 
     useEffect(() => {
         return () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
+            }
+            if (fadeOutTimeoutRef.current) {
+                clearTimeout(fadeOutTimeoutRef.current);
             }
         };
     }, []);
@@ -131,16 +145,19 @@ function PreviewLink({ href, children, ...props }) {
             >
                 {children}
             </a>
-            {showPreview && createPortal(
+            {renderPreview && createPortal(
                 <div
                     ref={previewRef}
-                    className={`link-preview ${isBelow ? 'link-preview-below' : 'link-preview-above'} ${preview.isInternal ? 'internal-preview' : ''}`}
+                    className={`link-preview ${isBelow ? 'link-preview-below' : 'link-preview-above'} ${preview.isInternal ? 'internal-preview' : ''} ${showPreview ? 'is-visible' : 'is-fading'}`}
                     style={{
                         left: `${position.x}px`,
                         top: `${position.y}px`
                     }}
-                    onMouseEnter={() => setShowPreview(true)}
-                    onMouseLeave={() => setShowPreview(false)}
+                    onMouseEnter={() => {
+                        if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
+                        setShowPreview(true);
+                    }}
+                    onMouseLeave={handleMouseLeave}
                 >
                     {preview.image && (
                         <div className="link-preview-image">

@@ -94,45 +94,45 @@ a:hover {
     0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.link-preview.is-visible {
+  opacity: 1;
+}
+
+.link-preview.is-fading {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Position above the link */
 .link-preview-above {
   transform: translateX(-50%) translateY(-100%);
   margin-top: -10px;
-  /* Gap between preview and link */
-  animation: previewFadeInAbove 0.2s ease-out;
 }
 
-@keyframes previewFadeInAbove {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-100%) translateY(8px);
-  }
+.link-preview-above.is-visible {
+  transform: translateX(-50%) translateY(-100%) translateY(0);
+}
 
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-100%);
-  }
+.link-preview-above.is-fading {
+  transform: translateX(-50%) translateY(-100%) translateY(8px);
 }
 
 /* Position below the link */
 .link-preview-below {
-  transform: translateX(-50%) translateY(10px);
-  margin-top: 0;
-  animation: previewFadeInBelow 0.2s ease-out;
+  transform: translateX(-50%) translateY(0);
+  margin-top: 10px;
 }
 
-@keyframes previewFadeInBelow {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(2px);
-  }
+.link-preview-below.is-visible {
+  transform: translateX(-50%) translateY(10px);
+}
 
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(10px);
-  }
+.link-preview-below.is-fading {
+  transform: translateX(-50%) translateY(2px);
 }
 
 .link-preview-image {
