@@ -79,7 +79,7 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
-                description: `To be completed`,
+                description: `I had previously taken a discrete math course at my local community college during high school (seniro summer), however that course greatly lacked the rigor at which greggo taught this course. I thoroughly enjoyed this course as it forced me to think differently. The weekly homeworks for this course conditioned me to grapple with difficult programs and proofs (would take me all of Thursday to complete). The exam problems were easier than the homework questions, however, the final was quite brutal (median was a 68).`,
                 favorite: true
             },
             {
@@ -89,7 +89,7 @@ const courses = [
                 units: "9",
                 hoursPerWeek: "4-6",
                 difficulty: "Easy",
-                description: `To be completed`
+                description: `The core material covered in this class was very similar to my high school AP Lang course as we explored rhetoric through analyzing text. I had this course at 8 am so attendance for the class in general was not great, but the professor was very accomodating and nice!`
             },
             {
                 code: "39-101",
@@ -98,7 +98,7 @@ const courses = [
                 units: "1",
                 hoursPerWeek: "1",
                 difficulty: "Very Easy",
-                description: `To be completed`
+                description: `The course offered the chance to learn more about CMU's offering within and beyond the college of engineering. Homework in this class was very minimal as a completion-based reflection (~250 words) was the only assignment every week. I felt as though small group sessions were a good way to connect with an upperclassmen in engineering, but I already knew my TA from o-week! `
             }
         ]
     }
@@ -211,7 +211,10 @@ function CourseReviews() {
                     <div>
                         <h1>CMU Course Reviews</h1>
                         <p className="subtitle" style={{ marginBottom: 0 }}>
-                            My thoughts and experiences with courses at Carnegie Mellon University.
+                            My thoughts and experiences with courses at Carnegie Mellon University. I feel as though the abundance of course reviews on other websites of CMU students/alumna (Fan Pu in particular) has compelled me to create one of my own.
+                        </p>
+                        <p className="subtitle" style={{ marginBottom: 0 }}>
+                            In each of the reflection/reviews I attempt to offer a perspective of how I felt the course benefited me.
                         </p>
                         <div className="course-legend">
                             <span className="legend-item">
@@ -315,7 +318,7 @@ function CourseReviews() {
                 </div>
 
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '5rem', textAlign: 'center' }}>
-                    Last updated: December 2025
+                    Last updated: March 2026
                 </p>
             </main>
             <Footer />
