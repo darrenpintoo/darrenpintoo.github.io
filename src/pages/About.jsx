@@ -66,7 +66,7 @@ function About() {
                         <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
                         At CMU, I conduct research at the <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink>,
                         exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
-                        depth perception for robotic learning experiments.
+                        depth perception for robotic learning experiments. This upcoming summer I will be interning at IBM in their Silicon Valley Labratory.
                     </p>
 
                     <p>

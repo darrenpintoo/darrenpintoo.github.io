@@ -47,12 +47,22 @@ const courses = [
                 hoursPerWeek: "TBD",
                 difficulty: "TBD",
                 description: "Currently taking this course."
+            },
+            {
+                code: "76-270",
+                name: "Writing for the Professions",
+                instructor: "Andrew Gordon",
+                units: "12",
+                hoursPerWeek: "TBD",
+                difficulty: "TBD",
+                description: "Currently taking this course."
+
             }
         ]
     },
     {
         semester: "Fall 2025",
-        reflection: "21-127 lol",
+        reflection: "I feel as though the course schedule I took was perfect for my first semester at CMU. The workload wasn't extremely demanding, which allowed me to become involved in out of the classroom activities like ScottyLabs, pickleball, and hackathons. My Tuesdays and Thursdays were mostly free and would be the day that I predominantly spent getting ahead for the week. Thursday, in particular, would be quite brutal as 21-127 HW and 18-100 labs were due that night. The 21-127 HW alone would take me 8+ hours to conceptual, solve, and latex, so I needed to plan around this. ",
         items: [
             {
                 code: "21-241",
@@ -61,7 +71,7 @@ const courses = [
                 units: "11",
                 hoursPerWeek: "6-8",
                 difficulty: "Medium",
-                description: `To be completed`
+                description: `Going into this course, I had lacked any (rigorous) introduction to linear algebra. With this being my first \'non-proof-based\' math course, I was quite surprised at the structure of the course. The lectures would mostly consist of the professor writing out formal proofs towards theorems. Although this helped me gain a more intutive understanding of the topics, I feel as though this was an interesting structure for an application-oriented math course. Lectures would have sparse turnouts, and sometimes the professor would have to start class with <5 people in the lecture hall. My recitation TA for this course was fantastic and undoubtably helped me gain deeper intution for the course content.`
             },
             {
                 code: "18-100",
@@ -70,7 +80,7 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "6-8",
                 difficulty: "Easy",
-                description: `To be completed`
+                description: `I feel as though this course is quite effective in what it seeks out to do: provide an overview of ECE. At the cost of doing this, there is a signifcant amount of \'skimming\' topics to ensure that the class covers all the topics. The labs were quite enjoyable and we got to keep a ton of EE-related circuit components at the end of the semester! Jimmy is a very accomidating professor, after our exam 2 median was <70, he even offered an optional retake for students to replace that score if they desired.`
             },
             {
                 code: "21-127",
@@ -79,11 +89,11 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
-                description: `I had previously taken a discrete math course at my local community college during high school (seniro summer), however that course greatly lacked the rigor at which greggo taught this course. I thoroughly enjoyed this course as it forced me to think differently. The weekly homeworks for this course conditioned me to grapple with difficult programs and proofs (would take me all of Thursday to complete). The exam problems were easier than the homework questions, however, the final was quite brutal (median was a 68).`,
+                description: `I had previously taken a discrete math course at my local community college during high school (seniro summer), however that course greatly lacked the rigor at which greggo taught this course. I thoroughly enjoyed this course as it forced me to think differently. The weekly homeworks for this course conditioned me to grapple with difficult programs and proofs (would take me all of Thursday to complete). The exams (~median 75) were easier than the homeworks, however, the final was quite brutal (median was a 68).`,
                 favorite: true
             },
             {
-                code: "79-101",
+                code: "76-101",
                 name: "Interpretation and Argument",
                 instructor: "Peter Mayshle",
                 units: "9",
@@ -107,7 +117,7 @@ const courses = [
 const departmentNames = {
     "18": "Electrical & Computer Engineering",
     "21": "Mathematics",
-    "79": "History & Humanities",
+    "76": "English",
     "39": "Engineering",
     "15": "Computer Science",
     "24": "Mechanical Engineering",
