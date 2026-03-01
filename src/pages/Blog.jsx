@@ -31,6 +31,17 @@ function parseFrontmatter(markdown) {
     return { metadata, content };
 }
 
+// Format ISO date to human-readable (e.g. "Feb 22, 2026")
+function formatDate(isoDate) {
+    if (!isoDate || isoDate === 'Unknown Date') return isoDate;
+    try {
+        const d = new Date(isoDate);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
+        return isoDate;
+    }
+}
+
 // TOC Generator Helper
 function generateTOC(content) {
     const headings = [];
@@ -194,7 +205,7 @@ function Blog() {
                                             <div className="post-meta">
                                                 <span className="meta-item">
                                                     <Calendar size={14} />
-                                                    {activePostData.date}
+                                                    {formatDate(activePostData.date)}
                                                 </span>
                                                 <span className="meta-item">
                                                     <Tag size={14} />
@@ -221,7 +232,7 @@ function Blog() {
                     <>
                         <div className={`pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
                             <h1>Blog</h1>
-                            <p className="subtitle">Thoughts on robotics, engineering, and more.</p>
+                            <p className="subtitle">Hackathons, competitions, and projects from CMU and beyond.</p>
                         </div>
 
                         <div className={`blog-list pre-animate delay-100 ${isVisible ? 'fade-in-visible' : ''}`}>
@@ -239,7 +250,7 @@ function Blog() {
                                                 </div>
 
                                                 <div className="post-card-meta">
-                                                    <span className="post-date">{post.date}</span>
+                                                    <span className="post-date">{formatDate(post.date)}</span>
                                                 </div>
                                                 <h2 className="post-card-title">{post.title}</h2>
                                                 <p className="post-card-excerpt">{post.excerpt}</p>
