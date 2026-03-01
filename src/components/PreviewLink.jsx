@@ -27,6 +27,11 @@ const linkPreviews = {
         title: 'Find the Toons',
         description: 'A Roblox game with over 175,000 players and 6 million+ play sessions, featuring an engaging treasure hunt experience.',
         image: '/images/previews/roblox-preview.png'
+    },
+    'https://www.ibm.com/': {
+        title: 'IBM',
+        description: 'IBM is a leading technology and consulting company, with research and innovation in AI, cloud, quantum computing, and enterprise software.',
+        image: '/images/previews/ibm-preview.png'
     }
 };
 
@@ -44,16 +49,15 @@ function PreviewLink({ href, children, ...props }) {
     const [showPreview, setShowPreview] = useState(false);
     const [renderPreview, setRenderPreview] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [placement, setPlacement] = useState('above');
     const linkRef = useRef(null);
     const previewRef = useRef(null);
     const timeoutRef = useRef(null);
     const fadeOutTimeoutRef = useRef(null);
 
-    // Normalize URL for lookup
     const normalizedHref = href?.endsWith('/') ? href : href + '/';
     let preview = linkPreviews[normalizedHref] || linkPreviews[href];
 
-    // Handle internal links
     const isInternal = href?.startsWith('/') || href?.includes(window.location.host);
     if (!preview && isInternal) {
         preview = {
@@ -64,7 +68,35 @@ function PreviewLink({ href, children, ...props }) {
         };
     }
 
-    const [isBelow, setIsBelow] = useState(false);
+    const computePosition = (linkRect, previewEl) => {
+        const PADDING = 16;
+        const GAP = 14;
+        const previewWidth = previewEl ? previewEl.offsetWidth : 320;
+        const previewHeight = previewEl ? previewEl.offsetHeight : 280;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        const spaceAbove = linkRect.top;
+        const spaceBelow = vh - linkRect.bottom;
+        const verticalPlacement = spaceAbove >= previewHeight + GAP + PADDING
+            ? 'above'
+            : spaceBelow >= previewHeight + GAP + PADDING
+                ? 'below'
+                : spaceAbove > spaceBelow ? 'above' : 'below';
+
+        let y;
+        if (verticalPlacement === 'above') {
+            y = linkRect.top - GAP - previewHeight;
+        } else {
+            y = linkRect.bottom + GAP;
+        }
+        y = Math.max(PADDING, Math.min(y, vh - previewHeight - PADDING));
+
+        let x = linkRect.left + linkRect.width / 2 - previewWidth / 2;
+        x = Math.max(PADDING, Math.min(x, vw - previewWidth - PADDING));
+
+        return { x, y, placement: verticalPlacement };
+    };
 
     const handleMouseEnter = (e) => {
         if (!preview) return;
@@ -73,33 +105,14 @@ function PreviewLink({ href, children, ...props }) {
             clearTimeout(fadeOutTimeoutRef.current);
         }
 
-        // Delay showing preview
         timeoutRef.current = setTimeout(() => {
             if (linkRef.current) {
                 const rect = linkRef.current.getBoundingClientRect();
-
-                // Center relative to mouse position, but clamp to viewport
-                const previewWidth = 320;
-                const previewHeight = 200; // Estimated height
-                const padding = 16;
-                let x = e.clientX;
-
-                // Ensure the preview stays within the window
-                const minX = previewWidth / 2 + padding;
-                const maxX = window.innerWidth - (previewWidth / 2 + padding);
-                x = Math.max(minX, Math.min(x, maxX));
-
-                // Check if it fits above
-                const fitsAbove = rect.top > previewHeight + padding;
-                setIsBelow(!fitsAbove);
-
-                setPosition({
-                    x: x,
-                    y: fitsAbove ? rect.top : rect.bottom
-                });
+                const { x, y, placement: p } = computePosition(rect, null);
+                setPosition({ x, y });
+                setPlacement(p);
             }
             setRenderPreview(true);
-            setTimeout(() => setShowPreview(true), 10);
         }, 300);
     };
 
@@ -111,21 +124,40 @@ function PreviewLink({ href, children, ...props }) {
         setShowPreview(false);
         fadeOutTimeoutRef.current = setTimeout(() => {
             setRenderPreview(false);
-        }, 200); // Match CSS transition duration
+        }, 200);
     };
 
     useEffect(() => {
+        if (!renderPreview || !linkRef.current) return;
+
+        // Double rAF: first frame lets the browser paint the initial (hidden) state,
+        // second frame triggers the transition to visible.
+        let id1, id2;
+        id1 = requestAnimationFrame(() => {
+            if (previewRef.current) {
+                const rect = linkRef.current.getBoundingClientRect();
+                const { x, y, placement: p } = computePosition(rect, previewRef.current);
+                setPosition({ x, y });
+                setPlacement(p);
+            }
+            id2 = requestAnimationFrame(() => {
+                setShowPreview(true);
+            });
+        });
+
         return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-            if (fadeOutTimeoutRef.current) {
-                clearTimeout(fadeOutTimeoutRef.current);
-            }
+            cancelAnimationFrame(id1);
+            cancelAnimationFrame(id2);
+        };
+    }, [renderPreview]);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
         };
     }, []);
 
-    // If no preview data, just render a regular link
     if (!preview) {
         return (
             <a href={href} {...props}>
@@ -148,7 +180,7 @@ function PreviewLink({ href, children, ...props }) {
             {renderPreview && createPortal(
                 <div
                     ref={previewRef}
-                    className={`link-preview ${isBelow ? 'link-preview-below' : 'link-preview-above'} ${preview.isInternal ? 'internal-preview' : ''} ${showPreview ? 'is-visible' : 'is-fading'}`}
+                    className={`link-preview link-preview-${placement} ${preview.isInternal ? 'internal-preview' : ''} ${showPreview ? 'is-visible' : 'is-fading'}`}
                     style={{
                         left: `${position.x}px`,
                         top: `${position.y}px`
@@ -161,7 +193,7 @@ function PreviewLink({ href, children, ...props }) {
                 >
                     {preview.image && (
                         <div className="link-preview-image">
-                            <img src={preview.image} alt="" />
+                            <img src={preview.image} alt={`Preview for ${preview.title}`} />
                         </div>
                     )}
                     <div className="link-preview-content">

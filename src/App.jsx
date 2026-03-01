@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import CourseReviews from './pages/CourseReviews';
+
+const About = lazy(() => import('./pages/About'));
+const Blog = lazy(() => import('./pages/Blog'));
+const CourseReviews = lazy(() => import('./pages/CourseReviews'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -26,6 +28,7 @@ function AnimatedRoutes() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<Blog />} />
           <Route path="/courses" element={<CourseReviews />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </>
@@ -138,6 +141,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <a href="#main" className="skip-link">Skip to main content</a>
       <header className="header animate-blur-fade">
         <div className="header-inner">
           <Navigation />
@@ -155,7 +159,9 @@ function App() {
         </div>
       </header>
 
-      <AnimatedRoutes />
+      <Suspense fallback={<div className="container" style={{ paddingTop: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }} aria-live="polite">Loading…</div>}>
+        <AnimatedRoutes />
+      </Suspense>
     </BrowserRouter>
   );
 }

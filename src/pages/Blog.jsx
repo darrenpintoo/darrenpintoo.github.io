@@ -144,7 +144,7 @@ function Blog() {
                 <meta name="description" content={activePostData ? activePostData.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
                 <link rel="canonical" href={activePostData ? `https://darrenpinto.me/blog/${slug}` : "https://darrenpinto.me/blog"} />
             </Helmet>
-            <main className="container">
+            <main id="main" className="container">
                 {slug ? (
                     // Single Post View with Sidebar
                     <div className={`blog-post-view pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
@@ -154,7 +154,18 @@ function Blog() {
                         </Link>
 
                         {!activePostData ? (
-                            <div className="loading-state">Post not found</div>
+                            <div className="loading-state">
+                                <p>Post not found.</p>
+                                <p style={{ marginTop: '1rem' }}>
+                                    <Link to="/blog" className="back-link" style={{ display: 'inline-flex', marginRight: '1rem' }}>
+                                        <ArrowLeft size={18} style={{ marginRight: '0.25rem' }} />
+                                        Back to Blog
+                                    </Link>
+                                    <Link to="/" className="back-link" style={{ display: 'inline-flex' }}>
+                                        Home
+                                    </Link>
+                                </p>
+                            </div>
                         ) : (
                             <div className="blog-post-layout">
                                 {/* Sidebar TOC - Sticky on Left */}

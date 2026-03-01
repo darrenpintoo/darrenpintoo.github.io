@@ -62,7 +62,9 @@ const courses = [
     },
     {
         semester: "Fall 2025",
-        reflection: "I feel as though the course schedule I took was perfect for my first semester at CMU. The workload wasn't extremely demanding, which allowed me to become involved in out of the classroom activities like ScottyLabs, pickleball, and hackathons. My Tuesdays and Thursdays were mostly free and would be the day that I predominantly spent getting ahead for the week. Thursday, in particular, would be quite brutal as 21-127 HW and 18-100 labs were due that night. The 21-127 HW alone would take me 8+ hours to conceptual, solve, and latex, so I needed to plan around this. ",
+        reflection: `I feel as though the course schedule I took was perfect for my first semester at CMU. The workload wasn't extremely demanding, which allowed me to become involved in out-of-the-classroom activities like ScottyLabs, pickleball, and hackathons. My Tuesdays and Thursdays were mostly free and were the days I predominantly spent getting ahead for the week.
+
+Thursday, in particular, would be quite brutal as 21-127 HW and 18-100 labs were due that night. The 21-127 HW alone would take me 8+ hours to conceptualize, solve, and LaTeX, so I needed to plan around this.`,
         items: [
             {
                 code: "21-241",
@@ -71,7 +73,9 @@ const courses = [
                 units: "11",
                 hoursPerWeek: "6-8",
                 difficulty: "Medium",
-                description: `Going into this course, I had lacked any (rigorous) introduction to linear algebra. With this being my first \'non-proof-based\' math course, I was quite surprised at the structure of the course. The lectures would mostly consist of the professor writing out formal proofs towards theorems. Although this helped me gain a more intutive understanding of the topics, I feel as though this was an interesting structure for an application-oriented math course. Lectures would have sparse turnouts, and sometimes the professor would have to start class with <5 people in the lecture hall. My recitation TA for this course was fantastic and undoubtably helped me gain deeper intution for the course content.`
+                description: `Going into this course, I had lacked any (rigorous) introduction to linear algebra. With this being my first 'non-proof-based' math course, I was quite surprised at the structure of the course. The lectures would mostly consist of the professor writing out formal proofs towards theorems. Although this helped me gain a more intuitive understanding of the topics, I feel as though this was an interesting structure for an application-oriented math course.
+
+Lectures would have sparse turnouts, and sometimes the professor would have to start class with <5 people in the lecture hall. My recitation TA for this course was fantastic and undoubtedly helped me gain deeper intuition for the course content.`
             },
             {
                 code: "18-100",
@@ -80,7 +84,9 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "6-8",
                 difficulty: "Easy",
-                description: `I feel as though this course is quite effective in what it seeks out to do: provide an overview of ECE. At the cost of doing this, there is a signifcant amount of \'skimming\' topics to ensure that the class covers all the topics. The labs were quite enjoyable and we got to keep a ton of EE-related circuit components at the end of the semester! Jimmy is a very accomidating professor, after our exam 2 median was <70, he even offered an optional retake for students to replace that score if they desired.`
+                description: `I feel as though this course is quite effective in what it seeks out to do: provide an overview of ECE. At the cost of doing this, there is a significant amount of 'skimming' topics to ensure that the class covers all the topics.
+
+The labs were quite enjoyable and we got to keep a ton of EE-related circuit components at the end of the semester! Jimmy is a very accommodating professor—after our exam 2 median was <70, he even offered an optional retake for students to replace that score if they desired.`
             },
             {
                 code: "21-127",
@@ -89,7 +95,9 @@ const courses = [
                 units: "12",
                 hoursPerWeek: "12-15",
                 difficulty: "Hard",
-                description: `I had previously taken a discrete math course at my local community college during high school (seniro summer), however that course greatly lacked the rigor at which greggo taught this course. I thoroughly enjoyed this course as it forced me to think differently. The weekly homeworks for this course conditioned me to grapple with difficult programs and proofs (would take me all of Thursday to complete). The exams (~median 75) were easier than the homeworks, however, the final was quite brutal (median was a 68).`,
+                description: `I had previously taken a discrete math course at my local community college during high school (senior summer); however, that course greatly lacked the rigor at which Greggo taught this course. I thoroughly enjoyed this course as it forced me to think differently.
+
+The weekly homeworks conditioned me to grapple with difficult problems and proofs (would take me all of Thursday to complete). The exams (~median 75) were easier than the homeworks; however, the final was quite brutal (median was a 68).`,
                 favorite: true
             },
             {
@@ -99,7 +107,9 @@ const courses = [
                 units: "9",
                 hoursPerWeek: "4-6",
                 difficulty: "Easy",
-                description: `The core material covered in this class was very similar to my high school AP Lang course as we explored rhetoric through analyzing text. I had this course at 8 am so attendance for the class in general was not great, but the professor was very accomodating and nice!`
+                description: `The core material covered in this class was very similar to my high school AP Lang course as we explored rhetoric through analyzing text.
+
+I had this course at 8 am so attendance for the class in general was not great, but the professor was very accommodating and nice!`
             },
             {
                 code: "39-101",
@@ -108,7 +118,9 @@ const courses = [
                 units: "1",
                 hoursPerWeek: "1",
                 difficulty: "Very Easy",
-                description: `The course offered the chance to learn more about CMU's offering within and beyond the college of engineering. Homework in this class was very minimal as a completion-based reflection (~250 words) was the only assignment every week. I felt as though small group sessions were a good way to connect with an upperclassmen in engineering, but I already knew my TA from o-week! `
+                description: `The course offered the chance to learn more about CMU's offerings within and beyond the college of engineering. Homework in this class was very minimal—a completion-based reflection (~250 words) was the only assignment every week.
+
+I felt as though small group sessions were a good way to connect with an upperclassman in engineering, but I already knew my TA from o-week!`
             }
         ]
     }
@@ -134,8 +146,18 @@ const allCoursesList = courses.flatMap(sem =>
     sem.items.map(course => ({ ...course, semester: sem.semester }))
 );
 
+const STORAGE_KEY = 'coursesExpandAll';
+
 function CourseReviews() {
-    const [expandedCourses, setExpandedCourses] = useState(new Set());
+    const allCodes = allCoursesList.map(c => c.code);
+    const [expandedCourses, setExpandedCourses] = useState(() => {
+        try {
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(STORAGE_KEY) === 'true') {
+                return new Set(allCodes);
+            }
+        } catch (_) { /* ignore */ }
+        return new Set();
+    });
     const [activeSemester, setActiveSemester] = useState("");
 
     // Toggle logic
@@ -149,10 +171,14 @@ function CourseReviews() {
     };
 
     const toggleAll = () => {
-        const allCodes = allCoursesList.map(c => c.code);
         const isAllExpanded = allCodes.every(code => expandedCourses.has(code));
-        if (isAllExpanded) setExpandedCourses(new Set());
-        else setExpandedCourses(new Set(allCodes));
+        if (isAllExpanded) {
+            setExpandedCourses(new Set());
+            try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch (_) { /* ignore */ }
+        } else {
+            setExpandedCourses(new Set(allCodes));
+            try { sessionStorage.setItem(STORAGE_KEY, 'true'); } catch (_) { /* ignore */ }
+        }
     };
 
     const isAllExpanded = allCoursesList.every(c => expandedCourses.has(c.code));
@@ -216,7 +242,7 @@ function CourseReviews() {
                 <meta name="description" content="A list of my computer science and engineering coursework at CMU, including reviews and project links." />
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
-            <main className="container">
+            <main id="main" className="container">
                 <div className="animate-blur-fade page-header-flex">
                     <div>
                         <h1>CMU Course Reviews</h1>
@@ -413,7 +439,9 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                 <div className="course-expand-inner">
                                     <div className="course-expanded">
                                         <div className="course-description">
-                                            <p>{course.description}</p>
+                                            {course.description.split(/\n\n+/).map((para, i) => (
+                                                <p key={i}>{para.trim()}</p>
+                                            ))}
                                         </div>
                                         <div className="course-stats">
                                             <div className="stat-item">
@@ -440,7 +468,11 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                         <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
                     </div>
                     {semester.reflection && (
-                        <p className="review-text">{semester.reflection}</p>
+                        <>
+                            {semester.reflection.split(/\n\n+/).map((para, i) => (
+                                <p key={i} className="review-text">{para.trim()}</p>
+                            ))}
+                        </>
                     )}
                 </div>
             </div>

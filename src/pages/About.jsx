@@ -40,7 +40,7 @@ function About() {
                 <meta name="description" content="Darren Pinto's Personal Portfolio. Undergraduate Student & Robotics Researcher at Carnegie Mellon University building intelligent systems." />
                 <link rel="canonical" href="https://darrenpinto.me/" />
             </Helmet>
-            <main className="container">
+            <main id="main" className="container">
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>
                     <p className="subtitle">
@@ -66,7 +66,7 @@ function About() {
                         <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
                         At CMU, I conduct research at the <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink>,
                         exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
-                        depth perception for robotic learning experiments. This upcoming summer I will be interning at IBM in their Silicon Valley Labratory.
+                        depth perception for robotic learning experiments. This upcoming summer I will be interning at <PreviewLink href="https://www.ibm.com/" target="_blank" rel="noreferrer">IBM</PreviewLink> in their Silicon Valley Laboratory.
                     </p>
 
                     <p>
