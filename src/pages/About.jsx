@@ -59,6 +59,7 @@ function About() {
                     <p className="subtitle">
                         Undergraduate Student & Robotics Researcher at <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>
                     </p>
+                    <p className="location">Based in Pittsburgh, PA</p>
                 </div>
 
                 <div className="profile-section prose animate-blur-fade delay-100">
@@ -74,6 +75,10 @@ function About() {
                         Hi, I'm Darren. I build intelligent systems at the intersection of hardware and software,
                         with a focus on <strong>robotics</strong>, <strong>reinforcement learning</strong>,
                         and <strong>embedded systems</strong>.
+                    </p>
+
+                    <p className="currently">
+                        <strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.
                     </p>
 
                     <p>
@@ -102,28 +107,30 @@ function About() {
                     </p>
 
                     <p style={{ marginTop: '2rem', fontStyle: 'italic', fontSize: '0.95rem' }}>
-                        Check out my <Link to="/blog">blogs</Link> or <Link to="/courses">CMU course reviews</Link>.
+                        I write about hackathons, projects, and coursework—check out my latest below, or browse my <Link to="/blog">blog</Link> and <Link to="/courses">CMU course reviews</Link>.
                     </p>
-                </div>
 
-                {latestPost && (
-                    <Link to={`/blog/${latestPost.slug}`} className="latest-post-card animate-blur-fade delay-100">
-                        <div className="latest-post-card-image">
-                            <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
-                        </div>
-                        <div className="latest-post-card-content">
-                            <span className="latest-post-card-label">Latest from the blog</span>
-                            <h3 className="latest-post-card-title">{latestPost.title}</h3>
-                            <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
-                            <span className="latest-post-card-meta">
-                                {formatDate(latestPost.date)} · {latestPost.category}
-                            </span>
-                            <span className="latest-post-card-cta">
-                                Read post <ChevronRight size={16} />
-                            </span>
-                        </div>
-                    </Link>
-                )}
+                    {latestPost && (
+                        <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
+                            <div className="latest-post-card-image">
+                                <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
+                            </div>
+                            <div className="latest-post-card-content">
+                                <span className="latest-post-card-label">Latest post</span>
+                                <h3 className="latest-post-card-title">{latestPost.title}</h3>
+                                <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
+                                <div className="latest-post-card-bottom">
+                                    <span className="latest-post-card-meta">
+                                        {formatDate(latestPost.date)} · {latestPost.category}
+                                    </span>
+                                    <span className="latest-post-card-cta">
+                                        Read <ChevronRight size={14} />
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
+                    )}
+                </div>
 
                 <div
                     ref={footerRef}
