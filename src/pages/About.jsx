@@ -44,8 +44,6 @@ function About() {
         };
     }, []);
 
-
-
     return (
         <PageLayout>
             <Helmet>
@@ -77,9 +75,10 @@ function About() {
                         and <strong>embedded systems</strong>.
                     </p>
 
-                    <p className="currently">
-                        <strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.
-                    </p>
+                    <div className="status-pill">
+                        <span className="status-dot" />
+                        <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
+                    </div>
 
                     <p>
                         I am an Electrical and Computer Engineering student at{' '}

@@ -30,10 +30,11 @@ function AboutSkeleton() {
                 />
                 <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} />
                 <S width="95%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.08} />
-                <S width="88%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.16} />
-                <S width="92%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.24} />
-                <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.32} />
-                <S width="75%" height="1rem" style={{ marginBottom: '1.5rem' }} delay={0.4} />
+                <S width="88%" height="1rem" style={{ marginBottom: '1rem' }} delay={0.16} />
+                <S width="280px" height="2rem" radius="40px" delay={0.2} style={{ marginBottom: '1.25rem', maxWidth: '100%' }} />
+                <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.24} />
+                <S width="92%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.28} />
+                <S width="75%" height="1rem" style={{ marginBottom: '1.5rem' }} delay={0.32} />
                 <S width="98%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.08} />
                 <S width="90%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.16} />
                 <S width="95%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.24} />
