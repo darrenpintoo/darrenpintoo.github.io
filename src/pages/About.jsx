@@ -54,19 +54,17 @@ function About() {
             </Helmet>
             <main id="main" className="container">
                 <div className="animate-blur-fade">
-                    <div className="page-header-flex">
-                        <div>
-                            <h1><strong>Darren</strong> Pinto</h1>
-                            <p className="subtitle" style={{ marginBottom: '0.75rem' }}>
-                                Undergraduate Student & Robotics Researcher at{' '}
-                                <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
-                            </p>
-                        </div>
-                        <div className="status-pill">
+                    <div className="header-top-row">
+                        <h1><strong>Darren</strong> Pinto</h1>
+                        <div className="status-pill header-status-pill">
                             <span className="status-dot" />
                             <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
                         </div>
                     </div>
+                    <p className="subtitle" style={{ marginBottom: '2.5rem' }}>
+                        Undergraduate Student & Robotics Researcher at{' '}
+                        <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
+                    </p>
                 </div>
 
                 <div className="profile-section prose animate-blur-fade delay-100">

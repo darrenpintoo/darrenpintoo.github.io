@@ -1354,6 +1354,18 @@ h2 {
   gap: 1rem;
 }
 
+.header-top-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.header-status-pill {
+  margin-bottom: 0;
+}
+
 .text-action-btn {
   /* Consistent Glass - matches liquid glass styling */
   background: linear-gradient(135deg,
