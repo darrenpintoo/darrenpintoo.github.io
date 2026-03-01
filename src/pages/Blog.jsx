@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, ChevronRight, Eye } from 'lucide-react';
 import { getAllPosts } from '../utils/posts';
 
 function parseFrontmatter(markdown) {
@@ -62,6 +62,7 @@ function Blog() {
     const { slug } = useParams();
     const [isVisible, setIsVisible] = useState(false);
     const [activeSection, setActiveSection] = useState('');
+    const [viewCount, setViewCount] = useState(null);
 
     const blogPosts = useMemo(() => getAllPosts(), []);
 
@@ -71,6 +72,29 @@ function Blog() {
         }, 50);
         return () => clearTimeout(timer);
     }, []);
+
+    // Fetch and increment view count for the active post
+    useEffect(() => {
+        if (!slug) return;
+
+        let cancelled = false;
+        const namespace = 'darrenpinto-blog-views';
+
+        fetch(`https://api.countapi.xyz/hit/${namespace}/${slug}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (!cancelled && data && typeof data.value === 'number') {
+                    setViewCount(data.value);
+                }
+            })
+            .catch(() => {
+                // Fail silently if the view counter service is unavailable
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [slug]);
 
     const activePostData = useMemo(() => {
         if (!slug) return null;
@@ -241,6 +265,12 @@ function Blog() {
                                                     <Tag size={14} />
                                                     {activePostData.category}
                                                 </span>
+                                                {viewCount !== null && (
+                                                    <span className="meta-item">
+                                                        <Eye size={14} />
+                                                        {viewCount.toLocaleString()} views
+                                                    </span>
+                                                )}
                                             </div>
                                         </header>
                                         <div className="markdown-content">
