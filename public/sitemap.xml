@@ -19,8 +19,26 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://darrenpinto.me/blog/algorithms-purpose-2026-acm-cmu</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://darrenpinto.me/blog/databricks-un-datathon-cmu</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://darrenpinto.me/blog/implementing-slam-in-1-week</loc>
     <lastmod>2026-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://darrenpinto.me/blog/prodhacks-2026-cmu</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

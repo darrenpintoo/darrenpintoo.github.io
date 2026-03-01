@@ -1,9 +1,9 @@
 ---
-title: Winning NexHacks 2026
-date: 2026-01-24
-category: Hackathon
-image: /nexhacks-2026-win.jpg
-excerpt: A technical dive into our CMU build18 hackathon
+title: Implementing SLAM in 1 Week
+date: 2026-01-17
+category: Robotics
+image: /build-18-thumbnail.png
+excerpt: A technical dive into implementing SLAM for a robotics project at CMU's Build 18 showcase.
 ---
 
 work in progress...
