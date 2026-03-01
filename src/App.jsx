@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import PageSkeleton from './components/PageSkeleton';
 
 const About = lazy(() => import('./pages/About'));
 const Blog = lazy(() => import('./pages/Blog'));
@@ -159,7 +160,7 @@ function App() {
         </div>
       </header>
 
-      <Suspense fallback={<div className="container" style={{ paddingTop: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }} aria-live="polite">Loading…</div>}>
+      <Suspense fallback={<PageSkeleton />}>
         <AnimatedRoutes />
       </Suspense>
     </BrowserRouter>

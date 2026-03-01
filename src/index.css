@@ -2268,6 +2268,53 @@ a:not(.prose a) {
   opacity: 0.88;
 }
 
+/* Skeleton Loading */
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-page {
+  padding-top: 3rem;
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 0%,
+    var(--bg-card-hover) 40%,
+    var(--bg-card) 80%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: var(--max-width);
+}
+
+.skeleton-card {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+@media (max-width: 1024px) {
+  .skeleton-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .skeleton-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Print styles */
 @media print {
   .skip-link,
