@@ -155,7 +155,7 @@ function CourseReviews() {
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(STORAGE_KEY) === 'true') {
                 return new Set(allCodes);
             }
-        } catch (_) { /* ignore */ }
+        } catch { /* ignore */ }
         return new Set();
     });
     const [activeSemester, setActiveSemester] = useState("");
@@ -174,10 +174,10 @@ function CourseReviews() {
         const isAllExpanded = allCodes.every(code => expandedCourses.has(code));
         if (isAllExpanded) {
             setExpandedCourses(new Set());
-            try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch (_) { /* ignore */ }
+            try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch { /* ignore */ }
         } else {
             setExpandedCourses(new Set(allCodes));
-            try { sessionStorage.setItem(STORAGE_KEY, 'true'); } catch (_) { /* ignore */ }
+            try { sessionStorage.setItem(STORAGE_KEY, 'true'); } catch { /* ignore */ }
         }
     };
 

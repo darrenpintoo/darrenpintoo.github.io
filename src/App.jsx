@@ -47,17 +47,15 @@ function Navigation() {
   const indicatorRef = useRef(null);
   const linksRef = useRef({});
 
-  // Determine which nav item is active based on pathname
-  const getActiveKey = () => {
-    if (location.pathname === '/') return '/';
-    if (location.pathname.startsWith('/blog')) return '/blog';
-    if (location.pathname.startsWith('/courses')) return '/courses';
-    return '/';
-  };
-
   // Update indicator position
   useLayoutEffect(() => {
-    const activeKey = getActiveKey();
+    const activeKey = location.pathname === '/'
+      ? '/'
+      : location.pathname.startsWith('/blog')
+        ? '/blog'
+        : location.pathname.startsWith('/courses')
+          ? '/courses'
+          : '/';
     const activeLink = linksRef.current[activeKey];
     const nav = navRef.current;
     const indicator = indicatorRef.current;
@@ -69,6 +67,32 @@ function Navigation() {
       indicator.style.width = `${linkRect.width}px`;
       indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
     }
+  }, [location.pathname]);
+
+  // Keep indicator aligned when viewport size changes
+  useEffect(() => {
+    const handleResize = () => {
+      const activeKey = location.pathname === '/'
+        ? '/'
+        : location.pathname.startsWith('/blog')
+          ? '/blog'
+          : location.pathname.startsWith('/courses')
+            ? '/courses'
+            : '/';
+      const activeLink = linksRef.current[activeKey];
+      const nav = navRef.current;
+      const indicator = indicatorRef.current;
+
+      if (activeLink && nav && indicator) {
+        const navRect = nav.getBoundingClientRect();
+        const linkRect = activeLink.getBoundingClientRect();
+        indicator.style.width = `${linkRect.width}px`;
+        indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [location.pathname]);
 
   return (
@@ -202,4 +226,3 @@ function App() {
 }
 
 export default App;
-

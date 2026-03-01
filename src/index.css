@@ -7,7 +7,7 @@
   --text-primary: #333;
   --text-secondary: #555;
   --text-muted: #444;
-  --accent: #f25c54;
+  --accent: #9d2235;
   --border-color: #eaeaea;
   --infinite-text: #f4f4f4;
 
@@ -31,6 +31,7 @@
   --text-primary: #e0e0e0;
   --text-secondary: #a0a0a0;
   --text-muted: #b0b0b0;
+  --accent: #d05a6e;
   --border-color: #2a2a2a;
   --infinite-text: #2a2a2a;
 
@@ -462,13 +463,6 @@ h2 {
   font-size: 1rem;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
-}
-
-.location {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 2.5rem;
-  opacity: 0.9;
 }
 
 /* Latest Post Card - Inline with prose, liquid glass */

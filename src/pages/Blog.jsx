@@ -119,6 +119,11 @@ function Blog() {
         }
     };
 
+    const handleTocClick = (event, id) => {
+        event.preventDefault();
+        scrollToSection(id);
+    };
+
     // Custom renderer: IDs for headings, alt fallback for images
     const MarkdownComponents = {
         h2: ({ children, ...props }) => {
@@ -210,8 +215,10 @@ function Blog() {
                                             {activePostData.toc.map((item) => (
                                                 <li key={item.slug} style={{ paddingLeft: item.level === 3 ? '0.75rem' : '0' }}>
                                                     <a
+                                                        href={`#${item.slug}`}
                                                         className={`toc-link ${activeSection === item.slug ? 'active' : ''}`}
-                                                        onClick={() => scrollToSection(item.slug)}
+                                                        onClick={(event) => handleTocClick(event, item.slug)}
+                                                        aria-current={activeSection === item.slug ? 'location' : undefined}
                                                     >
                                                         {item.text}
                                                     </a>
@@ -302,4 +309,3 @@ function Blog() {
 }
 
 export default Blog;
-

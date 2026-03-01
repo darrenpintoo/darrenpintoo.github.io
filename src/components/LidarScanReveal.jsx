@@ -25,7 +25,9 @@ function LidarScanReveal({ onComplete, contentReady = true }) {
     const particlesRef = useRef(null);
     const dimsRef = useRef({ w: 0, h: 0, cols: 0, rows: 0 });
 
-    onCompleteRef.current = onComplete;
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
 
     const finish = useCallback(() => {
         if (skippedRef.current) return;

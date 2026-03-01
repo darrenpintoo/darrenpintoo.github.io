@@ -35,16 +35,6 @@ const linkPreviews = {
     }
 };
 
-// Preload images
-if (typeof window !== 'undefined') {
-    Object.values(linkPreviews).forEach(preview => {
-        if (preview.image) {
-            const img = new Image();
-            img.src = preview.image;
-        }
-    });
-}
-
 function PreviewLink({ href, children, ...props }) {
     const [showPreview, setShowPreview] = useState(false);
     const [renderPreview, setRenderPreview] = useState(false);
@@ -98,7 +88,7 @@ function PreviewLink({ href, children, ...props }) {
         return { x, y, placement: verticalPlacement };
     };
 
-    const handleMouseEnter = (e) => {
+    const handleMouseEnter = () => {
         if (!preview) return;
 
         if (fadeOutTimeoutRef.current) {

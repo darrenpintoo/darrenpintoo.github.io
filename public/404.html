@@ -33,8 +33,14 @@
     <script>
         // Apply theme immediately before React loads
         (function () {
-            var saved = localStorage.getItem('theme');
-            var theme = saved ? saved : 'dark';
+            var saved = null;
+            try {
+                saved = localStorage.getItem('theme');
+            } catch (err) {
+                saved = null;
+            }
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = saved || (prefersDark ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.getElementById('theme-color-meta');
             if (meta) meta.setAttribute('content', theme === 'dark' ? '#121212' : '#ffffff');

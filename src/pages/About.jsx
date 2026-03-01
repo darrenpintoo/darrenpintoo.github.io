@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import PreviewLink from '../components/PreviewLink';
 import { getLatestPost } from '../utils/posts';
 import { ChevronRight } from 'lucide-react';
+import FadeIn from '../components/FadeIn';
 
 function formatDate(isoDate) {
     if (!isoDate || isoDate === 'Unknown Date') return isoDate;
@@ -54,10 +55,9 @@ function About() {
             <main id="main" className="container">
                 <div className="animate-blur-fade">
                     <h1><strong>Darren</strong> Pinto</h1>
-                    <p className="subtitle">
-                        Undergraduate Student & Robotics Researcher at <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>
+                    <p className="subtitle" style={{ marginBottom: '2.5rem' }}>
+                        Undergraduate Student & Robotics Researcher at <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink> in Pittsburgh, PA.
                     </p>
-                    <p className="location">Based in Pittsburgh, PA</p>
                 </div>
 
                 <div className="profile-section prose animate-blur-fade delay-100">
@@ -105,29 +105,31 @@ function About() {
                         I'm always exploring new ideas and working on creative problems. Feel free to reach out—I'm happy to chat.
                     </p>
 
-                    <p style={{ marginTop: '2rem', fontStyle: 'italic', fontSize: '0.95rem' }}>
+                    <p style={{ marginTop: '2rem', fontSize: '0.95rem' }}>
                         I write about hackathons, projects, and coursework—check out my latest below, or browse my <Link to="/blog">blog</Link> and <Link to="/courses">CMU course reviews</Link>.
                     </p>
 
                     {latestPost && (
-                        <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
-                            <div className="latest-post-card-image">
-                                <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
-                            </div>
-                            <div className="latest-post-card-content">
-                                <span className="latest-post-card-label">Latest post</span>
-                                <h3 className="latest-post-card-title">{latestPost.title}</h3>
-                                <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
-                                <div className="latest-post-card-bottom">
-                                    <span className="latest-post-card-meta">
-                                        {formatDate(latestPost.date)} · {latestPost.category}
-                                    </span>
-                                    <span className="latest-post-card-cta">
-                                        Read <ChevronRight size={14} />
-                                    </span>
+                        <FadeIn>
+                            <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
+                                <div className="latest-post-card-image">
+                                    <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
                                 </div>
-                            </div>
-                        </Link>
+                                <div className="latest-post-card-content">
+                                    <span className="latest-post-card-label">Latest post</span>
+                                    <h3 className="latest-post-card-title">{latestPost.title}</h3>
+                                    <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
+                                    <div className="latest-post-card-bottom">
+                                        <span className="latest-post-card-meta">
+                                            {formatDate(latestPost.date)} · {latestPost.category}
+                                        </span>
+                                        <span className="latest-post-card-cta">
+                                            Read <ChevronRight size={14} />
+                                        </span>
+                                    </div>
+                                </div>
+                            </Link>
+                        </FadeIn>
                     )}
                 </div>
 
