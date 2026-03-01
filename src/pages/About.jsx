@@ -54,10 +54,19 @@ function About() {
             </Helmet>
             <main id="main" className="container">
                 <div className="animate-blur-fade">
-                    <h1><strong>Darren</strong> Pinto</h1>
-                    <p className="subtitle" style={{ marginBottom: '2.5rem' }}>
-                        Undergraduate Student & Robotics Researcher at <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink> in Pittsburgh, PA.
-                    </p>
+                    <div className="page-header-flex">
+                        <div>
+                            <h1><strong>Darren</strong> Pinto</h1>
+                            <p className="subtitle" style={{ marginBottom: '0.75rem' }}>
+                                Undergraduate Student & Robotics Researcher at{' '}
+                                <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
+                            </p>
+                        </div>
+                        <div className="status-pill">
+                            <span className="status-dot" />
+                            <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="profile-section prose animate-blur-fade delay-100">
@@ -74,11 +83,6 @@ function About() {
                         with a focus on <strong>robotics</strong>, <strong>reinforcement learning</strong>,
                         and <strong>embedded systems</strong>.
                     </p>
-
-                    <div className="status-pill">
-                        <span className="status-dot" />
-                        <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
-                    </div>
 
                     <p>
                         I am an Electrical and Computer Engineering student at{' '}
