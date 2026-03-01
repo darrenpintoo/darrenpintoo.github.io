@@ -513,8 +513,8 @@ h2 {
   transform: none;
 }
 
-/* ========== Pixel Dissolve Reveal ========== */
-.lidar-overlay {
+/* ========== Intro Animation Overlay (commented out) ========== */
+/* .lidar-overlay {
   position: fixed;
   inset: 0;
   z-index: 10002;
@@ -560,8 +560,8 @@ h2 {
 [data-theme="light"] .lidar-skip:hover {
   color: rgba(0, 0, 0, 0.5);
   border-color: rgba(0, 0, 0, 0.25);
-}
-/* ========== End Pixel Dissolve Reveal ========== */
+} */
+/* ========== End Intro Animation Overlay ========== */
 
 /* Infinite Text */
 .infinite-scroll-container {
@@ -2389,23 +2389,27 @@ a:not(.prose a) {
   opacity: 1;
 }
 
-/* Staggered content reveal after lidar */
-.main-content {
+/* Staggered content reveal after intro animation (commented out) */
+/* .main-content {
   opacity: 0;
 }
 
 .main-content.content-revealed {
-  animation: contentReveal 0.5s ease-out 0.15s forwards;
+  animation: contentReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes contentReveal {
   from {
     opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
+    filter: blur(0px);
+    transform: scale(1);
   }
-}
+} */
 
 .suspense-delayed-fallback {
   animation: skeleton-fallback-enter 220ms ease-out both;
