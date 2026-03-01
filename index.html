@@ -10,8 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="description" content="Darren Pinto's personal portfolio. Undergraduate student and robotics researcher at Carnegie Mellon University building intelligent systems." />
     <link rel="preconnect" href="https://cloud.umami.is" />
-    <script defer src="https://cloud.umami.is/script.js"
-        data-website-id="5085e392-f6e1-4180-b5b9-d7fcfd42da29"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
     <title>Darren Pinto</title>
     <meta name="keywords"
         content="Darren Pinto, Carnegie Mellon University, CMU, Robotics, Engineering, Computer Engineering, Portfolio, Embedded Systems, Reinforcement Learning" />
@@ -57,6 +58,7 @@
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.getElementById('theme-color-meta');
             if (meta) meta.setAttribute('content', theme === 'dark' ? '#121212' : '#ffffff');
+            document.body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
         })();
     </script>
 </head>

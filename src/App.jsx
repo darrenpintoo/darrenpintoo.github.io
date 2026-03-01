@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef, useLayoutEffect, lazy } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, lazy, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import SuspenseWithFade from './components/SuspenseWithFade';
 import PageSkeleton from './components/PageSkeleton';
+import LidarScanReveal from './components/LidarScanReveal';
+import About from './pages/About';
 
-const About = lazy(() => import('./pages/About'));
 const Blog = lazy(() => import('./pages/Blog'));
 const CourseReviews = lazy(() => import('./pages/CourseReviews'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+
+const ENABLE_LIDAR_ANIMATION = true; // Set to false to disable
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -106,6 +109,27 @@ function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
+  const [showLidar, setShowLidar] = useState(() =>
+    ENABLE_LIDAR_ANIMATION
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [contentReady, setContentReady] = useState(false);
+
+  const handleLidarComplete = useCallback(() => {
+    setShowLidar(false);
+  }, []);
+
+  // Load Umami analytics after main UI is visible (when lidar completes or is disabled)
+  useEffect(() => {
+    if (!showLidar && typeof window !== 'undefined' && !document.querySelector('script[data-website-id="5085e392-f6e1-4180-b5b9-d7fcfd42da29"]')) {
+      const s = document.createElement('script');
+      s.defer = true;
+      s.src = 'https://cloud.umami.is/script.js';
+      s.setAttribute('data-website-id', '5085e392-f6e1-4180-b5b9-d7fcfd42da29');
+      document.head.appendChild(s);
+    }
+  }, [showLidar]);
+
   // Apply theme to document and save to localStorage
   useEffect(() => {
     const theme = isDarkMode ? 'dark' : 'light';
@@ -161,9 +185,21 @@ function App() {
         </div>
       </header>
 
-      <SuspenseWithFade fallback={<PageSkeleton />}>
-        <AnimatedRoutes />
-      </SuspenseWithFade>
+      <div className={`main-content ${!showLidar ? 'content-revealed' : ''}`}>
+        <SuspenseWithFade
+          fallback={<PageSkeleton />}
+          onContentReady={() => setContentReady(true)}
+        >
+          <AnimatedRoutes />
+        </SuspenseWithFade>
+      </div>
+
+      {showLidar && (
+        <LidarScanReveal
+          onComplete={handleLidarComplete}
+          contentReady={contentReady}
+        />
+      )}
     </BrowserRouter>
   );
 }
