@@ -4,10 +4,23 @@ import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 import { Helmet } from 'react-helmet-async';
 import PreviewLink from '../components/PreviewLink';
+import { getLatestPost } from '../utils/posts';
+import { ChevronRight } from 'lucide-react';
+
+function formatDate(isoDate) {
+    if (!isoDate || isoDate === 'Unknown Date') return isoDate;
+    try {
+        const d = new Date(isoDate);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
+        return isoDate;
+    }
+}
 
 function About() {
     const [isVisible, setIsVisible] = useState(false);
     const footerRef = useRef(null);
+    const latestPost = getLatestPost();
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -53,6 +66,8 @@ function About() {
                         src="/darren.jpg"
                         alt="Darren Pinto"
                         className="profile-image"
+                        loading="lazy"
+                        decoding="async"
                     />
 
                     <p>
@@ -90,6 +105,25 @@ function About() {
                         Check out my <Link to="/blog">blogs</Link> or <Link to="/courses">CMU course reviews</Link>.
                     </p>
                 </div>
+
+                {latestPost && (
+                    <Link to={`/blog/${latestPost.slug}`} className="latest-post-card animate-blur-fade delay-100">
+                        <div className="latest-post-card-image">
+                            <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
+                        </div>
+                        <div className="latest-post-card-content">
+                            <span className="latest-post-card-label">Latest from the blog</span>
+                            <h3 className="latest-post-card-title">{latestPost.title}</h3>
+                            <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
+                            <span className="latest-post-card-meta">
+                                {formatDate(latestPost.date)} · {latestPost.category}
+                            </span>
+                            <span className="latest-post-card-cta">
+                                Read post <ChevronRight size={16} />
+                            </span>
+                        </div>
+                    </Link>
+                )}
 
                 <div
                     ref={footerRef}

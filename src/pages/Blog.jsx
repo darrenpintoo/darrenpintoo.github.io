@@ -6,9 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
-
-// Automatically discover all markdown files in src/posts
-const postFiles = import.meta.glob('../posts/*.md', { query: '?raw', eager: true });
+import { getAllPosts } from '../utils/posts';
 
 function parseFrontmatter(markdown) {
     const frontmatterRegex = /^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/;
@@ -30,6 +28,8 @@ function parseFrontmatter(markdown) {
 
     return { metadata, content };
 }
+
+const BASE_URL = 'https://darrenpinto.me';
 
 // Format ISO date to human-readable (e.g. "Feb 22, 2026")
 function formatDate(isoDate) {
@@ -63,22 +63,7 @@ function Blog() {
     const [isVisible, setIsVisible] = useState(false);
     const [activeSection, setActiveSection] = useState('');
 
-    // Process all discovered posts
-    const blogPosts = useMemo(() => {
-        return Object.entries(postFiles).map(([path, module]) => {
-            const fileName = path.split('/').pop().replace('.md', '');
-            const { metadata } = parseFrontmatter(module.default);
-            return {
-                slug: fileName,
-                title: metadata.title || 'Untitled Post',
-                date: metadata.date || 'Unknown Date',
-                category: metadata.category || 'General',
-                excerpt: metadata.excerpt || '',
-                image: metadata.image || '/blog-placeholder.png',
-                content: module.default
-            };
-        }).sort((a, b) => new Date(b.date) - new Date(a.date));
-    }, []);
+    const blogPosts = useMemo(() => getAllPosts(), []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -134,7 +119,7 @@ function Blog() {
         }
     };
 
-    // Custom renderer to add IDs to headings
+    // Custom renderer: IDs for headings, alt fallback for images
     const MarkdownComponents = {
         h2: ({ children, ...props }) => {
             const text = Array.isArray(children) ? children.join('') : children.toString();
@@ -145,15 +130,53 @@ function Blog() {
             const text = Array.isArray(children) ? children.join('') : children.toString();
             const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
             return <h3 id={id} {...props}>{children}</h3>;
-        }
+        },
+        img: ({ src, alt, ...props }) => (
+            <img src={src} alt={alt || 'Blog post image'} loading="lazy" decoding="async" {...props} />
+        ),
     };
+
+    // Article schema for SEO (single post view)
+    const articleSchema = activePostData ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: activePostData.title,
+        description: activePostData.excerpt,
+        image: activePostData.image.startsWith('http') ? activePostData.image : `${BASE_URL}${activePostData.image}`,
+        datePublished: activePostData.date,
+        dateModified: activePostData.date,
+        author: { '@type': 'Person', name: 'Darren Pinto', url: BASE_URL },
+        publisher: { '@type': 'Person', name: 'Darren Pinto', url: BASE_URL },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/blog/${slug}` },
+    } : null;
 
     return (
         <PageLayout>
             <Helmet>
                 <title>{activePostData ? `${activePostData.title} | Blog` : 'Blog | Darren Pinto'}</title>
                 <meta name="description" content={activePostData ? activePostData.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
-                <link rel="canonical" href={activePostData ? `https://darrenpinto.me/blog/${slug}` : "https://darrenpinto.me/blog"} />
+                <link rel="canonical" href={activePostData ? `${BASE_URL}/blog/${slug}` : `${BASE_URL}/blog`} />
+                {activePostData && (
+                    <>
+                        <meta property="og:type" content="article" />
+                        <meta property="og:url" content={`${BASE_URL}/blog/${slug}`} />
+                        <meta property="og:title" content={activePostData.title} />
+                        <meta property="og:description" content={activePostData.excerpt} />
+                        <meta property="og:image" content={activePostData.image.startsWith('http') ? activePostData.image : `${BASE_URL}${activePostData.image}`} />
+                        <meta property="og:site_name" content="Darren Pinto" />
+                        <meta property="article:published_time" content={activePostData.date} />
+                        <meta property="og:image:alt" content={activePostData.title} />
+                        <meta property="twitter:card" content="summary_large_image" />
+                        <meta property="twitter:url" content={`${BASE_URL}/blog/${slug}`} />
+                        <meta property="twitter:title" content={activePostData.title} />
+                        <meta property="twitter:description" content={activePostData.excerpt} />
+                        <meta property="twitter:image" content={activePostData.image.startsWith('http') ? activePostData.image : `${BASE_URL}${activePostData.image}`} />
+                        <meta property="twitter:image:alt" content={activePostData.title} />
+                        {articleSchema && (
+                            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+                        )}
+                    </>
+                )}
             </Helmet>
             <main id="main" className="container">
                 {slug ? (
@@ -241,7 +264,7 @@ function Blog() {
                                     {blogPosts.map((post) => (
                                         <Link to={`/blog/${post.slug}`} key={post.slug} className="post-card">
                                             <div className="post-card-image-wrapper">
-                                                <img src={post.image} alt={post.title} className="post-card-image" />
+                                                <img src={post.image} alt={post.title} className="post-card-image" loading="lazy" decoding="async" />
                                             </div>
                                             <div className="post-card-content">
 

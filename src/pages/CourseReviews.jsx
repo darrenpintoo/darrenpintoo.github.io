@@ -405,6 +405,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                             role="button"
                             tabIndex={0}
                             aria-expanded={expandedCourses.has(course.code)}
+                            aria-controls={`${course.code}-content`}
                         >
                             <div className="course-header">
                                 <div className="course-info">
@@ -435,7 +436,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                     </span>
                                 </div>
                             </div>
-                            <div className={`course-expand-wrapper ${expandedCourses.has(course.code) ? 'open' : ''}`}>
+                            <div id={`${course.code}-content`} className={`course-expand-wrapper ${expandedCourses.has(course.code) ? 'open' : ''}`}>
                                 <div className="course-expand-inner">
                                     <div className="course-expanded">
                                         <div className="course-description">
