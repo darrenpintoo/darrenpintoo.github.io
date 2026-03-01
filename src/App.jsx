@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useLayoutEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, lazy } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import SuspenseWithFade from './components/SuspenseWithFade';
 import PageSkeleton from './components/PageSkeleton';
 
 const About = lazy(() => import('./pages/About'));
@@ -160,9 +161,9 @@ function App() {
         </div>
       </header>
 
-      <Suspense fallback={<PageSkeleton />}>
+      <SuspenseWithFade fallback={<PageSkeleton />}>
         <AnimatedRoutes />
-      </Suspense>
+      </SuspenseWithFade>
     </BrowserRouter>
   );
 }
