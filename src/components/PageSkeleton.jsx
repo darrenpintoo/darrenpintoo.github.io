@@ -25,8 +25,10 @@ function AboutSkeleton() {
 
             <div className="profile-section" style={{ overflow: 'hidden' }}>
                 <S
-                    width="200px" height="200px" radius="50%"
-                    style={{ float: 'left', marginRight: '2rem', marginBottom: '1rem', flexShrink: 0 }}
+                    width="clamp(11rem, 28vw, 14rem)"
+                    height="clamp(11rem, 28vw, 14rem)"
+                    radius="50%"
+                    style={{ float: 'left', marginRight: '1.5rem', marginBottom: '0.85rem', flexShrink: 0 }}
                 />
                 <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} />
                 <S width="95%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.08} />
