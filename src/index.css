@@ -620,100 +620,31 @@ h2 {
   }
 }
 
-/* Profile section with floated image + circular text halo (SVG textPath) */
+/* Profile section with floated image */
 .profile-section {
   overflow: visible;
 }
 
-.profile-halo-float {
+.profile-image {
   float: left;
-  /* Scaled for legible halo type; still floats beside prose */
-  --profile-halo-size: clamp(11rem, 28vw, 14rem);
-  width: var(--profile-halo-size);
-  height: var(--profile-halo-size);
-  margin-right: 1.5rem;
-  margin-bottom: 0.85rem;
-  shape-outside: circle(50% at 50% 50%);
-}
-
-.profile-halo {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  /* Tunables (override inline on .profile-halo-float if you prefer) */
-  --profile-halo-text-color: var(--text-secondary);
-  --profile-halo-font: var(--font-sans);
-  --profile-halo-letter-spacing: 0.08em;
-  --profile-halo-spin-duration: 32s;
-}
-
-.profile-halo-svg {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.profile-halo-spin {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
-  animation: profile-halo-rotate var(--profile-halo-spin-duration) linear infinite;
-}
-
-@keyframes profile-halo-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.profile-halo-text {
-  fill: var(--profile-halo-text-color);
-  font-family: var(--profile-halo-font);
-  /* SVG user units (viewBox 100): ~3.5 ≈ 11–14px at typical component sizes */
-  font-size: 3.5px;
-  font-weight: 600;
-  letter-spacing: var(--profile-halo-letter-spacing);
-  text-transform: uppercase;
-}
-
-.profile-halo-img {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  /* Slightly smaller photo vs ring = clearer band between face and text */
-  width: 62%;
-  height: 62%;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
   object-position: center 15%;
+  margin-right: 2rem;
+  margin-bottom: 1rem;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 3px solid rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 6px 24px rgba(0, 0, 0, 0.1),
-    0 2px 6px rgba(0, 0, 0, 0.06);
-  z-index: 1;
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-[data-theme="dark"] .profile-halo-img {
+[data-theme="dark"] .profile-image {
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow:
-    0 6px 24px rgba(0, 0, 0, 0.3),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-@media (max-width: 480px) {
-  .profile-halo-float {
-    margin-right: 1.15rem;
-    --profile-halo-size: clamp(9.5rem, 72vw, 11.5rem);
-  }
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Status Pill — liquid glass standout for "Currently" */

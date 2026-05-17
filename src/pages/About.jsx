@@ -18,11 +18,6 @@ function formatDate(isoDate) {
     }
 }
 
-/** Repeating segment fills the circular path so the halo reads as one even ring (textPath + spin). */
-const PROFILE_HALO_SEGMENT =
-    'Robotics · RL · Embedded · CMU · Biorobotics Lab · IBM 2026 · ';
-const PROFILE_HALO_TEXT = PROFILE_HALO_SEGMENT.repeat(5);
-
 function About() {
     const [isVisible, setIsVisible] = useState(false);
     const footerRef = useRef(null);
@@ -73,47 +68,13 @@ function About() {
                 </div>
 
                 <div className="profile-section prose animate-blur-fade delay-100">
-                    <div
-                        className="profile-halo-float"
-                        style={{
-                            '--profile-halo-text-color': 'var(--text-secondary)',
-                            '--profile-halo-font': 'var(--font-sans)',
-                            '--profile-halo-letter-spacing': '0.08em',
-                            '--profile-halo-spin-duration': '32s',
-                        }}
-                    >
-                        <div className="profile-halo">
-                            <svg
-                                className="profile-halo-svg"
-                                viewBox="0 0 100 100"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden
-                                focusable="false"
-                            >
-                                <defs>
-                                    <path
-                                        id="about-profile-halo-circle"
-                                        d="M 50,10 A 40,40 0 1 1 49.97,10"
-                                        fill="none"
-                                    />
-                                </defs>
-                                <g className="profile-halo-spin">
-                                    <text className="profile-halo-text" dy="0">
-                                        <textPath href="#about-profile-halo-circle" startOffset="0%">
-                                            {PROFILE_HALO_TEXT}
-                                        </textPath>
-                                    </text>
-                                </g>
-                            </svg>
-                            <img
-                                src="/darren.jpg"
-                                alt="Darren Pinto"
-                                className="profile-halo-img"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </div>
-                    </div>
+                    <img
+                        src="/darren.jpg"
+                        alt="Darren Pinto"
+                        className="profile-image"
+                        loading="lazy"
+                        decoding="async"
+                    />
 
                     <p>
                         Hi, I'm Darren. I build intelligent systems at the intersection of hardware and software,
