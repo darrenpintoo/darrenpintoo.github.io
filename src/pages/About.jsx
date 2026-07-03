@@ -4,19 +4,9 @@ import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 import { Helmet } from 'react-helmet-async';
 import PreviewLink from '../components/PreviewLink';
-import { getLatestPost } from '../utils/posts';
+import { getLatestPost, formatDate } from '../utils/posts';
 import { ChevronRight } from 'lucide-react';
 import FadeIn from '../components/FadeIn';
-
-function formatDate(isoDate) {
-    if (!isoDate || isoDate === 'Unknown Date') return isoDate;
-    try {
-        const d = new Date(isoDate);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch {
-        return isoDate;
-    }
-}
 
 function About() {
     const [isVisible, setIsVisible] = useState(false);
@@ -72,7 +62,9 @@ function About() {
                         src="/darren.jpg"
                         alt="Darren Pinto"
                         className="profile-image"
-                        loading="lazy"
+                        width="400"
+                        height="400"
+                        fetchPriority="high"
                         decoding="async"
                     />
 

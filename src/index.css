@@ -180,8 +180,9 @@ button:focus-visible {
 
 .link-preview-image {
   width: 100%;
-  min-height: 120px;
-  max-height: 200px;
+  /* Fixed height: the popup is measured for positioning before the image
+     loads, so its size must not change afterwards */
+  height: 176px;
   padding: 14px;
   background: var(--bg-secondary);
   display: flex;
@@ -193,7 +194,7 @@ button:focus-visible {
 
 .link-preview-image img {
   max-width: 100%;
-  max-height: 172px;
+  max-height: 148px;
   width: auto;
   height: auto;
   object-fit: contain;

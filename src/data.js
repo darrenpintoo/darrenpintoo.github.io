@@ -3,7 +3,6 @@ export const profile = {
     tagline: "Engineer & Researcher",
     contact: {
         email: "pintodarren999@gmail.com",
-        phone: "(224)-814-9416",
         github: "github.com/darrenpintoo",
         linkedin: "linkedin.com/in/darrpinto",
     },

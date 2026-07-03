@@ -1,7 +1,19 @@
 // Shared post loading for Blog and About pages
 const postFiles = import.meta.glob('../posts/*.md', { query: '?raw', eager: true });
 
-function parseFrontmatter(markdown) {
+// Format ISO date to human-readable (e.g. "Feb 22, 2026").
+// Bare YYYY-MM-DD strings are parsed as UTC midnight by new Date(), which
+// renders as the previous day in US timezones — parse as local time instead.
+export function formatDate(isoDate) {
+  if (!isoDate || isoDate === 'Unknown Date') return isoDate;
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(isoDate)
+    ? new Date(`${isoDate}T00:00:00`)
+    : new Date(isoDate);
+  if (Number.isNaN(d.getTime())) return isoDate;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export function parseFrontmatter(markdown) {
   const frontmatterRegex = /^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/;
   const match = markdown.match(frontmatterRegex);
 

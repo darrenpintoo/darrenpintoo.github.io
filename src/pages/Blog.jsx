@@ -5,41 +5,33 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Calendar, Tag, ChevronRight, Eye } from 'lucide-react';
-import { getAllPosts } from '../utils/posts';
-
-function parseFrontmatter(markdown) {
-    const frontmatterRegex = /^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/;
-    const match = markdown.match(frontmatterRegex);
-
-    if (!match) return { metadata: {}, content: markdown };
-
-    const yamlStr = match[1];
-    const content = match[2];
-    const metadata = {};
-
-    yamlStr.split('\n').forEach(line => {
-        const [key, ...valueParts] = line.split(':');
-        if (key && valueParts.length > 0) {
-            const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
-            metadata[key.trim()] = value;
-        }
-    });
-
-    return { metadata, content };
-}
+import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
+import { getAllPosts, parseFrontmatter, formatDate } from '../utils/posts';
 
 const BASE_URL = 'https://darrenpinto.me';
 
-// Format ISO date to human-readable (e.g. "Feb 22, 2026")
-function formatDate(isoDate) {
-    if (!isoDate || isoDate === 'Unknown Date') return isoDate;
-    try {
-        const d = new Date(isoDate);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch {
-        return isoDate;
-    }
+// Turn heading text into a URL-safe anchor id
+function slugify(text) {
+    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+}
+
+// Extract plain text from rendered markdown children, which may contain
+// elements (e.g. <strong> from **bold**) — children.toString() would give
+// "[object Object]" and break the heading id
+function getNodeText(node) {
+    if (node == null) return '';
+    if (typeof node === 'string' || typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(getNodeText).join('');
+    if (typeof node === 'object' && node.props) return getNodeText(node.props.children);
+    return '';
+}
+
+// Strip inline markdown (links, emphasis, code) so TOC slugs match the
+// ids generated from the rendered heading text
+function stripInlineMarkdown(text) {
+    return text
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+        .replace(/[*_`]/g, '');
 }
 
 // TOC Generator Helper
@@ -50,9 +42,8 @@ function generateTOC(content) {
         const match = line.match(/^(#{2,3})\s+(.*)$/);
         if (match) {
             const level = match[1].length;
-            const text = match[2].trim().replace(/\*|_/g, ''); // Strip simple markdown for slug
-            const slug = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            headings.push({ level, text: match[2].trim(), slug });
+            const text = stripInlineMarkdown(match[2].trim());
+            headings.push({ level, text, slug: slugify(text) });
         }
     });
     return headings;
@@ -62,7 +53,6 @@ function Blog() {
     const { slug } = useParams();
     const [isVisible, setIsVisible] = useState(false);
     const [activeSection, setActiveSection] = useState('');
-    const [viewCount, setViewCount] = useState(null);
 
     const blogPosts = useMemo(() => getAllPosts(), []);
 
@@ -73,29 +63,6 @@ function Blog() {
         return () => clearTimeout(timer);
     }, []);
 
-    // Fetch and increment view count for the active post
-    useEffect(() => {
-        if (!slug) return;
-
-        let cancelled = false;
-        const namespace = 'darrenpinto-blog-views';
-
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${slug}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (!cancelled && data && typeof data.value === 'number') {
-                    setViewCount(data.value);
-                }
-            })
-            .catch(() => {
-                // Fail silently if the view counter service is unavailable
-            });
-
-        return () => {
-            cancelled = true;
-        };
-    }, [slug]);
-
     const activePostData = useMemo(() => {
         if (!slug) return null;
         const post = blogPosts.find(p => p.slug === slug);
@@ -104,24 +71,31 @@ function Blog() {
         return { ...post, metadata, markdownContent: content, toc: generateTOC(content) };
     }, [slug, blogPosts]);
 
-    // Handle scroll for TOC highlighting
+    // Handle scroll for TOC highlighting (rAF-throttled so the layout reads
+    // run at most once per frame)
     useEffect(() => {
         if (!slug || !activePostData?.toc.length) return;
 
+        let ticking = false;
         const handleScroll = () => {
-            const scrollValues = activePostData.toc.map(item => {
-                const element = document.getElementById(item.slug);
-                if (!element) return { id: item.slug, offset: Infinity };
-                return { id: item.slug, offset: Math.abs(element.getBoundingClientRect().top - 150) };
-            });
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(() => {
+                ticking = false;
+                const scrollValues = activePostData.toc.map(item => {
+                    const element = document.getElementById(item.slug);
+                    if (!element) return { id: item.slug, offset: Infinity };
+                    return { id: item.slug, offset: Math.abs(element.getBoundingClientRect().top - 150) };
+                });
 
-            const closest = scrollValues.sort((a, b) => a.offset - b.offset)[0];
-            if (closest && closest.offset < 500) {
-                setActiveSection(closest.id);
-            }
+                const closest = scrollValues.sort((a, b) => a.offset - b.offset)[0];
+                if (closest && closest.offset < 500) {
+                    setActiveSection(closest.id);
+                }
+            });
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [slug, activePostData]);
 
@@ -150,16 +124,12 @@ function Blog() {
 
     // Custom renderer: IDs for headings, alt fallback for images
     const MarkdownComponents = {
-        h2: ({ children, ...props }) => {
-            const text = Array.isArray(children) ? children.join('') : children.toString();
-            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            return <h2 id={id} {...props}>{children}</h2>;
-        },
-        h3: ({ children, ...props }) => {
-            const text = Array.isArray(children) ? children.join('') : children.toString();
-            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            return <h3 id={id} {...props}>{children}</h3>;
-        },
+        h2: ({ children, ...props }) => (
+            <h2 id={slugify(getNodeText(children))} {...props}>{children}</h2>
+        ),
+        h3: ({ children, ...props }) => (
+            <h3 id={slugify(getNodeText(children))} {...props}>{children}</h3>
+        ),
         img: ({ src, alt, ...props }) => (
             <img src={src} alt={alt || 'Blog post image'} loading="lazy" decoding="async" {...props} />
         ),
@@ -265,12 +235,6 @@ function Blog() {
                                                     <Tag size={14} />
                                                     {activePostData.category}
                                                 </span>
-                                                {viewCount !== null && (
-                                                    <span className="meta-item">
-                                                        <Eye size={14} />
-                                                        {viewCount.toLocaleString()} views
-                                                    </span>
-                                                )}
                                             </div>
                                         </header>
                                         <div className="markdown-content">
