@@ -1,15 +1,15 @@
-import { useState, useEffect, useRef, useLayoutEffect, lazy } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, useCallback, lazy } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import SuspenseWithFade from './components/SuspenseWithFade';
 import PageSkeleton from './components/PageSkeleton';
-// import LidarScanReveal from './components/LidarScanReveal';
+import ScanReveal from './components/ScanReveal';
 import About from './pages/About';
 
 const Blog = lazy(() => import('./pages/Blog'));
 const CourseReviews = lazy(() => import('./pages/CourseReviews'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// const ENABLE_LIDAR_ANIMATION = true; // Set to false to disable
+const SCAN_REVEAL_KEY = 'scan_reveal_played';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -133,17 +133,24 @@ function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  // const [showLidar, setShowLidar] = useState(() =>
-  //   ENABLE_LIDAR_ANIMATION
-  //   && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  // );
-  // const [contentReady, setContentReady] = useState(false);
+  // Intro scan reveal: first visit per session only, never for reduced motion
+  const [showScanReveal, setShowScanReveal] = useState(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    try {
+      return sessionStorage.getItem(SCAN_REVEAL_KEY) !== 'true';
+    } catch {
+      return true;
+    }
+  });
 
-  // const handleLidarComplete = useCallback(() => {
-  //   setShowLidar(false);
-  // }, []);
+  const handleScanRevealComplete = useCallback(() => {
+    setShowScanReveal(false);
+    try {
+      sessionStorage.setItem(SCAN_REVEAL_KEY, 'true');
+    } catch { /* ignore */ }
+  }, []);
 
-  // Load Umami analytics after main UI is visible (when lidar completes or is disabled)
+  // Load Umami analytics after main UI is visible
   useEffect(() => {
     if (typeof window !== 'undefined' && !document.querySelector('script[data-website-id="5085e392-f6e1-4180-b5b9-d7fcfd42da29"]')) {
       const s = document.createElement('script');
@@ -215,12 +222,7 @@ function App() {
         </SuspenseWithFade>
       </div>
 
-      {/* {showLidar && (
-        <LidarScanReveal
-          onComplete={handleLidarComplete}
-          contentReady={contentReady}
-        />
-      )} */}
+      {showScanReveal && <ScanReveal onComplete={handleScanRevealComplete} />}
     </BrowserRouter>
   );
 }
