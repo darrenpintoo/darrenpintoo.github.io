@@ -955,6 +955,19 @@ html.intro-freeze .profile-image {
   transform: none !important;
 }
 
+/* Coordinated intro: suppress the elements' own entrance so the reveal loop is
+   the sole controller, but leave opacity non-important so the per-element
+   inline opacity it sets can take over. Wrappers stay visible by default. */
+html.intro-coordinate .animate-blur-fade,
+html.intro-coordinate .pre-animate,
+html.intro-coordinate .profile-image {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+}
+
 .course-index {
   margin-bottom: 3rem;
   padding-bottom: 1rem;

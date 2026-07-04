@@ -2,8 +2,8 @@
 // "physics" is deterministic — every visitor sees the same choreography),
 // and a DOM sampler that turns the real rendered page into target dots.
 
-export const INTRO_VARIANT_NAMES = ['shader', 'orbit', 'balls', 'flow', 'scan'];
-export const DEFAULT_INTRO = 'shader';
+export const INTRO_VARIANT_NAMES = ['coord', 'shader', 'orbit', 'balls', 'flow', 'scan'];
+export const DEFAULT_INTRO = 'coord';
 
 // Dev/testing switch: ?intro=balls|flow|scan|none forces a variant and
 // bypasses the once-per-session gate; add &slow=1 for 6x slow motion.

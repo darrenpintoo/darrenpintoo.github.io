@@ -1,3 +1,4 @@
+import CoordinatedReveal from './CoordinatedReveal';
 import ShaderReveal from './ShaderReveal';
 import OrbitIntro from './OrbitIntro';
 import BallDropIntro from './BallDropIntro';
@@ -6,6 +7,7 @@ import ScanReveal from '../ScanReveal';
 import { getForcedIntro, getIntroSlowMo, DEFAULT_INTRO } from './introUtils';
 
 const VARIANTS = {
+    coord: CoordinatedReveal,
     shader: ShaderReveal,
     orbit: OrbitIntro,
     balls: BallDropIntro,

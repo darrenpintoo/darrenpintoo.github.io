@@ -146,28 +146,9 @@ function App() {
     }
   });
 
-  // While the intro plays, the shader owns the reveal: freeze the elements'
-  // own entrance animations so the dissolve unveils settled content instead of
-  // two motions fighting. Set before paint (any first-frame flash is under the
-  // opaque cover anyway).
-  useLayoutEffect(() => {
-    if (showIntro) {
-      document.documentElement.classList.add('intro-freeze');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  // Each intro variant manages how it relates to the elements' own entrance
+  // animations (freeze vs. coordinate); App just tracks whether it's playing.
   const handleIntroComplete = useCallback(() => {
-    // Lock the now-revealed hero into its final state so lifting the freeze
-    // can't replay its entrance, then restore normal entrance animations for
-    // future in-app navigations.
-    document.querySelectorAll('.animate-blur-fade, .pre-animate, .profile-image')
-      .forEach((el) => {
-        el.style.animation = 'none';
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      });
-    document.documentElement.classList.remove('intro-freeze');
     setShowIntro(false);
     try {
       sessionStorage.setItem(SCAN_REVEAL_KEY, 'true');
