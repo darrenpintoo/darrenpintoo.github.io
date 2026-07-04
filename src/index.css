@@ -749,6 +749,27 @@ h2 {
 }
 /* ========== End Scan Reveal Intro ========== */
 
+/* ========== Physics Intro Overlays ========== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+}
+
+.intro-cover {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-primary);
+}
+
+.intro-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* ========== End Physics Intro Overlays ========== */
+
 /* Infinite Text */
 .infinite-scroll-container {
   text-align: center;

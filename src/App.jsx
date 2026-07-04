@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useLayoutEffect, useCallback, lazy } from 
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import SuspenseWithFade from './components/SuspenseWithFade';
 import PageSkeleton from './components/PageSkeleton';
-import ScanReveal from './components/ScanReveal';
+import IntroReveal from './components/intro/IntroReveal';
+import { getForcedIntro } from './components/intro/introUtils';
 import About from './pages/About';
 
 const Blog = lazy(() => import('./pages/Blog'));
@@ -133,8 +134,10 @@ function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  // Intro scan reveal: first visit per session only, never for reduced motion
-  const [showScanReveal, setShowScanReveal] = useState(() => {
+  // Intro reveal: first visit per session only, never for reduced motion.
+  // A ?intro= query param forces a variant (for testing/comparing).
+  const [showIntro, setShowIntro] = useState(() => {
+    if (getForcedIntro()) return true;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
     try {
       return sessionStorage.getItem(SCAN_REVEAL_KEY) !== 'true';
@@ -143,8 +146,8 @@ function App() {
     }
   });
 
-  const handleScanRevealComplete = useCallback(() => {
-    setShowScanReveal(false);
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
     try {
       sessionStorage.setItem(SCAN_REVEAL_KEY, 'true');
     } catch { /* ignore */ }
@@ -222,7 +225,7 @@ function App() {
         </SuspenseWithFade>
       </div>
 
-      {showScanReveal && <ScanReveal onComplete={handleScanRevealComplete} />}
+      {showIntro && <IntroReveal onComplete={handleIntroComplete} />}
     </BrowserRouter>
   );
 }
