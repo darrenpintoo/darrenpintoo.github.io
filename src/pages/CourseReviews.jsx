@@ -166,16 +166,17 @@ function CourseReviews() {
 
     const isAllExpanded = allCoursesList.every(c => expandedCourses.has(c.code));
 
-    // Smooth-scroll to a semester section
+    // Smooth-scroll to a semester section (instant under reduced motion)
     const scrollToId = (id) => {
         const element = document.getElementById(id);
         if (element) {
             const headerOffset = 90;
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             window.scrollTo({
                 top: offsetPosition,
-                behavior: "smooth"
+                behavior: reduceMotion ? 'auto' : 'smooth'
             });
         }
     };
@@ -293,16 +294,17 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                         <div
                             id={course.code}
                             className={`course-card ${expandedCourses.has(course.code) ? 'expanded' : ''}`}
-                            onClick={() => toggleCourse(course.code)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCourse(course.code); } }}
-                            role="button"
-                            tabIndex={0}
-                            aria-expanded={expandedCourses.has(course.code)}
-                            aria-controls={`${course.code}-content`}
                         >
-                            <div className="course-header">
-                                <div className="course-info">
-                                    <div className="course-title-row">
+                            <button
+                                type="button"
+                                className="course-header"
+                                onClick={() => toggleCourse(course.code)}
+                                aria-expanded={expandedCourses.has(course.code)}
+                                aria-controls={`${course.code}-content`}
+                                aria-label={`${course.code} ${course.name} — ${expandedCourses.has(course.code) ? 'collapse' : 'expand'} review`}
+                            >
+                                <span className="course-info">
+                                    <span className="course-title-row">
                                         <span className="course-code">{course.code}</span>
                                         <span className="course-name">{course.name}</span>
                                         {course.favorite && (
@@ -317,19 +319,23 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                             </svg>
                                         )}
-                                    </div>
-                                    <div className="course-instructor">
+                                    </span>
+                                    <span className="course-instructor">
                                         Instructor: {course.instructor}
-                                    </div>
-                                </div>
-                                <div className="course-meta">
+                                    </span>
+                                </span>
+                                <span className="course-meta">
                                     <span className="course-units">{course.units} {parseInt(course.units, 10) === 1 ? 'unit' : 'units'}</span>
-                                    <span className="course-expand-icon">
+                                    <span className="course-expand-icon" aria-hidden="true">
                                         {expandedCourses.has(course.code) ? '−' : '+'}
                                     </span>
-                                </div>
-                            </div>
-                            <div id={`${course.code}-content`} className={`course-expand-wrapper ${expandedCourses.has(course.code) ? 'open' : ''}`}>
+                                </span>
+                            </button>
+                            <div
+                                id={`${course.code}-content`}
+                                className={`course-expand-wrapper ${expandedCourses.has(course.code) ? 'open' : ''}`}
+                                aria-hidden={!expandedCourses.has(course.code)}
+                            >
                                 <div className="course-expand-inner">
                                     <div className="course-expanded">
                                         <div className="course-description">

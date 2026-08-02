@@ -157,7 +157,7 @@ function Blog() {
                                         <Link to={`/blog/${post.slug}`} key={post.slug} className="writing-row">
                                             <span className="writing-date">{formatDate(post.date)}</span>
                                             <span>
-                                                <span className="writing-title">{post.title}</span>
+                                                <h2 className="writing-title">{post.title}</h2>
                                                 <span className="writing-excerpt" style={{ display: 'block' }}>{post.excerpt}</span>
                                                 <span className="writing-tag">{post.category}</span>
                                             </span>

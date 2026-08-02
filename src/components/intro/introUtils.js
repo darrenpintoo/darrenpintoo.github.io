@@ -37,7 +37,7 @@ export function mulberry32(seed) {
 // Races a timeout so a slow network can never stall the intro.
 export function waitForPageReady(timeoutMs = 550) {
     const fonts = (document.fonts && document.fonts.ready) || Promise.resolve();
-    const img = document.querySelector('img.profile-image');
+    const img = document.querySelector('img.hero-portrait, img.profile-image');
     const imgReady = img && !img.complete
         ? new Promise((resolve) => {
             img.addEventListener('load', resolve, { once: true });
@@ -50,7 +50,7 @@ export function waitForPageReady(timeoutMs = 550) {
 }
 
 const OUTLINE_SELECTORS =
-    '.status-pill, .theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card';
+    '.theme-toggle, .nav-links, .latest-post-row, .writing-row, .course-card, .semester-review-card, .work-card';
 
 // Sample the live page into { x, y, color, r } dots:
 // - text gets one dot row per line box, in its real rendered color
@@ -138,7 +138,7 @@ export function sampleLayout({ spacing = 13, maxPoints = 850 } = {}) {
     });
 
     // Profile photo → dot portrait sampled from real pixels (same-origin)
-    const img = document.querySelector('img.profile-image');
+    const img = document.querySelector('img.hero-portrait, img.profile-image');
     if (img && img.complete && img.naturalWidth > 0) {
         const rect = img.getBoundingClientRect();
         if (rect.width > 40 && rect.top < vh && rect.bottom > 0) {

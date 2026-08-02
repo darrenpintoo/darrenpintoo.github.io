@@ -18,7 +18,8 @@
   --panel: #ffffff;
   --ink: #1f1f1f;
   --ink-2: #5b5751;
-  --ink-3: #8a857e;
+  /* smallest text still passes 4.5:1 on both paper and panel */
+  --ink-3: #6f6a63;
   --line: rgba(31, 31, 31, 0.14);
   --line-strong: rgba(31, 31, 31, 0.32);
 
@@ -55,7 +56,7 @@
   --panel: #14171b;
   --ink: #e8e6e2;
   --ink-2: #a8a39c;
-  --ink-3: #716c65;
+  --ink-3: #8c8780;
   --line: rgba(232, 230, 226, 0.14);
   --line-strong: rgba(232, 230, 226, 0.32);
 
@@ -117,8 +118,23 @@ a:hover {
   text-underline-offset: 3px;
 }
 
-a:not(.prose a) {
-  text-decoration: none !important;
+/* Chrome links opt out of underlines individually; content links keep the
+   default hover underline, and markdown links carry a persistent one */
+.nav-links a,
+.wordmark,
+.footer-links a,
+.back-link,
+.writing-row,
+.latest-post-row,
+.contact-links a,
+.work-card-links a {
+  text-decoration: none;
+}
+
+.markdown-content a {
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--accent-rgb), 0.45);
+  text-underline-offset: 3px;
 }
 
 a:focus-visible,
@@ -948,8 +964,7 @@ h2 {
   border-bottom: 1px solid var(--line);
   border-left: 2px solid transparent;
   padding: 0.9rem 0 0.9rem 0;
-  cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, padding-left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .course-card.expanded {
@@ -957,11 +972,20 @@ h2 {
   padding-left: 1rem;
 }
 
+/* The header is the disclosure button; the review sits outside it */
 .course-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1.25rem;
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
 }
 
 .course-info {
@@ -1039,13 +1063,15 @@ h2 {
 .course-expand-wrapper {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.35s ease-out;
+  transition: grid-template-rows 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.35s ease-out, visibility 0.35s;
   opacity: 0;
+  visibility: hidden;
 }
 
 .course-expand-wrapper.open {
   grid-template-rows: 1fr;
   opacity: 1;
+  visibility: visible;
 }
 
 .course-expand-inner {
@@ -1525,6 +1551,34 @@ html.entrances-quiet .hero-portrait {
     flex-direction: column;
     gap: 0.25rem;
     text-align: center;
+  }
+}
+
+/* Narrow phones: keep wordmark + nav + toggle inside even 320px viewports.
+   (Must follow the base header rules — same specificity, source order wins.) */
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 0.75rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .nav-links {
+    gap: 0;
+  }
+
+  .nav-links a {
+    padding: 0.6rem 0.35rem;
+    letter-spacing: 0.06em;
+    font-size: 0.7rem;
+  }
+
+  .header-controls {
+    gap: 0.3rem;
+  }
+
+  .theme-toggle {
+    width: 34px;
+    height: 34px;
   }
 }
 

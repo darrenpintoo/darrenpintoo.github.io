@@ -60,17 +60,11 @@ float fbm(vec2 p){
     return v;
 }
 
-// Reproduces the site's own ambient background: base colour layered with the
-// accent glow at 15%/50% (6%) and 85%/30% (4%) (see body in index.css).
-// Because the cover paints exactly this, it reads as the real page background,
-// not a foreign overlay.
+// The page surface is flat paper now, so the cover paints plain uBg — any
+// baked-in glow would visibly mismatch the real background during the
+// dissolve. The accent only appears in the transient dissolve-front band.
 vec3 ambient(vec2 apx, float aspect){
-    vec3 col = uBg;
-    float dC = distance(apx, vec2(0.15 * aspect, 0.50));
-    float dB = distance(apx, vec2(0.85 * aspect, 0.70));
-    col = mix(col, uGlowA, 0.06 * (1.0 - smoothstep(0.0, 0.42, dC)));
-    col = mix(col, uGlowB, 0.04 * (1.0 - smoothstep(0.0, 0.42, dB)));
-    return col;
+    return uBg;
 }
 
 void main(){
@@ -111,7 +105,7 @@ void main(){
     vec3 bgCol = ambient(ap, aspect);
     float band = cover * (1.0 - cover) * 4.0;
     vec3 frontGlow = mix(uGlowA, uGlowB, smoothstep(0.25, 0.75, uv.x));
-    vec3 rgb = mix(bgCol, frontGlow, band * 0.16);
+    vec3 rgb = mix(bgCol, frontGlow, band * 0.12);
     gl_FragColor = vec4(rgb, cover);
 }
 `;
@@ -232,7 +226,7 @@ function ShaderReveal({ onComplete }) {
         };
         const setAnchors = () => {
             const name = anchorFrom(document.querySelector('main h1'), 0.32, 0.24);
-            const photo = anchorFrom(document.querySelector('img.profile-image'), 0.5, 0.5);
+            const photo = anchorFrom(document.querySelector('img.hero-portrait, img.profile-image'), 0.5, 0.5);
             gl.uniform2fv(uName, name);
             gl.uniform2fv(uPhoto, photo);
         };
