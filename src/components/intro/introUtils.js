@@ -37,7 +37,7 @@ export function mulberry32(seed) {
 // Races a timeout so a slow network can never stall the intro.
 export function waitForPageReady(timeoutMs = 550) {
     const fonts = (document.fonts && document.fonts.ready) || Promise.resolve();
-    const img = document.querySelector('img.profile-image');
+    const img = document.querySelector('img.hero-portrait, img.profile-image');
     const imgReady = img && !img.complete
         ? new Promise((resolve) => {
             img.addEventListener('load', resolve, { once: true });
@@ -50,7 +50,7 @@ export function waitForPageReady(timeoutMs = 550) {
 }
 
 const OUTLINE_SELECTORS =
-    '.status-pill, .theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card';
+    '.theme-toggle, .nav-links, .fig-card, .latest-card, .post-card, .ledger, .semester-review';
 
 // Sample the live page into { x, y, color, r } dots:
 // - text gets one dot row per line box, in its real rendered color
@@ -138,7 +138,7 @@ export function sampleLayout({ spacing = 13, maxPoints = 850 } = {}) {
     });
 
     // Profile photo → dot portrait sampled from real pixels (same-origin)
-    const img = document.querySelector('img.profile-image');
+    const img = document.querySelector('img.hero-portrait, img.profile-image');
     if (img && img.complete && img.naturalWidth > 0) {
         const rect = img.getBoundingClientRect();
         if (rect.width > 40 && rect.top < vh && rect.bottom > 0) {
@@ -161,9 +161,13 @@ export function sampleLayout({ spacing = 13, maxPoints = 850 } = {}) {
                 const cx = rect.left + rect.width / 2;
                 const cy = rect.top + rect.height / 2;
                 const R = rect.width / 2 - 3;
+                // only clip to a disc when the photo is actually round; the
+                // console layout frames it as a rectangle
+                const radius = parseFloat(getComputedStyle(img).borderTopLeftRadius) || 0;
+                const isCircular = radius >= rect.width * 0.4;
                 for (let y = rect.top + 4; y < rect.bottom - 4; y += dotStep) {
                     for (let x = rect.left + 4; x < rect.right - 4; x += dotStep) {
-                        if (Math.hypot(x - cx, y - cy) > R) continue;
+                        if (isCircular && Math.hypot(x - cx, y - cy) > R) continue;
                         const u = Math.min(res - 1, Math.max(0, Math.round(((x - rect.left) / rect.width) * res)));
                         const v = Math.min(res - 1, Math.max(0, Math.round(((y - rect.top) / rect.height) * res)));
                         const idx = (v * res + u) * 4;

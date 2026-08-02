@@ -168,7 +168,9 @@ function Blog() {
                             </div>
                             {blogPosts.length > 0 && (
                                 <div className="head-count">
-                                    {String(blogPosts.length).padStart(2, '0')} POSTS{yearRange ? ` · ${yearRange}` : ''}
+                                    {String(shownPosts.length).padStart(2, '0')}
+                                    {filter === 'ALL' ? '' : `/${String(blogPosts.length).padStart(2, '0')}`} POSTS
+                                    {yearRange ? ` · ${yearRange}` : ''}
                                 </div>
                             )}
                         </div>
@@ -203,7 +205,7 @@ function Blog() {
                                             </div>
                                             <h2 className="post-title">{post.title}</h2>
                                             <p className="post-excerpt">{post.excerpt}</p>
-                                            <div className="post-read">Read →</div>
+                                            <div className="post-read">Read <span aria-hidden="true">→</span></div>
                                         </div>
                                     </Link>
                                 ))}

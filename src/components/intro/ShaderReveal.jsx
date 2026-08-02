@@ -232,7 +232,7 @@ function ShaderReveal({ onComplete }) {
         };
         const setAnchors = () => {
             const name = anchorFrom(document.querySelector('main h1'), 0.32, 0.24);
-            const photo = anchorFrom(document.querySelector('img.profile-image'), 0.5, 0.5);
+            const photo = anchorFrom(document.querySelector('img.hero-portrait, img.profile-image'), 0.5, 0.5);
             gl.uniform2fv(uName, name);
             gl.uniform2fv(uPhoto, photo);
         };

@@ -36,7 +36,7 @@ function About() {
                         <span className="status-dot" />
                         Status
                     </div>
-                    <div className="status-cell">
+                    <div className="status-cell status-cell--now">
                         <span className="status-cell-label">Now</span>
                         <span className="status-cell-value">Biorobotics Lab @ CMU</span>
                     </div>
@@ -104,7 +104,7 @@ function About() {
                         </figure>
 
                         <section className="rail-block" aria-labelledby="news-label">
-                            <h2 className="log-label" id="news-label">// News.log</h2>
+                            <h2 className="log-label" id="news-label">News.log</h2>
                             <div className="news-log">
                                 {visibleNews.map((item) => (
                                     <div className="news-entry" key={`${item.date}-${item.text}`}>
@@ -127,7 +127,7 @@ function About() {
                         </section>
 
                         <section className="rail-block" aria-labelledby="info-label">
-                            <h2 className="log-label" id="info-label">// Info</h2>
+                            <h2 className="log-label" id="info-label">Info</h2>
                             <div className="info-list">
                                 <div><span className="info-key">Study —</span> B.S. ECE, Carnegie Mellon · '29</div>
                                 <div>
@@ -148,7 +148,7 @@ function About() {
                                 <img src={latestPost.image} alt="" loading="lazy" decoding="async" />
                             </div>
                             <div className="latest-content">
-                                <span className="log-label" style={{ color: 'var(--accent)' }}>// Latest post</span>
+                                <span className="log-label" style={{ color: 'var(--accent)' }}>Latest post</span>
                                 <h2 className="latest-title">{latestPost.title}</h2>
                                 <p className="latest-excerpt">{latestPost.excerpt}</p>
                                 <div className="latest-meta">

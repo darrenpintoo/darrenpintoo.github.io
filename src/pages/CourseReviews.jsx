@@ -166,17 +166,33 @@ function scrollToId(id) {
     window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
-function StarIcon() {
+function StarIcon({ label }) {
     return (
-        <svg className="course-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <svg
+            className="course-mark"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            role={label ? 'img' : undefined}
+            aria-label={label}
+            aria-hidden={label ? undefined : 'true'}
+        >
+            {label && <title>{label}</title>}
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
     );
 }
 
-function HeartIcon() {
+function HeartIcon({ label }) {
     return (
-        <svg className="course-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <svg
+            className="course-mark"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            role={label ? 'img' : undefined}
+            aria-label={label}
+            aria-hidden={label ? undefined : 'true'}
+        >
+            {label && <title>{label}</title>}
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
         </svg>
     );
@@ -200,6 +216,9 @@ function CourseReviews() {
             else next.add(code);
             return next;
         });
+        // an individual toggle invalidates the remembered expand-all state,
+        // otherwise a collapsed row silently re-expands on the next visit
+        try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch { /* ignore */ }
     };
 
     const isAllExpanded = allCodes.every((code) => expandedCourses.has(code));
@@ -214,10 +233,12 @@ function CourseReviews() {
         }
     };
 
-    // open a course from a sidebar code chip, then scroll to it
+    // open a course from a sidebar code chip, then scroll to it once the row
+    // has actually grown (two frames: state commit, then layout)
     const jumpToCourse = (code) => {
         setExpandedCourses((prev) => new Set(prev).add(code));
-        requestAnimationFrame(() => scrollToId(code));
+        try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch { /* ignore */ }
+        requestAnimationFrame(() => requestAnimationFrame(() => scrollToId(code)));
     };
 
     // which semester is in view — drives the sidebar index highlight
@@ -265,7 +286,7 @@ function CourseReviews() {
                 <div className="courses-layout">
                     <aside className="courses-index animate-blur-fade delay-100" aria-label="Course index">
                         <div className="rail-block">
-                            <h2 className="log-label">// Semesters</h2>
+                            <h2 className="log-label">Semesters</h2>
                             <div className="index-list">
                                 {courses.map((sem) => (
                                     <button
@@ -282,7 +303,7 @@ function CourseReviews() {
                         </div>
 
                         <div className="rail-block">
-                            <h2 className="log-label">// Departments</h2>
+                            <h2 className="log-label">Departments</h2>
                             <div className="dept-group">
                                 {departments.map((dept) => (
                                     <div className="dept" key={dept.name}>
@@ -316,6 +337,7 @@ function CourseReviews() {
                                 showExpandAll={i === 0}
                                 isAllExpanded={isAllExpanded}
                                 onToggleAll={toggleAll}
+                                totalCourses={allCodes.length}
                             />
                         ))}
                     </div>
@@ -327,7 +349,7 @@ function CourseReviews() {
     );
 }
 
-function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll, isAllExpanded, onToggleAll }) {
+function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll, isAllExpanded, onToggleAll, totalCourses }) {
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef(null);
     const semesterId = semester.semester.replace(/\s+/g, '-');
@@ -360,9 +382,15 @@ function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll,
             <div className="semester-head">
                 <h2 className="semester-title">{semester.semester}</h2>
                 {showExpandAll ? (
-                    <button type="button" className="expand-all" onClick={onToggleAll}>
+                    // the control spans every semester, so it says so
+                    <button
+                        type="button"
+                        className="expand-all"
+                        onClick={onToggleAll}
+                        aria-label={`${isAllExpanded ? 'Collapse' : 'Expand'} all ${totalCourses} course reviews`}
+                    >
                         <span aria-hidden="true">{isAllExpanded ? '−' : '+'}</span>
-                        {isAllExpanded ? 'Collapse all' : 'Expand all'}
+                        {isAllExpanded ? 'Collapse all' : 'Expand all'} ({totalCourses})
                     </button>
                 ) : (
                     <span className="units-pill">{totalUnits} units</span>
@@ -382,7 +410,14 @@ function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll,
                                     onClick={() => toggleCourse(course.code)}
                                     aria-expanded={open}
                                     aria-controls={`${course.code}-review`}
-                                    aria-label={`${course.code} ${course.name} — ${open ? 'collapse' : 'expand'} review`}
+                                    aria-label={[
+                                        `${course.code} ${course.name}`,
+                                        course.favorite && 'favorite of the semester',
+                                        course.transformative && 'transformative',
+                                        `${course.instructor}`,
+                                        `${course.units} ${parseInt(course.units, 10) === 1 ? 'unit' : 'units'}`,
+                                        `${open ? 'collapse' : 'expand'} review`,
+                                    ].filter(Boolean).join(' — ')}
                                 >
                                     <span className="course-code">{course.code}</span>
                                     <span className="course-info">
@@ -427,7 +462,7 @@ function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll,
 
             {semester.reflection && (
                 <div className={`semester-review fade-in-section ${isVisible ? 'is-visible' : ''}`}>
-                    <span className="log-label">// Semester review · {totalUnits} units</span>
+                    <span className="log-label">Semester review · {totalUnits} units</span>
                     {semester.reflection.split(/\n\n+/).map((para, i) => (
                         <p key={i} className="review-text">{para.trim()}</p>
                     ))}

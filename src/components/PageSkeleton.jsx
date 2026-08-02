@@ -18,7 +18,7 @@ function S({ width = '100%', height = '1rem', radius = '6px', delay = 0, style }
 function AboutSkeleton() {
     return (
         <main className="container skeleton-page">
-            <div className="about-hero" style={{ paddingTop: 0 }}>
+            <div className="about-hero">
                 <S width="420px" height="4rem" style={{ maxWidth: '80%' }} />
                 <S width="440px" height="1.2rem" style={{ maxWidth: '90%' }} />
             </div>
@@ -55,7 +55,7 @@ function AboutSkeleton() {
 function BlogListSkeleton() {
     return (
         <main className="container skeleton-page">
-            <div className="blog-head" style={{ paddingTop: 0 }}>
+            <div className="blog-head">
                 <div style={{ flex: 1 }}>
                     <S width="230px" height="3.5rem" style={{ marginBottom: '14px', maxWidth: '70%' }} />
                     <S width="420px" height="1.1rem" style={{ maxWidth: '90%' }} />
@@ -86,7 +86,7 @@ function BlogListSkeleton() {
 function BlogPostSkeleton() {
     return (
         <main className="container skeleton-page">
-            <div className="post-view" style={{ paddingTop: 0 }}>
+            <div className="post-view" style={{ paddingTop: '44px' }}>
                 <S width="120px" height="0.8rem" style={{ marginBottom: '36px' }} />
                 <S width="150px" height="0.75rem" style={{ marginBottom: '14px' }} />
                 <S width="80%" height="2.6rem" style={{ marginBottom: '32px' }} />
@@ -101,7 +101,7 @@ function BlogPostSkeleton() {
 function CoursesSkeleton() {
     return (
         <main className="container skeleton-page">
-            <div className="courses-head" style={{ paddingTop: 0 }}>
+            <div className="courses-head">
                 <S width="480px" height="3.25rem" style={{ maxWidth: '80%' }} />
                 <S width="100%" height="1rem" style={{ maxWidth: '760px' }} />
                 <S width="70%" height="1rem" style={{ maxWidth: '560px' }} />

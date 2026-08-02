@@ -69,8 +69,9 @@
   --ink: #14151a;
   --ink-bright: #000000;
   --ink-body: #3a3d45;
-  --ink-2: #565a66;
-  --ink-3: #6b6f7d;
+  --ink-2: #4f535e;
+  /* stays >= 4.5:1 on paper and on the tinted panels */
+  --ink-3: #5f636f;
   --ink-log: #23252c;
 
   --accent: #c2334c;
@@ -165,7 +166,8 @@ strong {
   letter-spacing: 0.02em;
 }
 
-/* `// SECTION` markers */
+/* `// SECTION` markers — the slashes are decoration, so they live in CSS
+   rather than in the accessible name */
 .log-label {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -173,6 +175,10 @@ strong {
   letter-spacing: 0.14em;
   color: var(--ink-3);
   text-transform: uppercase;
+}
+
+.log-label::before {
+  content: '// ';
 }
 
 .skip-link {
@@ -318,6 +324,15 @@ h2 {
 
 .page-title {
   font-size: clamp(2.75rem, 7vw, 4.75rem);
+}
+
+/* pages that don't bring their own section padding (404) */
+.simple-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 96px var(--gutter) 120px;
 }
 
 .page-sub {
@@ -1227,6 +1242,11 @@ h2 {
   cursor: pointer;
 }
 
+/* .ledger clips overflow, so draw the focus ring inside the row */
+.course-head:focus-visible {
+  outline-offset: -3px;
+}
+
 .course-code {
   font-family: var(--font-mono);
   font-size: 14px;
@@ -1320,7 +1340,10 @@ h2 {
 .course-expand {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+  transition:
+    grid-template-rows 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    opacity 0.3s ease,
+    visibility 0.35s;
   opacity: 0;
   visibility: hidden;
 }
@@ -1705,8 +1728,10 @@ html.intro-freeze .status-dot {
   border-radius: 6px;
 }
 
+/* sections bring their own padding; the skeleton must not add more or the
+   content jumps when the real page swaps in */
 .skeleton-page {
-  padding-top: 64px;
+  padding-top: 0;
 }
 
 .skeleton-card-stagger {
@@ -1760,15 +1785,40 @@ html.intro-freeze .status-dot {
     gap: 32px;
   }
 
+  /* the index collapses to a compact semester strip so the ledger stays
+     above the fold; the department chips are redundant at this width */
   .courses-index {
     position: static;
     flex-direction: row;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: 12px 20px;
   }
 
-  .courses-index .rail-block {
-    min-width: 220px;
+  .courses-index .dept-group,
+  .courses-index .rail-block:last-child {
+    display: none;
+  }
+
+  .courses-index .index-list {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .courses-index .index-row {
+    border: 1px solid var(--line-3);
+    border-radius: 7px;
+    padding: 7px 13px;
+    gap: 10px;
+  }
+
+  .courses-index .index-list .index-row:last-child {
+    border-bottom: 1px solid var(--line-3);
+  }
+
+  .courses-index .index-row.active {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    background: rgba(var(--accent-rgb), 0.07);
   }
 }
 
@@ -1841,7 +1891,9 @@ html.intro-freeze .status-dot {
     white-space: normal;
   }
 
-  .status-cell:first-of-type .status-cell-label {
+  /* the NOW row keeps the accent anchor once the STATUS key is hidden.
+     (:first-of-type would match .status-key, which is also a div) */
+  .status-cell--now .status-cell-label {
     color: var(--accent);
   }
 
@@ -1970,11 +2022,6 @@ html.intro-freeze .status-dot {
     gap: 24px;
   }
 
-  .courses-index {
-    flex-direction: column;
-    gap: 20px;
-  }
-
   .dept-group {
     display: none;
   }
@@ -2029,8 +2076,67 @@ html.intro-freeze .status-dot {
   }
 }
 
+/* narrow phones: keep wordmark + nav + toggle on one line down to 320px */
+@media (max-width: 400px) {
+  .header-inner {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .wordmark {
+    font-size: 11.5px;
+  }
+
+  .header-controls {
+    gap: 8px;
+  }
+
+  .nav-links {
+    gap: 8px;
+  }
+
+  .nav-links a {
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+  }
+
+  .theme-toggle {
+    width: 30px;
+    height: 30px;
+  }
+
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 /* ---------- print ---------- */
 @media print {
+
+  /* force ink-on-paper tokens; the dark theme's values would print invisible */
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --bg: #fff;
+    --grid: transparent;
+    --panel: transparent;
+    --panel-2: transparent;
+    --panel-hover: transparent;
+    --line: #ccc;
+    --line-2: #ccc;
+    --line-3: #bbb;
+    --line-4: #bbb;
+    --ink: #111;
+    --ink-bright: #000;
+    --ink-body: #222;
+    --ink-2: #333;
+    --ink-3: #555;
+    --ink-log: #222;
+    --accent: #8a1f33;
+    --accent-rgb: 138, 31, 51;
+    --hatch: none;
+  }
 
   .skip-link,
   .header,

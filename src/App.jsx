@@ -111,7 +111,7 @@ function App() {
     // Lock the now-revealed hero into its final state so lifting the freeze
     // can't replay its entrance, then restore normal entrance animations for
     // future in-app navigations.
-    document.querySelectorAll('.animate-blur-fade, .pre-animate, .profile-image')
+    document.querySelectorAll('.animate-blur-fade, .pre-animate, .profile-image, .hero-portrait')
       .forEach((el) => {
         el.style.animation = 'none';
         el.style.opacity = '1';
