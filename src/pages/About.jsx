@@ -24,8 +24,8 @@ function About() {
                         <span className="fact-label hero-status-label">
                             <span className="status-dot" /> Currently
                         </span>
-                        <p className="hero-status-value">Biorobotics Lab @ CMU</p>
-                        <p className="hero-status-value">IBM Silicon Valley Lab · Summer 2026</p>
+                        <p className="hero-status-value"><span className="hero-status-when">Now —</span> Biorobotics Lab @ CMU</p>
+                        <p className="hero-status-value"><span className="hero-status-when">Summer 2026 —</span> IBM Silicon Valley Lab</p>
                     </div>
                     <p className="subtitle">
                         Undergraduate Student & Robotics Researcher at{' '}

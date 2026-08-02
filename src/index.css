@@ -842,6 +842,12 @@ h2 {
   margin: 0;
 }
 
+/* Dim time-marker prefix — same grammar as the rail's news dates */
+.hero-status-when {
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
 .status-dot {
   width: 6px;
   height: 6px;
@@ -857,6 +863,8 @@ h2 {
       'name'
       'subtitle'
       'status';
+    /* keep the identity cluster and photo together */
+    margin-bottom: 1.75rem;
   }
 
   .hero-status {
