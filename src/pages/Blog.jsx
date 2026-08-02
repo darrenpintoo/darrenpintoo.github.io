@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { getAllPosts, getPostBySlug, parseFrontmatter, formatDate } from '../utils/posts';
 
 const BASE_URL = 'https://darrenpinto.me';
@@ -25,33 +25,9 @@ function getNodeText(node) {
     return '';
 }
 
-// Strip inline markdown (links, emphasis, code) so TOC slugs match the
-// ids generated from the rendered heading text
-function stripInlineMarkdown(text) {
-    return text
-        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-        .replace(/[*_`]/g, '');
-}
-
-// TOC Generator Helper
-function generateTOC(content) {
-    const headings = [];
-    const lines = content.split('\n');
-    lines.forEach((line) => {
-        const match = line.match(/^(#{2,3})\s+(.*)$/);
-        if (match) {
-            const level = match[1].length;
-            const text = stripInlineMarkdown(match[2].trim());
-            headings.push({ level, text, slug: slugify(text) });
-        }
-    });
-    return headings;
-}
-
 function Blog() {
     const { slug } = useParams();
     const [isVisible, setIsVisible] = useState(false);
-    const [activeSection, setActiveSection] = useState('');
 
     const blogPosts = useMemo(() => getAllPosts(), []);
 
@@ -69,59 +45,8 @@ function Blog() {
         const post = getPostBySlug(slug);
         if (!post) return null;
         const { metadata, content } = parseFrontmatter(post.content);
-        return { ...post, metadata, markdownContent: content, toc: generateTOC(content) };
+        return { ...post, metadata, markdownContent: content };
     }, [slug]);
-
-    // Handle scroll for TOC highlighting (rAF-throttled so the layout reads
-    // run at most once per frame)
-    useEffect(() => {
-        if (!slug || !activePostData?.toc.length) return;
-
-        let ticking = false;
-        const handleScroll = () => {
-            if (ticking) return;
-            ticking = true;
-            window.requestAnimationFrame(() => {
-                ticking = false;
-                const scrollValues = activePostData.toc.map(item => {
-                    const element = document.getElementById(item.slug);
-                    if (!element) return { id: item.slug, offset: Infinity };
-                    return { id: item.slug, offset: Math.abs(element.getBoundingClientRect().top - 150) };
-                });
-
-                const closest = scrollValues.sort((a, b) => a.offset - b.offset)[0];
-                if (closest && closest.offset < 500) {
-                    setActiveSection(closest.id);
-                }
-            });
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [slug, activePostData]);
-
-    const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            const headerOffset = 100;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-            setActiveSection(id);
-
-            // Update URL hash without jumping
-            window.history.pushState(null, null, `#${id}`);
-        }
-    };
-
-    const handleTocClick = (event, id) => {
-        event.preventDefault();
-        scrollToSection(id);
-    };
 
     // Custom renderer: IDs for headings, alt fallback for images
     const MarkdownComponents = {
@@ -153,7 +78,7 @@ function Blog() {
     return (
         <PageLayout>
             <Helmet>
-                <title>{activePostData ? `${activePostData.title} | Blog` : 'Blog | Darren Pinto'}</title>
+                <title>{activePostData ? `${activePostData.title} | Writing` : 'Writing | Darren Pinto'}</title>
                 <meta name="description" content={activePostData ? activePostData.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
                 <link rel="canonical" href={activePostData ? `${BASE_URL}/blog/${slug}` : `${BASE_URL}/blog`} />
                 {activePostData && (
@@ -180,107 +105,62 @@ function Blog() {
             </Helmet>
             <main id="main" className="container">
                 {slug ? (
-                    // Single Post View with Sidebar
-                    <div className={`blog-post-view pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
+                    <div className={`pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
                         <Link to="/blog" className="back-link">
-                            <ArrowLeft size={18} />
-                            Back to Blog
+                            <ArrowLeft size={14} />
+                            Back to Writing
                         </Link>
 
                         {!activePostData ? (
                             <div className="loading-state">
                                 <p>Post not found.</p>
                                 <p style={{ marginTop: '1rem' }}>
-                                    <Link to="/blog" className="back-link" style={{ display: 'inline-flex', marginRight: '1rem' }}>
-                                        <ArrowLeft size={18} style={{ marginRight: '0.25rem' }} />
-                                        Back to Blog
+                                    <Link to="/blog" className="back-link" style={{ display: 'inline-flex', marginRight: '1.5rem', marginBottom: 0 }}>
+                                        Back to Writing
                                     </Link>
-                                    <Link to="/" className="back-link" style={{ display: 'inline-flex' }}>
+                                    <Link to="/" className="back-link" style={{ display: 'inline-flex', marginBottom: 0 }}>
                                         Home
                                     </Link>
                                 </p>
                             </div>
                         ) : (
-                            <div className={`blog-post-layout ${activePostData.toc && activePostData.toc.length > 0 ? 'has-toc' : ''}`}>
-                                {/* Sidebar TOC - Sticky on Left */}
-                                {activePostData.toc && activePostData.toc.length > 0 && (
-                                    <aside className="blog-sidebar">
-                                        <h4 className="toc-title">On This Page</h4>
-                                        <ul className="toc-list">
-                                            {activePostData.toc.map((item) => (
-                                                <li key={item.slug} style={{ paddingLeft: item.level === 3 ? '0.75rem' : '0' }}>
-                                                    <a
-                                                        href={`#${item.slug}`}
-                                                        className={`toc-link ${activeSection === item.slug ? 'active' : ''}`}
-                                                        onClick={(event) => handleTocClick(event, item.slug)}
-                                                        aria-current={activeSection === item.slug ? 'location' : undefined}
-                                                    >
-                                                        {item.text}
-                                                    </a>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </aside>
-                                )}
-
-                                <div className="blog-content-wrapper">
-                                    <article className="prose blog-article">
-                                        <header className="post-header">
-                                            <h1 className="post-title">{activePostData.title}</h1>
-                                            <div className="post-meta">
-                                                <span className="meta-item">
-                                                    <Calendar size={14} />
-                                                    {formatDate(activePostData.date)}
-                                                </span>
-                                                <span className="meta-item">
-                                                    <Tag size={14} />
-                                                    {activePostData.category}
-                                                </span>
-                                            </div>
-                                        </header>
-                                        <div className="markdown-content">
-                                            <ReactMarkdown
-                                                remarkPlugins={[remarkGfm]}
-                                                components={MarkdownComponents}
-                                            >
-                                                {activePostData.markdownContent}
-                                            </ReactMarkdown>
-                                        </div>
-                                    </article>
+                            <article className="blog-article">
+                                <header className="post-header">
+                                    <div className="post-meta">
+                                        <span className="meta-item">{formatDate(activePostData.date)}</span>
+                                        <span className="meta-item">{activePostData.category}</span>
+                                    </div>
+                                    <h1 className="post-title">{activePostData.title}</h1>
+                                </header>
+                                <div className="markdown-content">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={MarkdownComponents}
+                                    >
+                                        {activePostData.markdownContent}
+                                    </ReactMarkdown>
                                 </div>
-                            </div>
+                            </article>
                         )}
                     </div>
-
                 ) : (
-                    // List View
                     <>
                         <div className={`pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
-                            <h1>Blog</h1>
+                            <h1>Writing</h1>
                             <p className="subtitle">Hackathons, competitions, and projects from CMU and beyond.</p>
                         </div>
 
-                        <div className={`blog-list pre-animate delay-100 ${isVisible ? 'fade-in-visible' : ''}`}>
+                        <div className={`pre-animate delay-100 ${isVisible ? 'fade-in-visible' : ''}`}>
                             {blogPosts.length > 0 ? (
-                                <div className="posts-grid">
+                                <div className="writing-list">
                                     {blogPosts.map((post) => (
-                                        <Link to={`/blog/${post.slug}`} key={post.slug} className="post-card">
-                                            <div className="post-card-image-wrapper">
-                                                <img src={post.image} alt={post.title} className="post-card-image" loading="lazy" decoding="async" />
-                                            </div>
-                                            <div className="post-card-content">
-                                                <div className="post-card-meta">
-                                                    <span className="post-tag-pill">{post.category}</span>
-                                                    <span className="post-date">{formatDate(post.date)}</span>
-                                                </div>
-                                                <h2 className="post-card-title">{post.title}</h2>
-                                                <p className="post-card-excerpt">{post.excerpt}</p>
-                                                <div className="post-card-footer">
-                                                    <span className="read-more" aria-hidden="true">
-                                                        <ChevronRight size={16} />
-                                                    </span>
-                                                </div>
-                                            </div>
+                                        <Link to={`/blog/${post.slug}`} key={post.slug} className="writing-row">
+                                            <span className="writing-date">{formatDate(post.date)}</span>
+                                            <span>
+                                                <span className="writing-title">{post.title}</span>
+                                                <span className="writing-excerpt" style={{ display: 'block' }}>{post.excerpt}</span>
+                                                <span className="writing-tag">{post.category}</span>
+                                            </span>
                                         </Link>
                                     ))}
                                 </div>

@@ -54,83 +54,20 @@ function AnimatedRoutes() {
   );
 }
 
-// Navigation component with sliding highlight
+// Navigation — mono readout links; the active page gets the accent underline
 function Navigation() {
   const location = useLocation();
-  const navRef = useRef(null);
-  const indicatorRef = useRef(null);
-  const linksRef = useRef({});
-
-  // Update indicator position
-  useLayoutEffect(() => {
-    const activeKey = location.pathname === '/'
-      ? '/'
-      : location.pathname.startsWith('/blog')
-        ? '/blog'
-        : location.pathname.startsWith('/courses')
-          ? '/courses'
-          : '/';
-    const activeLink = linksRef.current[activeKey];
-    const nav = navRef.current;
-    const indicator = indicatorRef.current;
-
-    if (activeLink && nav && indicator) {
-      const navRect = nav.getBoundingClientRect();
-      const linkRect = activeLink.getBoundingClientRect();
-
-      indicator.style.width = `${linkRect.width}px`;
-      indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-    }
-  }, [location.pathname]);
-
-  // Keep indicator aligned when viewport size changes
-  useEffect(() => {
-    const handleResize = () => {
-      const activeKey = location.pathname === '/'
-        ? '/'
-        : location.pathname.startsWith('/blog')
-          ? '/blog'
-          : location.pathname.startsWith('/courses')
-            ? '/courses'
-            : '/';
-      const activeLink = linksRef.current[activeKey];
-      const nav = navRef.current;
-      const indicator = indicatorRef.current;
-
-      if (activeLink && nav && indicator) {
-        const navRect = nav.getBoundingClientRect();
-        const linkRect = activeLink.getBoundingClientRect();
-        indicator.style.width = `${linkRect.width}px`;
-        indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [location.pathname]);
+  const blogActive = location.pathname.startsWith('/blog');
 
   return (
-    <nav className="nav-links" ref={navRef} aria-label="Primary">
-      <div className="nav-indicator" ref={indicatorRef} />
-      <NavLink
-        to="/"
-        ref={(el) => linksRef.current['/'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
+    <nav className="nav-links" aria-label="Primary">
+      <NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>
         About
       </NavLink>
-      <NavLink
-        to="/blog"
-        ref={(el) => linksRef.current['/blog'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
-        Blog
+      <NavLink to="/blog" className={blogActive ? 'active' : ''}>
+        Writing
       </NavLink>
-      <NavLink
-        to="/courses"
-        ref={(el) => linksRef.current['/courses'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
+      <NavLink to="/courses" className={({ isActive }) => isActive ? 'active' : ''}>
         Courses
       </NavLink>
     </nav>
@@ -210,7 +147,7 @@ function App() {
     // Update theme-color meta for iOS status bar
     const metaThemeColor = document.getElementById('theme-color-meta');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
+      metaThemeColor.setAttribute('content', isDarkMode ? '#0e1013' : '#fbfaf8');
     }
 
     // Remove transitioning class after animation completes

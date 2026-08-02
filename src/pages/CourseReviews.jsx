@@ -125,21 +125,6 @@ I felt as though small group sessions were a good way to connect with an uppercl
     }
 ];
 
-const departmentNames = {
-    "18": "Electrical & Computer Engineering",
-    "21": "Mathematics",
-    "76": "English",
-    "39": "Engineering",
-    "15": "Computer Science",
-    "24": "Mechanical Engineering",
-    "33": "Physics",
-};
-
-const getDepartment = (code) => {
-    const prefix = code.split('-')[0];
-    return departmentNames[prefix] || "Other";
-};
-
 // Flatten courses for search/index
 const allCoursesList = courses.flatMap(sem =>
     sem.items.map(course => ({ ...course, semester: sem.semester }))
@@ -157,7 +142,6 @@ function CourseReviews() {
         } catch { /* ignore */ }
         return new Set();
     });
-    const [activeSemester, setActiveSemester] = useState("");
 
     // Toggle logic
     const toggleCourse = (code) => {
@@ -182,56 +166,19 @@ function CourseReviews() {
 
     const isAllExpanded = allCoursesList.every(c => expandedCourses.has(c.code));
 
-    // Scroll helpers
+    // Smooth-scroll to a semester section
     const scrollToId = (id) => {
         const element = document.getElementById(id);
         if (element) {
-            const headerOffset = 100;
+            const headerOffset = 90;
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
             window.scrollTo({
                 top: offsetPosition,
                 behavior: "smooth"
             });
-            // Also explicitly set active to avoid jitter during scroll
-            if (!id.includes('-')) setActiveSemester(""); // Basic heuristic
-            else if (id.includes(' ')) setActiveSemester(id);
         }
     };
-
-    const scrollToCourse = (code) => {
-        setExpandedCourses(prev => new Set(prev).add(code));
-        setTimeout(() => scrollToId(code), 100);
-    };
-
-    // ScrollSpy Logic
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        // Use the data-semester attribute for stable ID tracking
-                        setActiveSemester(entry.target.getAttribute('data-semester'));
-                    }
-                });
-            },
-            {
-                rootMargin: "-20% 0px -60% 0px", // Trigger when element is near top
-                threshold: 0
-            }
-        );
-
-        courses.forEach(sem => {
-            const id = sem.semester.replace(/\s+/g, '-');
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
-    // Department grouping
-    const departments = [...new Set(allCoursesList.map(c => getDepartment(c.code)))].sort();
 
 
     return (
@@ -268,96 +215,37 @@ function CourseReviews() {
                     </div>
                 </div>
 
-                <div className="course-toolbar animate-blur-fade delay-100">
+                <div className="course-jump animate-blur-fade delay-100">
+                    {courses.map(sem => (
+                        <button
+                            key={sem.semester}
+                            onClick={() => scrollToId(sem.semester.replace(/\s+/g, '-'))}
+                            className="jump-link"
+                        >
+                            {sem.semester}
+                        </button>
+                    ))}
                     <button
                         onClick={toggleAll}
                         className="text-action-btn"
                         aria-label={isAllExpanded ? "Collapse all courses" : "Expand all courses"}
                     >
-                        {isAllExpanded ? (
-                            <>
-                                <span style={{ fontSize: '1.2em' }}>−</span> Collapse All
-                            </>
-                        ) : (
-                            <>
-                                <span style={{ fontSize: '1.2em' }}>+</span> Expand All
-                            </>
-                        )}
+                        {isAllExpanded ? '− Collapse all' : '+ Expand all'}
                     </button>
                 </div>
 
-                <div className="course-layout">
-                    {/* Sticky Sidebar */}
-                    <aside className="course-sidebar animate-blur-fade delay-100">
-                        <div className="sidebar-section">
-                            <h3 className="sidebar-title">Semesters</h3>
-                            <div className="sidebar-nav">
-                                {courses.map(sem => (
-                                    <button
-                                        key={sem.semester}
-                                        onClick={() => scrollToId(sem.semester.replace(/\s+/g, '-'))}
-                                        className={`sidebar-link ${activeSemester === sem.semester ? 'active' : ''}`}
-                                    >
-                                        {sem.semester}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-
-
-                        <div className="sidebar-section sidebar-dept-section">
-                            <h3 className="sidebar-title">Departments</h3>
-                            <div className="sidebar-nav">
-                                {departments.map(dept => (
-                                    <div key={dept} style={{ marginBottom: '0.5rem' }}>
-                                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
-                                            {dept}
-                                        </div>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                                            {allCoursesList.filter(c => getDepartment(c.code) === dept).map(c => (
-                                                <button
-                                                    key={c.code}
-                                                    onClick={() => scrollToCourse(c.code)}
-                                                    aria-label={`Jump to ${c.code}: ${c.name}`}
-                                                    style={{
-                                                        fontSize: '0.75rem',
-                                                        padding: '2px 6px',
-                                                        background: 'var(--stat-bg)',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer',
-                                                        color: 'var(--accent)'
-                                                    }}
-                                                >
-                                                    {c.code}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-
-                    </aside>
-
-                    {/* Main Content */}
-                    <div className="course-content animate-blur-fade delay-200">
-                        {courses.map((semester) => (
-                            <SemesterGroup
-                                key={semester.semester}
-                                semester={semester}
-                                expandedCourses={expandedCourses}
-                                toggleCourse={toggleCourse}
-                            />
-                        ))}
-                    </div>
+                <div className="animate-blur-fade delay-200">
+                    {courses.map((semester) => (
+                        <SemesterGroup
+                            key={semester.semester}
+                            semester={semester}
+                            expandedCourses={expandedCourses}
+                            toggleCourse={toggleCourse}
+                        />
+                    ))}
                 </div>
 
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '5rem', textAlign: 'center' }}>
-                    Last updated: March 2026
-                </p>
+                <p className="page-note">Last updated: March 2026</p>
             </main>
         </PageLayout>
     );
@@ -386,15 +274,19 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
         return () => observer.disconnect();
     }, []);
 
+    const totalUnits = semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0);
+
     return (
         <div
             id={semesterId}
             data-semester={semester.semester}
             ref={sectionRef}
             className="semester-section"
-            style={{ scrollMarginTop: '100px' }}
         >
-            <h2 className="semester-title">{semester.semester}</h2>
+            <div className="semester-head">
+                <h2 className="semester-title">{semester.semester}</h2>
+                <span className="semester-units">{semester.items.length} courses · {totalUnits} units</span>
+            </div>
             <div className={`course-list ${isVisible ? 'visible' : ''}`}>
                 {[...semester.items].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0)).map((course, index) => (
                     <FadeIn key={course.code} delay={Math.min(index * 0.08, 0.24)} visible={isVisible}>
@@ -445,16 +337,10 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                                 <p key={i}>{para.trim()}</p>
                                             ))}
                                         </div>
-                                        <div className="course-stats">
-                                            <div className="stat-item">
-                                                <span className="stat-label">Hours/Week</span>
-                                                <span className="stat-value">{course.hoursPerWeek}</span>
-                                            </div>
-                                            <div className="stat-item">
-                                                <span className="stat-label">Difficulty</span>
-                                                <span className="stat-value">{course.difficulty}</span>
-                                            </div>
-                                        </div>
+                                        <p className="course-stat-line">
+                                            Hours/week <strong>{course.hoursPerWeek}</strong>
+                                            {' '}· Difficulty <strong>{course.difficulty}</strong>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -464,16 +350,11 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
             </div>
 
             {semester.reflection && (
-                <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
-                    <div className="semester-review-card">
-                        <div className="review-header">
-                            <span className="review-label">Semester Review</span>
-                            <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
-                        </div>
-                        {semester.reflection.split(/\n\n+/).map((para, i) => (
-                            <p key={i} className="review-text">{para.trim()}</p>
-                        ))}
-                    </div>
+                <div className={`semester-review-card fade-in-section ${isVisible ? 'is-visible' : ''}`}>
+                    <span className="review-label">Semester Review</span>
+                    {semester.reflection.split(/\n\n+/).map((para, i) => (
+                        <p key={i} className="review-text">{para.trim()}</p>
+                    ))}
                 </div>
             )}
         </div>
