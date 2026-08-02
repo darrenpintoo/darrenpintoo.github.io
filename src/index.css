@@ -694,25 +694,27 @@ h2 {
   }
 }
 
-/* Profile section with floated image */
+/* Profile section — photo beside a consistent text column (a float would
+   reflow paragraphs to full width mid-sentence once they clear the image) */
 .profile-section {
-  overflow: visible;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
 }
 
 .profile-image {
-  float: left;
   width: 200px;
   height: 200px;
   object-fit: cover;
   object-position: center 15%;
-  margin-right: 2rem;
-  margin-bottom: 1rem;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.6);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.06);
 }
+
 
 [data-theme="dark"] .profile-image {
   border-color: rgba(255, 255, 255, 0.15);
@@ -1701,11 +1703,14 @@ html.intro-freeze .profile-image {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
 
-  /* Un-float the image and center it */
+  /* Stack the profile grid; center just the photo */
+  .profile-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
   .profile-image {
-    float: none;
-    display: block;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 0.5rem auto;
     width: 180px;
     height: 180px;
   }

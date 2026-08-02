@@ -68,6 +68,7 @@ function About() {
                         decoding="async"
                     />
 
+                    <div className="profile-text">
                     <p>
                         Hi, I'm Darren. I build intelligent systems at the intersection of hardware and software,
                         with a focus on <strong>robotics</strong>, <strong>reinforcement learning</strong>,
@@ -125,6 +126,7 @@ function About() {
                             </Link>
                         </FadeIn>
                     )}
+                    </div>
                 </div>
 
                 <div
