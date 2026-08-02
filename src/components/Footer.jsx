@@ -1,12 +1,15 @@
-import FadeIn from './FadeIn';
+import { profile } from '../data';
 
 function Footer() {
     return (
-        <FadeIn>
-            <footer className="footer" style={{ opacity: 0.4, fontStyle: 'italic', fontSize: '0.7rem' }}>
-                <p>Designed & Built by Darren Pinto</p>
-            </footer>
-        </FadeIn>
+        <footer className="footer">
+            <p>Designed &amp; built by Darren Pinto</p>
+            <nav className="footer-links" aria-label="Contact links">
+                <a href={`mailto:${profile.contact.email}`}>Email</a>
+                <a href={`https://${profile.contact.github}`} target="_blank" rel="noreferrer">GitHub</a>
+                <a href={`https://${profile.contact.linkedin}`} target="_blank" rel="noreferrer">LinkedIn</a>
+            </nav>
+        </footer>
     );
 }
 

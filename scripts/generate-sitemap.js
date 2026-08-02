@@ -35,18 +35,21 @@ const staticUrls = [
 let postUrls = [];
 if (fs.existsSync(postsDir)) {
   const files = fs.readdirSync(postsDir).filter((f) => f.endsWith('.md'));
-  postUrls = files.map((file) => {
-    const slug = file.replace(/\.md$/, '');
-    const content = fs.readFileSync(path.join(postsDir, file), 'utf8');
-    const { date } = parseFrontmatter(content);
-    const lastmod = date || today;
-    return {
-      loc: `${baseUrl}/blog/${slug}`,
-      lastmod: lastmod.length >= 10 ? lastmod.slice(0, 10) : today,
-      changefreq: 'monthly',
-      priority: '0.6',
-    };
-  });
+  postUrls = files
+    .map((file) => {
+      const slug = file.replace(/\.md$/, '');
+      const content = fs.readFileSync(path.join(postsDir, file), 'utf8');
+      const { date, draft } = parseFrontmatter(content);
+      if (draft === 'true') return null;
+      const lastmod = date || today;
+      return {
+        loc: `${baseUrl}/blog/${slug}`,
+        lastmod: lastmod.length >= 10 ? lastmod.slice(0, 10) : today,
+        changefreq: 'monthly',
+        priority: '0.6',
+      };
+    })
+    .filter(Boolean);
 }
 
 const urlEntries = [...staticUrls, ...postUrls]

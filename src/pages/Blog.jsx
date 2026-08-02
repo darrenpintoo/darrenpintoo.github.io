@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import PageLayout from '../components/PageLayout';
-import Footer from '../components/Footer';
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
@@ -200,7 +199,7 @@ function Blog() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="blog-post-layout">
+                            <div className={`blog-post-layout ${activePostData.toc && activePostData.toc.length > 0 ? 'has-toc' : ''}`}>
                                 {/* Sidebar TOC - Sticky on Left */}
                                 {activePostData.toc && activePostData.toc.length > 0 && (
                                     <aside className="blog-sidebar">
@@ -268,19 +267,15 @@ function Blog() {
                                                 <img src={post.image} alt={post.title} className="post-card-image" loading="lazy" decoding="async" />
                                             </div>
                                             <div className="post-card-content">
-
-                                                <div className="post-card-tags">
-                                                    <span className="post-tag-pill">{post.category}</span>
-                                                </div>
-
                                                 <div className="post-card-meta">
+                                                    <span className="post-tag-pill">{post.category}</span>
                                                     <span className="post-date">{formatDate(post.date)}</span>
                                                 </div>
                                                 <h2 className="post-card-title">{post.title}</h2>
                                                 <p className="post-card-excerpt">{post.excerpt}</p>
                                                 <div className="post-card-footer">
-                                                    <span className="read-more">
-                                                        Read More <ChevronRight size={16} />
+                                                    <span className="read-more" aria-hidden="true">
+                                                        <ChevronRight size={16} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -297,7 +292,6 @@ function Blog() {
                     </>
                 )}
             </main>
-            <Footer />
         </PageLayout>
     );
 }

@@ -46,9 +46,13 @@ export function getAllPosts() {
         category: metadata.category || 'General',
         excerpt: metadata.excerpt || '',
         image: metadata.image || '/blog-placeholder.png',
+        draft: metadata.draft === 'true',
         content: module.default,
       };
     })
+    // draft: true in frontmatter hides a post from the list, the latest-post
+    // card, and the sitemap (direct URLs still resolve for previewing)
+    .filter((post) => !post.draft)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 

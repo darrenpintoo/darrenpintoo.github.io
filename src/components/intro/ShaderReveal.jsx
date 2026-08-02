@@ -61,15 +61,15 @@ float fbm(vec2 p){
 }
 
 // Reproduces the site's own ambient background: base colour layered with the
-// coral glow at 15%/50% and the blue glow at 85%/30% (see body in index.css).
+// accent glow at 15%/50% (6%) and 85%/30% (4%) (see body in index.css).
 // Because the cover paints exactly this, it reads as the real page background,
 // not a foreign overlay.
 vec3 ambient(vec2 apx, float aspect){
     vec3 col = uBg;
     float dC = distance(apx, vec2(0.15 * aspect, 0.50));
     float dB = distance(apx, vec2(0.85 * aspect, 0.70));
-    col = mix(col, uGlowA, 0.08 * (1.0 - smoothstep(0.0, 0.42, dC)));
-    col = mix(col, uGlowB, 0.08 * (1.0 - smoothstep(0.0, 0.42, dB)));
+    col = mix(col, uGlowA, 0.06 * (1.0 - smoothstep(0.0, 0.42, dC)));
+    col = mix(col, uGlowB, 0.04 * (1.0 - smoothstep(0.0, 0.42, dB)));
     return col;
 }
 
@@ -178,9 +178,11 @@ function ShaderReveal({ onComplete }) {
 
         const styles = getComputedStyle(document.documentElement);
         const bg = hexToRgb(styles.getPropertyValue('--bg-primary') || '#121212');
-        // The two ambient glow colours from the body background in index.css
-        const glowA = [242 / 255, 92 / 255, 84 / 255];  // coral, left-centre
-        const glowB = [59 / 255, 130 / 255, 246 / 255]; // blue, upper-right
+        // Both ambient glows derive from --accent-rgb (see body in index.css)
+        const accentRgb = (styles.getPropertyValue('--accent-rgb') || '157, 34, 53')
+            .split(',').map((c) => (parseFloat(c) || 0) / 255);
+        const glowA = accentRgb; // left-centre
+        const glowB = accentRgb; // upper-right
 
         const vs = compile(gl, gl.VERTEX_SHADER, VERT);
         const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);

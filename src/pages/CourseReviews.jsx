@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import PageLayout from '../components/PageLayout';
-import Footer from '../components/Footer';
 import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
@@ -243,7 +242,7 @@ function CourseReviews() {
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main id="main" className="container">
-                <div className="animate-blur-fade page-header-flex">
+                <div className="animate-blur-fade">
                     <div>
                         <h1>CMU Course Reviews</h1>
                         <p className="subtitle" style={{ marginBottom: 0 }}>
@@ -267,6 +266,9 @@ function CourseReviews() {
                             </span>
                         </div>
                     </div>
+                </div>
+
+                <div className="course-toolbar animate-blur-fade delay-100">
                     <button
                         onClick={toggleAll}
                         className="text-action-btn"
@@ -357,8 +359,7 @@ function CourseReviews() {
                     Last updated: March 2026
                 </p>
             </main>
-            <Footer />
-        </PageLayout >
+        </PageLayout>
     );
 }
 
@@ -396,7 +397,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
             <h2 className="semester-title">{semester.semester}</h2>
             <div className={`course-list ${isVisible ? 'visible' : ''}`}>
                 {[...semester.items].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0)).map((course, index) => (
-                    <FadeIn key={course.code} delay={index < 8 ? index * 0.05 : 0} visible={isVisible}>
+                    <FadeIn key={course.code} delay={Math.min(index * 0.08, 0.24)} visible={isVisible}>
                         <div
                             id={course.code}
                             className={`course-card ${expandedCourses.has(course.code) ? 'expanded' : ''}`}
@@ -430,7 +431,7 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                                     </div>
                                 </div>
                                 <div className="course-meta">
-                                    <span className="course-units">{course.units} units</span>
+                                    <span className="course-units">{course.units} {parseInt(course.units, 10) === 1 ? 'unit' : 'units'}</span>
                                     <span className="course-expand-icon">
                                         {expandedCourses.has(course.code) ? '−' : '+'}
                                     </span>
@@ -462,21 +463,19 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                 ))}
             </div>
 
-            <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
-                <div className="semester-review-card">
-                    <div className="review-header">
-                        <span className="review-label">Semester Review</span>
-                        <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
+            {semester.reflection && (
+                <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
+                    <div className="semester-review-card">
+                        <div className="review-header">
+                            <span className="review-label">Semester Review</span>
+                            <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
+                        </div>
+                        {semester.reflection.split(/\n\n+/).map((para, i) => (
+                            <p key={i} className="review-text">{para.trim()}</p>
+                        ))}
                     </div>
-                    {semester.reflection && (
-                        <>
-                            {semester.reflection.split(/\n\n+/).map((para, i) => (
-                                <p key={i} className="review-text">{para.trim()}</p>
-                            ))}
-                        </>
-                    )}
                 </div>
-            </div>
+            )}
         </div>
     );
 }
