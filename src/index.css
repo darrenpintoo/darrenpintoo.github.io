@@ -741,7 +741,8 @@ h2 {
 
 .rail-news-item {
   font-size: var(--text-sm);
-  color: var(--text-secondary);
+  /* values assert, labels/dates recede — the rail was reading as one gray mass */
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -773,7 +774,7 @@ h2 {
 
 .fact-value {
   font-size: var(--text-sm);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1.5;
   margin: 0;
 }
@@ -836,7 +837,7 @@ h2 {
 
 .hero-status-value {
   font-size: var(--text-sm);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1.55;
   margin: 0;
 }
