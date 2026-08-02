@@ -1,4 +1,4 @@
-import { profile } from '../data';
+import { profile, news } from '../data';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 import { Helmet } from 'react-helmet-async';
@@ -44,6 +44,18 @@ function About() {
                             fetchPriority="high"
                             decoding="async"
                         />
+
+                        <div className="rail-news">
+                            <span className="fact-label">News</span>
+                            <ul className="rail-news-list">
+                                {news.map((item) => (
+                                    <li className="rail-news-item" key={`${item.date}-${item.text}`}>
+                                        <span className="rail-news-date">{item.date}</span>
+                                        {item.text}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
                         <dl className="profile-facts">
                             <div className="fact">
@@ -104,31 +116,31 @@ function About() {
                     <p style={{ marginTop: '2rem', fontSize: '0.95rem' }}>
                         I write about hackathons, projects, and coursework—check out my latest below, or browse my <Link to="/blog">blog</Link> and <Link to="/courses">CMU course reviews</Link>.
                     </p>
-
-                    {latestPost && (
-                        <FadeIn>
-                            <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
-                                <div className="latest-post-card-image">
-                                    <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
-                                </div>
-                                <div className="latest-post-card-content">
-                                    <span className="latest-post-card-label">Latest post</span>
-                                    <h3 className="latest-post-card-title">{latestPost.title}</h3>
-                                    <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
-                                    <div className="latest-post-card-bottom">
-                                        <span className="latest-post-card-meta">
-                                            {formatDate(latestPost.date)} · {latestPost.category}
-                                        </span>
-                                        <span className="latest-post-card-cta">
-                                            Read <ChevronRight size={14} />
-                                        </span>
-                                    </div>
-                                </div>
-                            </Link>
-                        </FadeIn>
-                    )}
                     </div>
                 </div>
+
+                {latestPost && (
+                    <FadeIn>
+                        <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
+                            <div className="latest-post-card-image">
+                                <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
+                            </div>
+                            <div className="latest-post-card-content">
+                                <span className="latest-post-card-label">Latest post</span>
+                                <h3 className="latest-post-card-title">{latestPost.title}</h3>
+                                <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
+                                <div className="latest-post-card-bottom">
+                                    <span className="latest-post-card-meta">
+                                        {formatDate(latestPost.date)} · {latestPost.category}
+                                    </span>
+                                    <span className="latest-post-card-cta">
+                                        Read <ChevronRight size={14} />
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
+                    </FadeIn>
+                )}
             </main>
         </PageLayout>
     );

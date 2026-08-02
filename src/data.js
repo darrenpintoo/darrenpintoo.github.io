@@ -56,6 +56,14 @@ export const profile = {
     },
 };
 
+// Short dated updates for the About-page rail (newest first)
+export const news = [
+    { date: "Feb 2026", text: "1st place at ProdHacks @ CMU" },
+    { date: "Jan 2026", text: "Advanced-track win at ACM's Algorithms with a Purpose" },
+    { date: "Jan 2026", text: "Won NexHacks 2026" },
+    { date: "Sep 2025", text: "Joined the CMU Biorobotics Lab" },
+];
+
 export const experiences = [
     {
         role: "Undergraduate Student Researcher",

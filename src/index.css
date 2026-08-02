@@ -723,6 +723,36 @@ h2 {
     0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+/* News — dated one-liners filling the rail's middle */
+.rail-news {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rail-news-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.rail-news-item {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.rail-news-date {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 0.1rem;
+}
+
 /* Facts block — pinned to the bottom corner of the rail */
 .profile-facts {
   margin: auto 0 0;
