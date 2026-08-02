@@ -669,8 +669,10 @@ h2 {
   white-space: nowrap;
 }
 
-.latest-post-card:hover .latest-post-card-cta {
-  gap: 0.35rem;
+@media (hover: hover) {
+  .latest-post-card:hover .latest-post-card-cta {
+    gap: 0.35rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -790,13 +792,9 @@ h2 {
   margin: 0;
 }
 
+/* Company names are links — give them the site-wide accent affordance */
 .experience-heading a {
-  color: inherit;
-}
-
-.experience-heading a:hover {
   color: var(--accent);
-  text-decoration: none;
 }
 
 .experience-org {
@@ -1244,12 +1242,15 @@ html.intro-freeze .profile-image {
       rgba(255, 255, 255, 0.06) 0%,
       rgba(255, 255, 255, 0.02) 100%);
   border-color: rgba(255, 255, 255, 0.06);
+  /* keep the collapsed spine invisible — border-color above repaints it */
+  border-left-color: transparent;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 @media (hover: hover) {
   .course-card:hover {
     border-color: rgba(var(--accent-rgb), 0.3);
+    border-left-color: transparent;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
@@ -1259,10 +1260,13 @@ html.intro-freeze .profile-image {
   }
 }
 
-/* Emphasis grammar: accent lives on the left spine, not the whole border */
+/* Emphasis grammar: accent lives on the left spine, not the whole border.
+   Declared with !important on the spine so the hover rule's
+   border-left-color: transparent (same specificity, later media block
+   ordering varies) can never blank an expanded card's spine. */
 .course-card.expanded {
   border-color: rgba(var(--accent-rgb), 0.3);
-  border-left-color: var(--accent);
+  border-left-color: var(--accent) !important;
   box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.1);
 }
 

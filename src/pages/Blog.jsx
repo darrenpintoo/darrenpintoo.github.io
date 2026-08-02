@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
-import { getAllPosts, parseFrontmatter, formatDate } from '../utils/posts';
+import { getAllPosts, getPostBySlug, parseFrontmatter, formatDate } from '../utils/posts';
 
 const BASE_URL = 'https://darrenpinto.me';
 
@@ -64,11 +64,13 @@ function Blog() {
 
     const activePostData = useMemo(() => {
         if (!slug) return null;
-        const post = blogPosts.find(p => p.slug === slug);
+        // getPostBySlug ignores the draft filter so draft posts can still be
+        // previewed at their direct URL
+        const post = getPostBySlug(slug);
         if (!post) return null;
         const { metadata, content } = parseFrontmatter(post.content);
         return { ...post, metadata, markdownContent: content, toc: generateTOC(content) };
-    }, [slug, blogPosts]);
+    }, [slug]);
 
     // Handle scroll for TOC highlighting (rAF-throttled so the layout reads
     // run at most once per frame)

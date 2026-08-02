@@ -25,16 +25,17 @@ function ScrollToTop() {
 
 function AnimatedRoutes() {
   const location = useLocation();
-  const isFirstRoute = useRef(true);
+  const lastPathRef = useRef(null);
 
   // Entrances play fully on the first page only; later in-app navigations
-  // get a quick fade (see html.entrances-quiet in index.css)
+  // get a quick fade (see html.entrances-quiet in index.css). Compare against
+  // the previous pathname rather than a run-once flag so StrictMode's
+  // double-invoked mount effect can't mark the first page as a navigation.
   useEffect(() => {
-    if (isFirstRoute.current) {
-      isFirstRoute.current = false;
-      return;
+    if (lastPathRef.current !== null && lastPathRef.current !== location.pathname) {
+      document.documentElement.classList.add('entrances-quiet');
     }
-    document.documentElement.classList.add('entrances-quiet');
+    lastPathRef.current = location.pathname;
   }, [location.pathname]);
 
   return (
@@ -109,7 +110,7 @@ function Navigation() {
   }, [location.pathname]);
 
   return (
-    <nav className="nav-links" ref={navRef}>
+    <nav className="nav-links" ref={navRef} aria-label="Primary">
       <div className="nav-indicator" ref={indicatorRef} />
       <NavLink
         to="/"

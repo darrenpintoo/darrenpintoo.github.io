@@ -20,7 +20,9 @@ function IntroReveal({ onComplete }) {
         return <ScanReveal onComplete={onComplete} slow={getIntroSlowMo()} />;
     }
     return (
-        <Suspense fallback={null}>
+        // Fallback paints the same opaque cover the variant will mount with,
+        // so the page never flashes uncovered while the lazy chunk loads
+        <Suspense fallback={<div className="intro-overlay" aria-hidden="true"><div className="intro-cover" /></div>}>
             <Variant onComplete={onComplete} slow={getIntroSlowMo()} />
         </Suspense>
     );

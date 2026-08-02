@@ -50,7 +50,7 @@ export function waitForPageReady(timeoutMs = 550) {
 }
 
 const OUTLINE_SELECTORS =
-    '.status-pill, .theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card';
+    '.theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card, .work-card';
 
 // Sample the live page into { x, y, color, r } dots:
 // - text gets one dot row per line box, in its real rendered color

@@ -73,10 +73,8 @@ function BlogListSkeleton() {
                                 <S width="100%" height="100%" radius="0" style={{ position: 'absolute', inset: 0 }} delay={i * 0.15} />
                             </div>
                             <div className="post-card-content">
-                                <div className="post-card-tags">
-                                    <S width="80px" height="0.65rem" radius="6px" delay={i * 0.15} />
-                                </div>
                                 <div className="post-card-meta">
+                                    <S width="80px" height="0.65rem" radius="6px" delay={i * 0.15} />
                                     <S width="100px" height="0.65rem" delay={i * 0.15} />
                                 </div>
                                 <S width="90%" height="1rem" style={{ marginBottom: '0.5rem' }} delay={i * 0.15} />

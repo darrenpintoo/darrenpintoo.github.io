@@ -34,26 +34,37 @@ export function parseFrontmatter(markdown) {
   return { metadata, content };
 }
 
+function toPost(path, module) {
+  const fileName = path.split('/').pop().replace('.md', '');
+  const { metadata } = parseFrontmatter(module.default);
+  return {
+    slug: fileName,
+    title: metadata.title || 'Untitled Post',
+    date: metadata.date || 'Unknown Date',
+    category: metadata.category || 'General',
+    excerpt: metadata.excerpt || '',
+    image: metadata.image || '/blog-placeholder.png',
+    draft: metadata.draft === 'true',
+    content: module.default,
+  };
+}
+
 export function getAllPosts() {
   return Object.entries(postFiles)
-    .map(([path, module]) => {
-      const fileName = path.split('/').pop().replace('.md', '');
-      const { metadata } = parseFrontmatter(module.default);
-      return {
-        slug: fileName,
-        title: metadata.title || 'Untitled Post',
-        date: metadata.date || 'Unknown Date',
-        category: metadata.category || 'General',
-        excerpt: metadata.excerpt || '',
-        image: metadata.image || '/blog-placeholder.png',
-        draft: metadata.draft === 'true',
-        content: module.default,
-      };
-    })
+    .map(([path, module]) => toPost(path, module))
     // draft: true in frontmatter hides a post from the list, the latest-post
-    // card, and the sitemap (direct URLs still resolve for previewing)
+    // card, and the sitemap; getPostBySlug still resolves it for previewing
     .filter((post) => !post.draft)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+// Slug lookup that ignores the draft filter, so /blog/<slug> works as a
+// preview URL for unpublished posts
+export function getPostBySlug(slug) {
+  const entry = Object.entries(postFiles).find(
+    ([path]) => path.split('/').pop().replace('.md', '') === slug
+  );
+  return entry ? toPost(entry[0], entry[1]) : null;
 }
 
 export function getLatestPost() {

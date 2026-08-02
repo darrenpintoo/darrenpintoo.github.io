@@ -12,7 +12,8 @@ function easeInOutCubic(t) {
 // The cover div hides content behind an animated conic-gradient mask;
 // the canvas on top draws only the beam, faint range rings, and sparse
 // scan returns — the page itself is live DOM, never a screenshot.
-function ScanReveal({ onComplete }) {
+// `slow` stretches the sweep for ?slow=1 debugging (see introUtils).
+function ScanReveal({ onComplete, slow = 1 }) {
     const rootRef = useRef(null);
     const coverRef = useRef(null);
     const canvasRef = useRef(null);
@@ -72,10 +73,11 @@ function ScanReveal({ onComplete }) {
         setMask(0);
 
         const start = performance.now();
+        const sweepMs = SWEEP_MS * slow;
 
         const draw = (now) => {
             if (doneRef.current) return;
-            const t = Math.min((now - start) / SWEEP_MS, 1);
+            const t = Math.min((now - start) / sweepMs, 1);
             const sweepDeg = easeInOutCubic(t) * 360;
             setMask(sweepDeg);
 
@@ -157,7 +159,7 @@ function ScanReveal({ onComplete }) {
             window.removeEventListener('keydown', onKey);
             root.removeEventListener('click', finish);
         };
-    }, []);
+    }, [slow]);
 
     return (
         <div ref={rootRef} className="scan-reveal" aria-hidden="true">

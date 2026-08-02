@@ -135,7 +135,7 @@ function About() {
                                     {project.link && (
                                         <div className="work-card-links">
                                             <a href={project.link.href} target="_blank" rel="noreferrer">
-                                                {project.link.label} ↗
+                                                {project.link.label} <span aria-hidden="true">↗</span>
                                             </a>
                                         </div>
                                     )}
