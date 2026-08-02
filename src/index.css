@@ -1793,31 +1793,42 @@ html.intro-freeze .profile-image {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
 
-  /* Stack the profile grid; the rule rotates to a horizontal divider */
+  /* Phone: sidebar becomes footer — the reader hits the bio right after the
+     photo; news + facts trail the prose as reference material */
   .profile-section {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   .profile-rail {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding-right: 0;
-    padding-bottom: 1.5rem;
-    gap: 1.5rem;
+    /* dissolve the rail box so its children reorder as grid items */
+    display: contents;
+  }
+
+  .profile-image {
+    order: 1;
+    margin: 0 auto 0.5rem auto;
+    width: 160px;
+    height: 160px;
+  }
+
+  .profile-text {
+    order: 2;
+  }
+
+  .rail-news {
+    order: 3;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
   }
 
   .profile-facts {
+    order: 4;
     margin-top: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem 1.5rem;
-  }
-
-  .profile-image {
-    margin: 0 auto 0.5rem auto;
-    width: 180px;
-    height: 180px;
   }
 
   /* Adjust container spacing */
