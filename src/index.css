@@ -694,19 +694,19 @@ h2 {
   }
 }
 
-/* Profile section — photo beside a fixed text column (no float reflow) */
+/* Profile section with floated image */
 .profile-section {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 2.5rem;
-  align-items: start;
+  overflow: visible;
 }
 
 .profile-image {
+  float: left;
   width: 200px;
   height: 200px;
   object-fit: cover;
   object-position: center 15%;
+  margin-right: 2rem;
+  margin-bottom: 1rem;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.6);
   box-shadow:
@@ -721,25 +721,57 @@ h2 {
     0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Status line — quiet "Currently" meta under the subtitle */
-.status-line {
+/* Status Pill — liquid glass standout for "Currently" */
+.header-top-row {
   display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.header-status-pill {
+  margin-bottom: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
   font-size: var(--text-sm);
   color: var(--text-secondary);
   line-height: 1.5;
-  margin: 0.75rem 0 0;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.12) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .status-pill {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent);
   flex-shrink: 0;
-  /* optically centered on the first text line even when the line wraps */
-  margin-top: 0.55em;
+  box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.5);
 }
 
 /* Prose */
@@ -754,162 +786,6 @@ h2 {
 
 .prose p:last-child {
   margin-bottom: 0;
-}
-
-/* Home sections — Experience and Selected Work, rendered from data.js */
-.home-section {
-  margin-top: 3.5rem;
-}
-
-.home-section-title {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
-  margin: 0 0 1rem;
-}
-
-.experience-list {
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.experience-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.2rem 1.5rem;
-  padding: 1rem 0;
-  border-top: 1px solid var(--border-color);
-}
-
-.experience-heading {
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-/* Company names are links — give them the site-wide accent affordance */
-.experience-heading a {
-  color: var(--accent);
-}
-
-.experience-org {
-  font-weight: 400;
-  color: var(--text-secondary);
-}
-
-.experience-date {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.experience-summary {
-  grid-column: 1 / -1;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0;
-  max-width: var(--measure);
-}
-
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-
-@media (max-width: 700px) {
-  .work-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .experience-row {
-    grid-template-columns: 1fr;
-  }
-
-  .experience-date {
-    grid-column: 1;
-    grid-row: auto;
-  }
-}
-
-.work-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.25rem 1.4rem;
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-@media (hover: hover) {
-  .work-card:hover {
-    border-color: rgba(var(--accent-rgb), 0.35);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  }
-}
-
-.work-card-title {
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.work-card-context {
-  font-size: var(--text-xs);
-  font-weight: 400;
-  color: var(--text-tertiary);
-}
-
-.work-card-stats {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-}
-
-.work-card-desc {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0;
-}
-
-.work-card-links {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.35rem;
-}
-
-.work-card-links a {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--accent);
-}
-
-/* Contact line at the end of the bio */
-.contact-cta a {
-  font-weight: 500;
 }
 
 /* Footer & Socials */
@@ -1825,14 +1701,11 @@ html.intro-freeze .profile-image {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
 
-  /* Stack the profile grid; center just the photo */
-  .profile-section {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
+  /* Un-float the image and center it */
   .profile-image {
-    margin: 0 auto 0.5rem auto;
+    float: none;
+    display: block;
+    margin: 0 auto 2rem auto;
     width: 180px;
     height: 180px;
   }

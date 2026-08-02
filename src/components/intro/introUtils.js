@@ -3,7 +3,7 @@
 // and a DOM sampler that turns the real rendered page into target dots.
 
 export const INTRO_VARIANT_NAMES = ['shader', 'orbit', 'balls', 'flow', 'scan'];
-export const DEFAULT_INTRO = 'scan';
+export const DEFAULT_INTRO = 'shader';
 
 // Dev/testing switch: ?intro=balls|flow|scan|none forces a variant and
 // bypasses the once-per-session gate; add &slow=1 for 6x slow motion.
@@ -50,7 +50,7 @@ export function waitForPageReady(timeoutMs = 550) {
 }
 
 const OUTLINE_SELECTORS =
-    '.theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card, .work-card';
+    '.status-pill, .theme-toggle, .nav-links, .latest-post-card, .post-card, .course-card, .semester-review-card';
 
 // Sample the live page into { x, y, color, r } dots:
 // - text gets one dot row per line box, in its real rendered color

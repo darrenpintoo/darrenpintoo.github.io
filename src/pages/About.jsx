@@ -1,4 +1,4 @@
-import { profile, experiences, projects } from '../data';
+import { profile } from '../data';
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
@@ -44,17 +44,16 @@ function About() {
             </Helmet>
             <main id="main" className="container">
                 <div className="animate-blur-fade">
-                    <h1><strong>Darren</strong> Pinto</h1>
-                    <p className="subtitle">
+                    <div className="header-top-row">
+                        <h1><strong>Darren</strong> Pinto</h1>
+                        <div className="status-pill header-status-pill">
+                            <span className="status-dot" />
+                            <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
+                        </div>
+                    </div>
+                    <p className="subtitle" style={{ marginBottom: '2.5rem' }}>
                         Undergraduate Student & Robotics Researcher at{' '}
                         <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
-                    </p>
-                    <p className="status-line" style={{ marginBottom: '2.5rem' }}>
-                        <span className="status-dot" />
-                        <span>
-                            Currently: <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink> @ CMU
-                            {' '}· <PreviewLink href="https://www.ibm.com/" target="_blank" rel="noreferrer">IBM Silicon Valley Lab</PreviewLink>, Summer 2026
-                        </span>
                     </p>
                 </div>
 
@@ -69,104 +68,64 @@ function About() {
                         decoding="async"
                     />
 
-                    <div className="profile-text">
-                        <p>
-                            Hi, I'm Darren. I build intelligent systems at the intersection of hardware and software,
-                            with a focus on <strong>robotics</strong>, <strong>reinforcement learning</strong>,
-                            and <strong>embedded systems</strong>.
-                        </p>
+                    <p>
+                        Hi, I'm Darren. I build intelligent systems at the intersection of hardware and software,
+                        with a focus on <strong>robotics</strong>, <strong>reinforcement learning</strong>,
+                        and <strong>embedded systems</strong>.
+                    </p>
 
-                        <p>
-                            I am an Electrical and Computer Engineering student at{' '}
-                            <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
-                            At CMU, I conduct research at the <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink>,
-                            exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
-                            depth perception for robotic learning experiments. This upcoming summer I will be interning at{' '}
-                            <PreviewLink href="https://www.ibm.com/" target="_blank" rel="noreferrer">IBM</PreviewLink> in their Silicon Valley Laboratory.
-                        </p>
+                    <p>
+                        I am an Electrical and Computer Engineering student at{' '}
+                        <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
+                        At CMU, I conduct research at the <PreviewLink href="https://biorobotics.org/" target="_blank" rel="noreferrer">Biorobotics Lab</PreviewLink>,
+                        exploring reinforcement learning for modular robot manipulation using NVIDIA IsaacSim and integrating
+                        depth perception for robotic learning experiments. This upcoming summer I will be interning at <PreviewLink href="https://www.ibm.com/" target="_blank" rel="noreferrer">IBM</PreviewLink> in their Silicon Valley Laboratory.
+                    </p>
 
-                        <p>
-                            Previously, I interned at <PreviewLink href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</PreviewLink>,
-                            where I designed embedded systems and high-performance computing prototypes, and led a World Championship
-                            Finalist <PreviewLink href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</PreviewLink> team.
-                            Beyond engineering, my <PreviewLink href="https://www.roblox.com/games/114162328499203/Find-the-Toons" target="_blank" rel="noreferrer">projects on Roblox</PreviewLink> have
-                            engaged over 175,000 players across 6 million play sessions.
-                        </p>
+                    <p>
+                        Previously, I interned at <PreviewLink href="https://www.cadreforensics.com/" target="_blank" rel="noreferrer">Cadre Research</PreviewLink>,
+                        where I designed embedded systems and high-performance computing prototypes. My background also includes
+                        leading a World Championship Finalist <PreviewLink href="https://www.firstinspires.org/robotics/ftc" target="_blank" rel="noreferrer">FIRST Tech Challenge</PreviewLink> team,
+                        where my team was a Control Award Finalist for the custom software libraries I developed.
+                    </p>
 
-                        <p className="contact-cta">
-                            I'm always exploring new ideas and working on creative problems—if you'd like to chat,{' '}
-                            <a href={`mailto:${profile.contact.email}`}>email me</a>.
-                        </p>
-                    </div>
-                </div>
+                    <p>
+                        Beyond engineering, I channel my creativity into game development. My <PreviewLink href="https://www.roblox.com/games/114162328499203/Find-the-Toons" target="_blank" rel="noreferrer">projects on Roblox</PreviewLink> have
+                        engaged a community of over 175,000 players with more than 6 million play sessions, allowing me to explore
+                        large-scale data-driven design.
+                    </p>
 
-                <FadeIn className="home-section">
-                    <section aria-labelledby="experience-title">
-                        <h2 className="home-section-title" id="experience-title">Experience</h2>
-                        <div className="experience-list">
-                            {experiences.map((exp) => (
-                                <div className="experience-row" key={exp.company}>
-                                    <p className="experience-heading">
-                                        {exp.role}
-                                        {' '}<span className="experience-org">
-                                            · <PreviewLink href={exp.url} target="_blank" rel="noreferrer">{exp.company}</PreviewLink>
+                    <p>
+                        I'm always exploring new ideas and working on creative problems. Feel free to reach out—I'm happy to chat.
+                    </p>
+
+                    <p style={{ marginTop: '2rem', fontSize: '0.95rem' }}>
+                        I write about hackathons, projects, and coursework—check out my latest below, or browse my <Link to="/blog">blog</Link> and <Link to="/courses">CMU course reviews</Link>.
+                    </p>
+
+                    {latestPost && (
+                        <FadeIn>
+                            <Link to={`/blog/${latestPost.slug}`} className="latest-post-card">
+                                <div className="latest-post-card-image">
+                                    <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
+                                </div>
+                                <div className="latest-post-card-content">
+                                    <span className="latest-post-card-label">Latest post</span>
+                                    <h3 className="latest-post-card-title">{latestPost.title}</h3>
+                                    <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
+                                    <div className="latest-post-card-bottom">
+                                        <span className="latest-post-card-meta">
+                                            {formatDate(latestPost.date)} · {latestPost.category}
                                         </span>
-                                    </p>
-                                    <span className="experience-date">{exp.date}</span>
-                                    <p className="experience-summary">{exp.summary}</p>
+                                        <span className="latest-post-card-cta">
+                                            Read <ChevronRight size={14} />
+                                        </span>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
-                </FadeIn>
-
-                <FadeIn className="home-section">
-                    <section aria-labelledby="work-title">
-                        <h2 className="home-section-title" id="work-title">Selected work</h2>
-                        <div className="work-grid">
-                            {projects.map((project) => (
-                                <div className="work-card" key={project.title}>
-                                    <h3 className="work-card-title">
-                                        {project.title}
-                                        <span className="work-card-context">{project.subtitle}</span>
-                                    </h3>
-                                    <span className="work-card-stats">{project.stats}</span>
-                                    <p className="work-card-desc">{project.blurb}</p>
-                                    {project.link && (
-                                        <div className="work-card-links">
-                                            <a href={project.link.href} target="_blank" rel="noreferrer">
-                                                {project.link.label} <span aria-hidden="true">↗</span>
-                                            </a>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </FadeIn>
-
-                {latestPost && (
-                    <FadeIn className="home-section">
-                        <Link to={`/blog/${latestPost.slug}`} className="latest-post-card" style={{ marginTop: 0 }}>
-                            <div className="latest-post-card-image">
-                                <img src={latestPost.image} alt={latestPost.title} loading="lazy" decoding="async" />
-                            </div>
-                            <div className="latest-post-card-content">
-                                <span className="latest-post-card-label">Latest post</span>
-                                <h3 className="latest-post-card-title">{latestPost.title}</h3>
-                                <p className="latest-post-card-excerpt">{latestPost.excerpt}</p>
-                                <div className="latest-post-card-bottom">
-                                    <span className="latest-post-card-meta">
-                                        {formatDate(latestPost.date)} · {latestPost.category}
-                                    </span>
-                                    <span className="latest-post-card-cta">
-                                        Read <ChevronRight size={14} />
-                                    </span>
-                                </div>
-                            </div>
-                        </Link>
-                    </FadeIn>
-                )}
+                            </Link>
+                        </FadeIn>
+                    )}
+                </div>
 
                 <div
                     ref={footerRef}
