@@ -13,6 +13,15 @@ export function formatDate(isoDate) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+// Readout format for the mono metadata layer: "2026-02-22" → "2026.02.22",
+// or "2026.02" when only the month is wanted (or available).
+export function logDate(isoDate, full = false) {
+  if (!isoDate) return '';
+  const m = String(isoDate).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/);
+  if (!m) return isoDate;
+  return full && m[3] ? `${m[1]}.${m[2]}.${m[3]}` : `${m[1]}.${m[2]}`;
+}
+
 export function parseFrontmatter(markdown) {
   const frontmatterRegex = /^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/;
   const match = markdown.match(frontmatterRegex);

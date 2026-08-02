@@ -56,12 +56,13 @@ export const profile = {
     },
 };
 
-// Short dated updates for the About-page rail (newest first)
+// Short dated updates for the About-page news log (newest first).
+// ISO year-month; rendered as a 2026.02 readout by logDate().
 export const news = [
-    { date: "Feb 2026", text: "1st place at ProdHacks @ CMU" },
-    { date: "Jan 2026", text: "Advanced-track win at ACM's Algorithms with a Purpose" },
-    { date: "Jan 2026", text: "Won NexHacks 2026" },
-    { date: "Sep 2025", text: "Joined the CMU Biorobotics Lab" },
+    { date: "2026-02", text: "1st place at ProdHacks @ CMU" },
+    { date: "2026-01", text: "Advanced-track win at ACM's Algorithms with a Purpose" },
+    { date: "2026-01", text: "Won NexHacks 2026" },
+    { date: "2025-09", text: "Joined the CMU Biorobotics Lab" },
 ];
 
 export const experiences = [

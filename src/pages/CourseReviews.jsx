@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import PageLayout from '../components/PageLayout';
-import FadeIn from '../components/FadeIn';
 import { Helmet } from 'react-helmet-async';
 
 
@@ -140,15 +139,50 @@ const getDepartment = (code) => {
     return departmentNames[prefix] || "Other";
 };
 
-// Flatten courses for search/index
-const allCoursesList = courses.flatMap(sem =>
-    sem.items.map(course => ({ ...course, semester: sem.semester }))
-);
-
 const STORAGE_KEY = 'coursesExpandAll';
 
+const allCourses = courses.flatMap((sem) =>
+    sem.items.map((course) => ({ ...course, semester: sem.semester }))
+);
+const allCodes = allCourses.map((c) => c.code);
+
+// department index for the mono sidebar
+const departments = [...new Set(allCourses.map((c) => getDepartment(c.code)))]
+    .sort()
+    .map((name) => ({
+        name,
+        codes: allCourses.filter((c) => getDepartment(c.code) === name).map((c) => c.code),
+    }));
+
+const prefersReducedMotion = () =>
+    typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function scrollToId(id) {
+    const element = document.getElementById(id);
+    if (!element) return;
+    const offset = 92;
+    const top = element.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+function StarIcon() {
+    return (
+        <svg className="course-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+    );
+}
+
+function HeartIcon() {
+    return (
+        <svg className="course-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+    );
+}
+
 function CourseReviews() {
-    const allCodes = allCoursesList.map(c => c.code);
     const [expandedCourses, setExpandedCourses] = useState(() => {
         try {
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(STORAGE_KEY) === 'true') {
@@ -157,11 +191,10 @@ function CourseReviews() {
         } catch { /* ignore */ }
         return new Set();
     });
-    const [activeSemester, setActiveSemester] = useState("");
+    const [activeSemester, setActiveSemester] = useState(courses[0]?.semester || '');
 
-    // Toggle logic
     const toggleCourse = (code) => {
-        setExpandedCourses(prev => {
+        setExpandedCourses((prev) => {
             const next = new Set(prev);
             if (next.has(code)) next.delete(code);
             else next.add(code);
@@ -169,8 +202,9 @@ function CourseReviews() {
         });
     };
 
+    const isAllExpanded = allCodes.every((code) => expandedCourses.has(code));
+
     const toggleAll = () => {
-        const isAllExpanded = allCodes.every(code => expandedCourses.has(code));
         if (isAllExpanded) {
             setExpandedCourses(new Set());
             try { sessionStorage.setItem(STORAGE_KEY, 'false'); } catch { /* ignore */ }
@@ -180,157 +214,89 @@ function CourseReviews() {
         }
     };
 
-    const isAllExpanded = allCoursesList.every(c => expandedCourses.has(c.code));
-
-    // Scroll helpers
-    const scrollToId = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            const headerOffset = 100;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-            // Also explicitly set active to avoid jitter during scroll
-            if (!id.includes('-')) setActiveSemester(""); // Basic heuristic
-            else if (id.includes(' ')) setActiveSemester(id);
-        }
+    // open a course from a sidebar code chip, then scroll to it
+    const jumpToCourse = (code) => {
+        setExpandedCourses((prev) => new Set(prev).add(code));
+        requestAnimationFrame(() => scrollToId(code));
     };
 
-    const scrollToCourse = (code) => {
-        setExpandedCourses(prev => new Set(prev).add(code));
-        setTimeout(() => scrollToId(code), 100);
-    };
-
-    // ScrollSpy Logic
+    // which semester is in view — drives the sidebar index highlight
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        // Use the data-semester attribute for stable ID tracking
                         setActiveSemester(entry.target.getAttribute('data-semester'));
                     }
                 });
             },
-            {
-                rootMargin: "-20% 0px -60% 0px", // Trigger when element is near top
-                threshold: 0
-            }
+            { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
         );
 
-        courses.forEach(sem => {
-            const id = sem.semester.replace(/\s+/g, '-');
-            const el = document.getElementById(id);
+        courses.forEach((sem) => {
+            const el = document.getElementById(sem.semester.replace(/\s+/g, '-'));
             if (el) observer.observe(el);
         });
 
         return () => observer.disconnect();
     }, []);
 
-    // Department grouping
-    const departments = [...new Set(allCoursesList.map(c => getDepartment(c.code)))].sort();
-
-
     return (
         <PageLayout>
             <Helmet>
-                <title>Coursework & Grades | Darren Pinto</title>
+                <title>Course Reviews | Darren Pinto</title>
                 <meta name="description" content="A list of my computer science and engineering coursework at CMU, including reviews and project links." />
                 <link rel="canonical" href="https://darrenpinto.me/courses" />
             </Helmet>
             <main id="main" className="container">
-                <div className="animate-blur-fade">
-                    <div>
-                        <h1>CMU Course Reviews</h1>
-                        <p className="subtitle" style={{ marginBottom: 0 }}>
-                            My thoughts and experiences with courses at Carnegie Mellon University. I feel as though the abundance of course reviews on other websites of CMU students/alumna (Fan Pu in particular) has compelled me to create one of my own.
-                        </p>
-                        <p className="subtitle" style={{ marginBottom: 0 }}>
-                            In each of the reflection/reviews I attempt to offer a perspective of how I felt the course benefited me.
-                        </p>
-                        <div className="course-legend">
-                            <span className="legend-item">
-                                <svg className="legend-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
-                                <span className="legend-text" aria-label="Favorite course of the semester">Favorite course of the semester</span>
-                            </span>
-                            <span className="legend-item">
-                                <svg className="legend-icon legend-icon-transformative" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                                <span className="legend-text" aria-label="Transformative course">Transformative course</span>
-                            </span>
-                        </div>
+                <div className="courses-head animate-blur-fade">
+                    <h1>Course Reviews<span className="hero-tail">.</span></h1>
+                    <p className="page-sub">
+                        My thoughts and experiences with courses at Carnegie Mellon University. The abundance of
+                        course reviews by CMU students and alumni (Fan Pu in particular) compelled me to create my
+                        own. Each review offers a perspective on how the course benefited me.
+                    </p>
+                    <div className="legend-row">
+                        <span className="legend-item"><StarIcon />Favorite of the semester</span>
+                        <span className="legend-item"><HeartIcon />Transformative</span>
                     </div>
                 </div>
 
-                <div className="course-toolbar animate-blur-fade delay-100">
-                    <button
-                        onClick={toggleAll}
-                        className="text-action-btn"
-                        aria-label={isAllExpanded ? "Collapse all courses" : "Expand all courses"}
-                    >
-                        {isAllExpanded ? (
-                            <>
-                                <span style={{ fontSize: '1.2em' }}>−</span> Collapse All
-                            </>
-                        ) : (
-                            <>
-                                <span style={{ fontSize: '1.2em' }}>+</span> Expand All
-                            </>
-                        )}
-                    </button>
-                </div>
-
-                <div className="course-layout">
-                    {/* Sticky Sidebar */}
-                    <aside className="course-sidebar animate-blur-fade delay-100">
-                        <div className="sidebar-section">
-                            <h3 className="sidebar-title">Semesters</h3>
-                            <div className="sidebar-nav">
-                                {courses.map(sem => (
+                <div className="courses-layout">
+                    <aside className="courses-index animate-blur-fade delay-100" aria-label="Course index">
+                        <div className="rail-block">
+                            <h2 className="log-label">// Semesters</h2>
+                            <div className="index-list">
+                                {courses.map((sem) => (
                                     <button
                                         key={sem.semester}
+                                        type="button"
+                                        className={`index-row ${activeSemester === sem.semester ? 'active' : ''}`}
                                         onClick={() => scrollToId(sem.semester.replace(/\s+/g, '-'))}
-                                        className={`sidebar-link ${activeSemester === sem.semester ? 'active' : ''}`}
                                     >
-                                        {sem.semester}
+                                        <span>{sem.semester}</span>
+                                        <span className="index-count">{String(sem.items.length).padStart(2, '0')}</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-
-
-                        <div className="sidebar-section sidebar-dept-section">
-                            <h3 className="sidebar-title">Departments</h3>
-                            <div className="sidebar-nav">
-                                {departments.map(dept => (
-                                    <div key={dept} style={{ marginBottom: '0.5rem' }}>
-                                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
-                                            {dept}
-                                        </div>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                                            {allCoursesList.filter(c => getDepartment(c.code) === dept).map(c => (
+                        <div className="rail-block">
+                            <h2 className="log-label">// Departments</h2>
+                            <div className="dept-group">
+                                {departments.map((dept) => (
+                                    <div className="dept" key={dept.name}>
+                                        <div className="dept-name">{dept.name}</div>
+                                        <div className="dept-codes">
+                                            {dept.codes.map((code) => (
                                                 <button
-                                                    key={c.code}
-                                                    onClick={() => scrollToCourse(c.code)}
-                                                    aria-label={`Jump to ${c.code}: ${c.name}`}
-                                                    style={{
-                                                        fontSize: '0.75rem',
-                                                        padding: '2px 6px',
-                                                        background: 'var(--stat-bg)',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer',
-                                                        color: 'var(--accent)'
-                                                    }}
+                                                    key={code}
+                                                    type="button"
+                                                    className="code-chip"
+                                                    onClick={() => jumpToCourse(code)}
+                                                    aria-label={`Jump to ${code}`}
                                                 >
-                                                    {c.code}
+                                                    {code}
                                                 </button>
                                             ))}
                                         </div>
@@ -338,35 +304,37 @@ function CourseReviews() {
                                 ))}
                             </div>
                         </div>
-
-
                     </aside>
 
-                    {/* Main Content */}
-                    <div className="course-content animate-blur-fade delay-200">
-                        {courses.map((semester) => (
-                            <SemesterGroup
+                    <div className="animate-blur-fade delay-200">
+                        {courses.map((semester, i) => (
+                            <SemesterBlock
                                 key={semester.semester}
                                 semester={semester}
                                 expandedCourses={expandedCourses}
                                 toggleCourse={toggleCourse}
+                                showExpandAll={i === 0}
+                                isAllExpanded={isAllExpanded}
+                                onToggleAll={toggleAll}
                             />
                         ))}
                     </div>
                 </div>
 
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '5rem', textAlign: 'center' }}>
-                    Last updated: March 2026
-                </p>
+                <p className="page-note">Last updated: March 2026</p>
             </main>
         </PageLayout>
     );
 }
 
-function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
+function SemesterBlock({ semester, expandedCourses, toggleCourse, showExpandAll, isAllExpanded, onToggleAll }) {
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef(null);
     const semesterId = semester.semester.replace(/\s+/g, '-');
+    const totalUnits = useMemo(
+        () => semester.items.reduce((acc, c) => acc + parseInt(c.units || 0, 10), 0),
+        [semester.items]
+    );
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -376,107 +344,96 @@ function SemesterGroup({ semester, expandedCourses, toggleCourse }) {
                     observer.disconnect();
                 }
             },
-            { threshold: 0.1 }
+            { threshold: 0.05 }
         );
-
-        if (sectionRef.current) {
-            observer.observe(sectionRef.current);
-        }
-
+        if (sectionRef.current) observer.observe(sectionRef.current);
         return () => observer.disconnect();
     }, []);
 
     return (
-        <div
+        <section
             id={semesterId}
             data-semester={semester.semester}
             ref={sectionRef}
-            className="semester-section"
-            style={{ scrollMarginTop: '100px' }}
+            className="semester-block"
         >
-            <h2 className="semester-title">{semester.semester}</h2>
-            <div className={`course-list ${isVisible ? 'visible' : ''}`}>
-                {[...semester.items].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0)).map((course, index) => (
-                    <FadeIn key={course.code} delay={Math.min(index * 0.08, 0.24)} visible={isVisible}>
-                        <div
-                            id={course.code}
-                            className={`course-card ${expandedCourses.has(course.code) ? 'expanded' : ''}`}
-                            onClick={() => toggleCourse(course.code)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCourse(course.code); } }}
-                            role="button"
-                            tabIndex={0}
-                            aria-expanded={expandedCourses.has(course.code)}
-                            aria-controls={`${course.code}-content`}
-                        >
-                            <div className="course-header">
-                                <div className="course-info">
-                                    <div className="course-title-row">
-                                        <span className="course-code">{course.code}</span>
-                                        <span className="course-name">{course.name}</span>
-                                        {course.favorite && (
-                                            <svg className="course-favorite" viewBox="0 0 24 24" fill="currentColor" aria-label="Favorite course of the semester">
-                                                <title>Favorite course of the semester</title>
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                            </svg>
-                                        )}
-                                        {course.transformative && (
-                                            <svg className="course-transformative" viewBox="0 0 24 24" fill="currentColor" aria-label="Transformative course">
-                                                <title>Transformative course</title>
-                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <div className="course-instructor">
-                                        Instructor: {course.instructor}
-                                    </div>
-                                </div>
-                                <div className="course-meta">
-                                    <span className="course-units">{course.units} {parseInt(course.units, 10) === 1 ? 'unit' : 'units'}</span>
-                                    <span className="course-expand-icon">
-                                        {expandedCourses.has(course.code) ? '−' : '+'}
+            <div className="semester-head">
+                <h2 className="semester-title">{semester.semester}</h2>
+                {showExpandAll ? (
+                    <button type="button" className="expand-all" onClick={onToggleAll}>
+                        <span aria-hidden="true">{isAllExpanded ? '−' : '+'}</span>
+                        {isAllExpanded ? 'Collapse all' : 'Expand all'}
+                    </button>
+                ) : (
+                    <span className="units-pill">{totalUnits} units</span>
+                )}
+            </div>
+
+            <div className={`ledger fade-in-section ${isVisible ? 'is-visible' : ''}`}>
+                {[...semester.items]
+                    .sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0))
+                    .map((course) => {
+                        const open = expandedCourses.has(course.code);
+                        return (
+                            <div id={course.code} className={`course-row ${open ? 'expanded' : ''}`} key={course.code}>
+                                <button
+                                    type="button"
+                                    className="course-head"
+                                    onClick={() => toggleCourse(course.code)}
+                                    aria-expanded={open}
+                                    aria-controls={`${course.code}-review`}
+                                    aria-label={`${course.code} ${course.name} — ${open ? 'collapse' : 'expand'} review`}
+                                >
+                                    <span className="course-code">{course.code}</span>
+                                    <span className="course-info">
+                                        <span className="course-name-row">
+                                            <span className="course-name">{course.name}</span>
+                                            {course.favorite && <StarIcon />}
+                                            {course.transformative && <HeartIcon />}
+                                        </span>
+                                        <span className="course-instructor">{course.instructor}</span>
                                     </span>
-                                </div>
-                            </div>
-                            <div id={`${course.code}-content`} className={`course-expand-wrapper ${expandedCourses.has(course.code) ? 'open' : ''}`}>
-                                <div className="course-expand-inner">
-                                    <div className="course-expanded">
-                                        <div className="course-description">
-                                            {course.description.split(/\n\n+/).map((para, i) => (
-                                                <p key={i}>{para.trim()}</p>
-                                            ))}
-                                        </div>
-                                        <div className="course-stats">
-                                            <div className="stat-item">
-                                                <span className="stat-label">Hours/Week</span>
-                                                <span className="stat-value">{course.hoursPerWeek}</span>
-                                            </div>
-                                            <div className="stat-item">
-                                                <span className="stat-label">Difficulty</span>
-                                                <span className="stat-value">{course.difficulty}</span>
+                                    <span className="course-meta">
+                                        <span className="units-pill">
+                                            {course.units} {parseInt(course.units, 10) === 1 ? 'unit' : 'units'}
+                                        </span>
+                                        <span className="row-toggle" aria-hidden="true">{open ? '−' : '+'}</span>
+                                    </span>
+                                </button>
+
+                                <div
+                                    id={`${course.code}-review`}
+                                    className={`course-expand ${open ? 'open' : ''}`}
+                                    aria-hidden={!open}
+                                >
+                                    <div className="course-expand-inner">
+                                        <div className="course-review">
+                                            <div className="course-review-body">
+                                                {course.description.split(/\n\n+/).map((para, i) => (
+                                                    <p key={i}>{para.trim()}</p>
+                                                ))}
+                                                <div className="course-stats">
+                                                    <span>Hours/week <strong>{course.hoursPerWeek}</strong></span>
+                                                    <span>Difficulty <strong>{course.difficulty}</strong></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </FadeIn>
-                ))}
+                        );
+                    })}
             </div>
 
             {semester.reflection && (
-                <div className={`semester-footer ${isVisible ? 'visible' : ''}`}>
-                    <div className="semester-review-card">
-                        <div className="review-header">
-                            <span className="review-label">Semester Review</span>
-                            <span className="review-units">{semester.items.reduce((acc, curr) => acc + parseInt(curr.units || 0), 0)} units</span>
-                        </div>
-                        {semester.reflection.split(/\n\n+/).map((para, i) => (
-                            <p key={i} className="review-text">{para.trim()}</p>
-                        ))}
-                    </div>
+                <div className={`semester-review fade-in-section ${isVisible ? 'is-visible' : ''}`}>
+                    <span className="log-label">// Semester review · {totalUnits} units</span>
+                    {semester.reflection.split(/\n\n+/).map((para, i) => (
+                        <p key={i} className="review-text">{para.trim()}</p>
+                    ))}
                 </div>
             )}
-        </div>
+        </section>
     );
 }
 

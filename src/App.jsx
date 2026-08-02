@@ -54,83 +54,20 @@ function AnimatedRoutes() {
   );
 }
 
-// Navigation component with sliding highlight
+// Navigation — mono readout links, accent underline marks the active page
 function Navigation() {
   const location = useLocation();
-  const navRef = useRef(null);
-  const indicatorRef = useRef(null);
-  const linksRef = useRef({});
-
-  // Update indicator position
-  useLayoutEffect(() => {
-    const activeKey = location.pathname === '/'
-      ? '/'
-      : location.pathname.startsWith('/blog')
-        ? '/blog'
-        : location.pathname.startsWith('/courses')
-          ? '/courses'
-          : '/';
-    const activeLink = linksRef.current[activeKey];
-    const nav = navRef.current;
-    const indicator = indicatorRef.current;
-
-    if (activeLink && nav && indicator) {
-      const navRect = nav.getBoundingClientRect();
-      const linkRect = activeLink.getBoundingClientRect();
-
-      indicator.style.width = `${linkRect.width}px`;
-      indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-    }
-  }, [location.pathname]);
-
-  // Keep indicator aligned when viewport size changes
-  useEffect(() => {
-    const handleResize = () => {
-      const activeKey = location.pathname === '/'
-        ? '/'
-        : location.pathname.startsWith('/blog')
-          ? '/blog'
-          : location.pathname.startsWith('/courses')
-            ? '/courses'
-            : '/';
-      const activeLink = linksRef.current[activeKey];
-      const nav = navRef.current;
-      const indicator = indicatorRef.current;
-
-      if (activeLink && nav && indicator) {
-        const navRect = nav.getBoundingClientRect();
-        const linkRect = activeLink.getBoundingClientRect();
-        indicator.style.width = `${linkRect.width}px`;
-        indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [location.pathname]);
+  const blogActive = location.pathname.startsWith('/blog');
 
   return (
-    <nav className="nav-links" ref={navRef} aria-label="Primary">
-      <div className="nav-indicator" ref={indicatorRef} />
-      <NavLink
-        to="/"
-        ref={(el) => linksRef.current['/'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
+    <nav className="nav-links" aria-label="Primary">
+      <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
         About
       </NavLink>
-      <NavLink
-        to="/blog"
-        ref={(el) => linksRef.current['/blog'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
+      <NavLink to="/blog" className={blogActive ? 'active' : ''}>
         Blog
       </NavLink>
-      <NavLink
-        to="/courses"
-        ref={(el) => linksRef.current['/courses'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
+      <NavLink to="/courses" className={({ isActive }) => (isActive ? 'active' : '')}>
         Courses
       </NavLink>
     </nav>
@@ -210,7 +147,7 @@ function App() {
     // Update theme-color meta for iOS status bar
     const metaThemeColor = document.getElementById('theme-color-meta');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
+      metaThemeColor.setAttribute('content', isDarkMode ? '#0c0d11' : '#f7f6f3');
     }
 
     // Remove transitioning class after animation completes
@@ -239,8 +176,7 @@ function App() {
       <header className="header animate-blur-fade">
         <div className="header-inner">
           <Link to="/" className="wordmark" aria-label="Darren Pinto — home">
-            <span className="wordmark-full">Darren Pinto</span>
-            <span className="wordmark-short">DP</span>
+            darren.pinto
           </Link>
           <div className="header-controls">
           <Navigation />
@@ -248,6 +184,7 @@ function App() {
             className="theme-toggle"
             onClick={() => setIsDarkMode(!isDarkMode)}
             aria-label="Toggle dark mode"
+            aria-pressed={isDarkMode}
           >
             {isDarkMode ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
