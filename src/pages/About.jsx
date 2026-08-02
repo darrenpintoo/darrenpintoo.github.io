@@ -18,15 +18,16 @@ function About() {
                 <link rel="canonical" href="https://darrenpinto.me/" />
             </Helmet>
             <main id="main" className="container">
-                <div className="animate-blur-fade">
-                    <div className="header-top-row">
-                        <h1><strong>Darren</strong> Pinto</h1>
-                        <div className="status-pill header-status-pill">
-                            <span className="status-dot" />
-                            <span><strong>Currently:</strong> Research at the Biorobotics Lab; joining IBM Silicon Valley Lab summer 2026.</span>
-                        </div>
+                <div className="animate-blur-fade about-hero">
+                    <h1><strong>Darren</strong> Pinto</h1>
+                    <div className="hero-status">
+                        <span className="fact-label hero-status-label">
+                            <span className="status-dot" /> Currently
+                        </span>
+                        <p className="hero-status-value">Biorobotics Lab @ CMU</p>
+                        <p className="hero-status-value">IBM Silicon Valley Lab · Summer 2026</p>
                     </div>
-                    <p className="subtitle" style={{ marginBottom: '2.5rem' }}>
+                    <p className="subtitle">
                         Undergraduate Student & Robotics Researcher at{' '}
                         <PreviewLink href="https://www.cmu.edu/" target="_blank" rel="noreferrer">Carnegie Mellon University</PreviewLink>.
                     </p>

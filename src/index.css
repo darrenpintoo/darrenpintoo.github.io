@@ -767,57 +767,72 @@ h2 {
     0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Status Pill — liquid glass standout for "Currently" */
-.header-top-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+/* About hero — the name owns the row; "Currently" is a typographic fact
+   block anchored to the name's baseline on the right, no bubble */
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'name status'
+    'subtitle subtitle';
+  column-gap: 2rem;
+  align-items: end;
+  margin-bottom: 2.5rem;
 }
 
-.header-status-pill {
+.about-hero h1 {
+  grid-area: name;
   margin-bottom: 0;
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 1rem;
-  border-radius: 40px;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 1.25rem;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0.12) 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+.about-hero .subtitle {
+  grid-area: subtitle;
+  margin: 0.5rem 0 0;
 }
 
-[data-theme="dark"] .status-pill {
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.04) 100%);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+.hero-status {
+  grid-area: status;
+  text-align: right;
+  /* optical alignment with the h1 baseline */
+  padding-bottom: 0.5rem;
+}
+
+.hero-status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.hero-status-value {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--accent);
   flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.5);
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'name'
+      'subtitle'
+      'status';
+  }
+
+  .hero-status {
+    text-align: left;
+    padding-bottom: 0;
+    margin-top: 1rem;
+  }
 }
 
 /* Prose */
