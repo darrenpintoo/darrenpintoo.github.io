@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useLayoutEffect, useCallback, lazy } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
 import SuspenseWithFade from './components/SuspenseWithFade';
 import PageSkeleton from './components/PageSkeleton';
 import Footer from './components/Footer';
 import IntroReveal from './components/intro/IntroReveal';
 import { getForcedIntro } from './components/intro/introUtils';
 import About from './pages/About';
+import { profile } from './data';
 
 const Blog = lazy(() => import('./pages/Blog'));
 const CourseReviews = lazy(() => import('./pages/CourseReviews'));
@@ -54,85 +56,17 @@ function AnimatedRoutes() {
   );
 }
 
-// Navigation component with sliding highlight
 function Navigation() {
-  const location = useLocation();
-  const navRef = useRef(null);
-  const indicatorRef = useRef(null);
-  const linksRef = useRef({});
-
-  // Update indicator position
-  useLayoutEffect(() => {
-    const activeKey = location.pathname === '/'
-      ? '/'
-      : location.pathname.startsWith('/blog')
-        ? '/blog'
-        : location.pathname.startsWith('/courses')
-          ? '/courses'
-          : '/';
-    const activeLink = linksRef.current[activeKey];
-    const nav = navRef.current;
-    const indicator = indicatorRef.current;
-
-    if (activeLink && nav && indicator) {
-      const navRect = nav.getBoundingClientRect();
-      const linkRect = activeLink.getBoundingClientRect();
-
-      indicator.style.width = `${linkRect.width}px`;
-      indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-    }
-  }, [location.pathname]);
-
-  // Keep indicator aligned when viewport size changes
-  useEffect(() => {
-    const handleResize = () => {
-      const activeKey = location.pathname === '/'
-        ? '/'
-        : location.pathname.startsWith('/blog')
-          ? '/blog'
-          : location.pathname.startsWith('/courses')
-            ? '/courses'
-            : '/';
-      const activeLink = linksRef.current[activeKey];
-      const nav = navRef.current;
-      const indicator = indicatorRef.current;
-
-      if (activeLink && nav && indicator) {
-        const navRect = nav.getBoundingClientRect();
-        const linkRect = activeLink.getBoundingClientRect();
-        indicator.style.width = `${linkRect.width}px`;
-        indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [location.pathname]);
+  const navClass = ({ isActive }) => (isActive ? 'active' : undefined);
 
   return (
-    <nav className="nav-links" ref={navRef} aria-label="Primary">
-      <div className="nav-indicator" ref={indicatorRef} />
-      <NavLink
-        to="/"
-        ref={(el) => linksRef.current['/'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
-        About
-      </NavLink>
-      <NavLink
-        to="/blog"
-        ref={(el) => linksRef.current['/blog'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
-        Blog
-      </NavLink>
-      <NavLink
-        to="/courses"
-        ref={(el) => linksRef.current['/courses'] = el}
-        className={({ isActive }) => isActive ? 'active' : ''}
-      >
-        Courses
-      </NavLink>
+    <nav className="nav-links" aria-label="Primary">
+      <NavLink to="/" end className={navClass}>About</NavLink>
+      <NavLink to="/blog" className={navClass}>Writing</NavLink>
+      <NavLink to="/courses" className={navClass}>Courses</NavLink>
+      {profile.links.cv && (
+        <a href={profile.links.cv} target="_blank" rel="noreferrer">CV</a>
+      )}
     </nav>
   );
 }
@@ -210,7 +144,7 @@ function App() {
     // Update theme-color meta for iOS status bar
     const metaThemeColor = document.getElementById('theme-color-meta');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#ffffff');
+      metaThemeColor.setAttribute('content', isDarkMode ? '#121212' : '#fcfbf9');
     }
 
     // Remove transitioning class after animation completes
@@ -243,18 +177,14 @@ function App() {
             <span className="wordmark-short">DP</span>
           </Link>
           <div className="header-controls">
-          <Navigation />
-          <button
-            className="theme-toggle"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            aria-label="Toggle dark mode"
-          >
-            {isDarkMode ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            )}
-          </button>
+            <Navigation />
+            <button
+              className="theme-toggle"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDarkMode ? <Sun size={17} strokeWidth={1.75} /> : <Moon size={17} strokeWidth={1.75} />}
+            </button>
           </div>
         </div>
       </header>

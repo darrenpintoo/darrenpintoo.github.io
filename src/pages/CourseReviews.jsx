@@ -246,7 +246,7 @@ function CourseReviews() {
                     <div>
                         <h1>CMU Course Reviews</h1>
                         <p className="subtitle" style={{ marginBottom: 0 }}>
-                            My thoughts and experiences with courses at Carnegie Mellon University. I feel as though the abundance of course reviews on other websites of CMU students/alumna (Fan Pu in particular) has compelled me to create one of my own.
+                            My thoughts and experiences with courses at Carnegie Mellon University. I feel as though the abundance of course reviews on other websites of CMU students and alumni (Fan Pu in particular) has compelled me to create one of my own.
                         </p>
                         <p className="subtitle" style={{ marginBottom: 0 }}>
                             In each of the reflection/reviews I attempt to offer a perspective of how I felt the course benefited me.
@@ -356,7 +356,7 @@ function CourseReviews() {
                 </div>
 
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, marginTop: '5rem', textAlign: 'center' }}>
-                    Last updated: March 2026
+                    Reviews last updated March 2026
                 </p>
             </main>
         </PageLayout>

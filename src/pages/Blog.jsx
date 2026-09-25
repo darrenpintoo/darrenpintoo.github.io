@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { getAllPosts, getPostBySlug, parseFrontmatter, formatDate } from '../utils/posts';
 
 const BASE_URL = 'https://darrenpinto.me';
@@ -153,7 +153,7 @@ function Blog() {
     return (
         <PageLayout>
             <Helmet>
-                <title>{activePostData ? `${activePostData.title} | Blog` : 'Blog | Darren Pinto'}</title>
+                <title>{activePostData ? `${activePostData.title} | Darren Pinto` : 'Writing | Darren Pinto'}</title>
                 <meta name="description" content={activePostData ? activePostData.excerpt : "Thoughts on robotics, engineering, embedded systems, and more by Darren Pinto."} />
                 <link rel="canonical" href={activePostData ? `${BASE_URL}/blog/${slug}` : `${BASE_URL}/blog`} />
                 {activePostData && (
@@ -183,8 +183,8 @@ function Blog() {
                     // Single Post View with Sidebar
                     <div className={`blog-post-view pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
                         <Link to="/blog" className="back-link">
-                            <ArrowLeft size={18} />
-                            Back to Blog
+                            <ArrowLeft size={16} />
+                            All writing
                         </Link>
 
                         {!activePostData ? (
@@ -192,8 +192,8 @@ function Blog() {
                                 <p>Post not found.</p>
                                 <p style={{ marginTop: '1rem' }}>
                                     <Link to="/blog" className="back-link" style={{ display: 'inline-flex', marginRight: '1rem' }}>
-                                        <ArrowLeft size={18} style={{ marginRight: '0.25rem' }} />
-                                        Back to Blog
+                                        <ArrowLeft size={16} style={{ marginRight: '0.25rem' }} />
+                                        All writing
                                     </Link>
                                     <Link to="/" className="back-link" style={{ display: 'inline-flex' }}>
                                         Home
@@ -227,16 +227,11 @@ function Blog() {
                                     <article className="prose blog-article">
                                         <header className="post-header">
                                             <h1 className="post-title">{activePostData.title}</h1>
-                                            <div className="post-meta">
-                                                <span className="meta-item">
-                                                    <Calendar size={14} />
-                                                    {formatDate(activePostData.date)}
-                                                </span>
-                                                <span className="meta-item">
-                                                    <Tag size={14} />
-                                                    {activePostData.category}
-                                                </span>
-                                            </div>
+                                            <p className="post-meta">
+                                                <time dateTime={activePostData.date}>{formatDate(activePostData.date)}</time>
+                                                <span aria-hidden="true"> · </span>
+                                                {activePostData.category}
+                                            </p>
                                         </header>
                                         <div className="markdown-content">
                                             <ReactMarkdown
@@ -255,39 +250,37 @@ function Blog() {
                 ) : (
                     // List View
                     <>
-                        <div className={`pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
-                            <h1>Blog</h1>
-                            <p className="subtitle">Hackathons, competitions, and projects from CMU and beyond.</p>
+                        <div className={`page-head pre-animate ${isVisible ? 'fade-in-visible' : ''}`}>
+                            <h1>Writing</h1>
+                            <p className="subtitle">Notes on hackathons, competitions, and projects from CMU and beyond.</p>
                         </div>
 
                         <div className={`blog-list pre-animate delay-100 ${isVisible ? 'fade-in-visible' : ''}`}>
                             {blogPosts.length > 0 ? (
-                                <div className="posts-grid">
+                                <ul className="post-list">
                                     {blogPosts.map((post) => (
-                                        <Link to={`/blog/${post.slug}`} key={post.slug} className="post-card">
-                                            <div className="post-card-image-wrapper">
-                                                <img src={post.image} alt={post.title} className="post-card-image" loading="lazy" decoding="async" />
-                                            </div>
-                                            <div className="post-card-content">
-                                                <div className="post-card-meta">
-                                                    <span className="post-tag-pill">{post.category}</span>
-                                                    <span className="post-date">{formatDate(post.date)}</span>
+                                        <li key={post.slug}>
+                                            <Link to={`/blog/${post.slug}`} className="post-row">
+                                                <div className="post-row-media">
+                                                    <img src={post.image} alt="" loading="lazy" decoding="async" />
                                                 </div>
-                                                <h2 className="post-card-title">{post.title}</h2>
-                                                <p className="post-card-excerpt">{post.excerpt}</p>
-                                                <div className="post-card-footer">
-                                                    <span className="read-more" aria-hidden="true">
-                                                        <ChevronRight size={16} />
-                                                    </span>
+                                                <div className="post-row-body">
+                                                    <p className="post-row-meta">
+                                                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                                                        <span aria-hidden="true"> · </span>
+                                                        {post.category}
+                                                    </p>
+                                                    <h2 className="post-row-title">{post.title}</h2>
+                                                    <p className="post-row-excerpt">{post.excerpt}</p>
                                                 </div>
-                                            </div>
-                                        </Link>
+                                            </Link>
+                                        </li>
                                     ))}
-                                </div>
+                                </ul>
                             ) : (
                                 <div className="blog-coming-soon">
-                                    <h2>No posts found.</h2>
-                                    <p>Check back later!</p>
+                                    <h2>No posts yet.</h2>
+                                    <p>Check back soon.</p>
                                 </div>
                             )}
                         </div>

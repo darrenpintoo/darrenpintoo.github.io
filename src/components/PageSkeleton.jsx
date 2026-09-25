@@ -17,35 +17,19 @@ function S({ width = '100%', height = '1rem', radius = '6px', delay = 0, style }
 
 function AboutSkeleton() {
     return (
-        <main className="container skeleton-page">
-            <div>
-                <S width="180px" height="2.2rem" style={{ marginBottom: '0.75rem' }} />
-                <S width="380px" height="1rem" style={{ marginBottom: '2.5rem', maxWidth: '90%' }} />
-            </div>
-
-            <div className="profile-section" style={{ overflow: 'hidden' }}>
-                <S
-                    width="200px" height="200px" radius="50%"
-                    style={{ float: 'left', marginRight: '2rem', marginBottom: '1rem', flexShrink: 0 }}
-                />
-                <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} />
-                <S width="95%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.08} />
-                <S width="88%" height="1rem" style={{ marginBottom: '1rem' }} delay={0.16} />
-                <S width="280px" height="2rem" radius="40px" delay={0.2} style={{ marginBottom: '1.25rem', maxWidth: '100%' }} />
-                <S width="100%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.24} />
-                <S width="92%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.28} />
-                <S width="75%" height="1rem" style={{ marginBottom: '1.5rem' }} delay={0.32} />
-                <S width="98%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.08} />
-                <S width="90%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.16} />
-                <S width="95%" height="1rem" style={{ marginBottom: '0.85rem' }} delay={0.24} />
-                <S width="60%" height="1rem" delay={0.32} />
-            </div>
-
-            <div className="socials-section" style={{ marginTop: '4rem', paddingTop: '2rem' }}>
-                <div className="skeleton-social-row">
-                    {[0, 1, 2].map((i) => (
-                        <S key={i} width="44px" height="44px" radius="14px" delay={i * 0.1} />
+        <main className="container home skeleton-page">
+            <div className="hero">
+                <div className="hero-media">
+                    <S width="100%" height="auto" radius="10px" style={{ aspectRatio: '1 / 1' }} />
+                </div>
+                <div className="hero-body">
+                    <S width="240px" height="2.4rem" style={{ marginBottom: '0.75rem', maxWidth: '90%' }} />
+                    <S width="360px" height="0.9rem" style={{ marginBottom: '2rem', maxWidth: '90%' }} />
+                    {['100%', '96%', '90%', '72%'].map((w, i) => (
+                        <S key={w} width={w} height="1rem" style={{ marginBottom: '0.85rem' }} delay={i * 0.08} />
                     ))}
+                    <S width="100%" height="1rem" style={{ margin: '1.25rem 0 0.85rem' }} delay={0.08} />
+                    <S width="84%" height="1rem" delay={0.16} />
                 </div>
             </div>
         </main>
@@ -55,33 +39,28 @@ function AboutSkeleton() {
 function BlogListSkeleton() {
     return (
         <main className="container skeleton-page">
-            <div>
-                <S width="80px" height="2.2rem" style={{ marginBottom: '0.75rem' }} />
-                <S width="420px" height="1rem" style={{ marginBottom: '2.5rem', maxWidth: '90%' }} />
+            <div className="page-head">
+                <S width="140px" height="2.2rem" style={{ marginBottom: '0.75rem' }} />
+                <S width="420px" height="1rem" style={{ maxWidth: '90%' }} />
             </div>
 
-            <div className="blog-list" style={{ marginTop: '3rem' }}>
-                <div className="posts-grid">
+            <div className="blog-list">
+                <ul className="post-list">
                     {[0, 1, 2].map((i) => (
-                        <div key={i} className="post-card skeleton-card-stagger" style={{ animationDelay: `${i * 0.15}s` }}>
-                            <div className="post-card-image-wrapper">
-                                <S width="100%" height="100%" radius="0" style={{ position: 'absolute', inset: 0 }} delay={i * 0.15} />
-                            </div>
-                            <div className="post-card-content">
-                                <div className="post-card-meta">
-                                    <S width="80px" height="0.65rem" radius="6px" delay={i * 0.15} />
-                                    <S width="100px" height="0.65rem" delay={i * 0.15} />
+                        <li key={i} className="skeleton-card-stagger" style={{ animationDelay: `${i * 0.15}s` }}>
+                            <div className="post-row">
+                                <div className="post-row-media">
+                                    <S width="100%" height="100%" radius="0" delay={i * 0.15} />
                                 </div>
-                                <S width="90%" height="1rem" style={{ marginBottom: '0.5rem' }} delay={i * 0.15} />
-                                <S width="100%" height="0.75rem" style={{ marginBottom: '0.35rem' }} delay={i * 0.15} />
-                                <S width="70%" height="0.75rem" delay={i * 0.15} />
-                                <div className="post-card-footer">
-                                    <S width="100px" height="0.85rem" delay={i * 0.15} />
+                                <div className="post-row-body">
+                                    <S width="140px" height="0.7rem" style={{ marginBottom: '0.6rem' }} delay={i * 0.15} />
+                                    <S width="70%" height="1.1rem" style={{ marginBottom: '0.6rem' }} delay={i * 0.15} />
+                                    <S width="90%" height="0.8rem" delay={i * 0.15} />
                                 </div>
                             </div>
-                        </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
         </main>
     );

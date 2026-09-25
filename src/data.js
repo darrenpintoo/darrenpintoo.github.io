@@ -1,139 +1,128 @@
+// Site content. The home page renders every section below in order; empty or
+// null fields are skipped, so an entry can be filled in incrementally.
+
 export const profile = {
     name: "Darren Pinto",
-    tagline: "Engineer & Researcher",
-    contact: {
-        email: "pintodarren999@gmail.com",
-        github: "github.com/darrenpintoo",
-        linkedin: "linkedin.com/in/darrpinto",
+    affiliation: "Electrical & Computer Engineering · Carnegie Mellon University",
+    location: "Pittsburgh, PA",
+    email: "pintodarren999@gmail.com",
+    links: {
+        github: "https://github.com/darrenpintoo",
+        linkedin: "https://www.linkedin.com/in/darrpinto",
+        // Drop a PDF in /public and set this (e.g. "/cv.pdf") to show a CV
+        // link in the header, hero, and footer.
+        cv: null,
+        scholar: null,
     },
-    education: [
-        {
-            university: "Carnegie Mellon University",
-            location: "Pittsburgh, PA",
-            degree: "B.S. in Electrical and Computer Engineering",
-            date: "Aug 2025 - May 2029",
-            courses: [
-                "Intro to ECE",
-                "Matrices & Linear Transformations",
-                "Concepts of Math",
-            ],
-        },
-        {
-            university: "Carmel Catholic High School",
-            location: "Mundelein, IL",
-            degree: "Valedictorian (Rank 1/263)",
-            date: "May 2025",
-        },
-    ],
     skills: {
-        languages: [
-            "C++",
-            "Python",
-            "Java",
-            "C",
-            "MATLAB",
-            "Lua",
-            "JavaScript",
-            "TypeScript",
-        ],
-        frameworks: [
-            "ROS",
-            "NumPy",
-            "OpenCV",
-            "PyTorch",
-            "Kubernetes",
-            "Flask",
-        ],
-        tools: [
-            "Git",
-            "Docker",
-            "Azure",
-            "Linux",
-            "Bash",
-            "Altium Designer",
-            "Onshape",
-        ],
+        languages: ["C++", "Python", "Java", "C", "MATLAB", "Lua", "JavaScript", "TypeScript"],
+        frameworks: ["ROS", "NumPy", "OpenCV", "PyTorch", "Kubernetes", "Flask"],
+        tools: ["Git", "Docker", "Azure", "Linux", "Bash", "Altium Designer", "Onshape"],
     },
 };
 
-// Short dated updates for the About-page rail (newest first)
+// Dated one-liners, newest first. `href` may be internal ("/blog/...") or external.
 export const news = [
-    { date: "Feb 2026", text: "1st place at ProdHacks @ CMU" },
-    { date: "Jan 2026", text: "Advanced-track win at ACM's Algorithms with a Purpose" },
-    { date: "Jan 2026", text: "Won NexHacks 2026" },
-    { date: "Sep 2025", text: "Joined the CMU Biorobotics Lab" },
+    { date: "Summer 2026", text: "Internship at IBM's Silicon Valley Lab" },
+    { date: "Feb 2026", text: "1st place (Product Track) and People's Choice at ProdHacks @ CMU", href: "/blog/prodhacks-2026-cmu" },
+    { date: "Jan 2026", text: "Advanced-track win at ACM@CMU's Algorithms with a Purpose", href: "/blog/algorithms-purpose-2026-acm-cmu" },
+    { date: "Jan 2026", text: "Won NexHacks 2026", href: "/blog/winning-nexhacks-2026" },
+    { date: "Sep 2025", text: "Joined the Biorobotics Lab at the CMU Robotics Institute" },
 ];
 
-export const experiences = [
+export const research = [
     {
-        role: "Undergraduate Student Researcher",
-        company: "Biorobotics Lab — CMU Robotics Institute",
-        url: "https://biorobotics.org/",
-        location: "Pittsburgh, PA",
+        title: "Reinforcement learning for modular robot manipulation",
+        role: "Undergraduate Researcher",
+        org: "Biorobotics Lab, CMU Robotics Institute",
+        orgUrl: "https://biorobotics.org/",
+        // Name the PI or PhD mentor you work with — PhD committees look for it.
+        advisor: null,
         date: "Sep 2025 – Present",
-        summary: "Reinforcement learning for modular robot manipulation in NVIDIA IsaacSim; depth perception with Intel RealSense and ROS.",
-        description: [
-            "Integrating Intel RealSense Depth camera w/ ROS for robotic perception in reinforcement learning.",
-            "Researching reinforcement learning solutions for vertical manipulation on modular robots w/ NVIDIA IsaacSim.",
-        ],
+        image: "/images/previews/biorobotics-preview.jpg",
+        description: "Developing reinforcement-learning approaches to vertical manipulation on modular robots in NVIDIA Isaac Sim, and integrating Intel RealSense depth sensing with ROS for perception in robot-learning experiments.",
+        tags: ["Reinforcement learning", "Isaac Sim", "ROS", "RealSense"],
+    },
+];
+
+export const experience = [
+    {
+        role: "Intern",
+        org: "IBM Silicon Valley Lab",
+        orgUrl: "https://www.ibm.com/",
+        location: "San Jose, CA",
+        date: "Summer 2026",
+        summary: null,
     },
     {
         role: "Research & Development Intern",
-        company: "Cadre Research (Cadre Forensics)",
-        url: "https://www.cadreforensics.com/",
+        org: "Cadre Research",
+        orgUrl: "https://www.cadreforensics.com/",
         location: "Evanston, IL",
-        date: "Jun 2025 – Aug 2025",
-        summary: "Embedded systems for 3D virtual microscopy — low-power ESP32 PCBs, deterministic stepper control in C++, and an Azure HPC prototype that sped comparisons ~30%.",
-        description: [
-            "Conceptualized & developed automated motor rotation system for 3D Virtual Microscopy bullet scanning.",
-            "Designed low-power ESP32 PCBs (<2mA) with wireless duplex IR comms and ISO 15693 RFID tray identification.",
-            "Implemented time-deterministic stepper motor control in C++ to minimize bullet slippage.",
-            "Developed an HPC prototype using Azure and KEDA, accelerating comparisons by ~30%.",
-        ],
+        date: "Jun – Aug 2025",
+        summary: "Embedded systems for 3D virtual microscopy: low-power (<2 mA) ESP32 PCBs with duplex IR comms and RFID tray identification, time-deterministic stepper control in C++, and an Azure/KEDA HPC prototype that sped up comparisons by ~30%.",
     },
     {
         role: "Software Lead & Team Captain",
-        company: "Not Your Average Nerds Robotics (FTC)",
-        url: "https://www.firstinspires.org/robotics/ftc",
+        org: "Not Your Average Nerds (FIRST Tech Challenge)",
+        orgUrl: "https://www.firstinspires.org/robotics/ftc",
         location: "Mundelein, IL",
-        date: "Aug 2021 – May 2025",
-        summary: "Led a World Championship Finalist team; Control Award Finalist for custom control-theory software libraries.",
-        description: [
-            "Led development of a library for intuitive control theory, optimizing I2C/UART communication.",
-            "Designed physics-based subsystem modeling using state-space representation.",
-            "Created an inverse-point-projection algorithm to translate 2D vision data to 3D.",
-            "Showcased software to 15k+ industry professionals at Rockwell Industrial Automation Fair.",
-            "Achievements: Control Award Finalist (World Championship), 3x Illinois State Champion.",
-        ],
-    }
+        date: "2021 – 2025",
+        summary: "Led a World Championship Finalist team. Built a control-theory library with state-space subsystem models and an inverse point projection from 2D vision to 3D; Control Award Finalist at the World Championship.",
+    },
 ];
 
 export const projects = [
     {
-        title: "Cartoon Creation Club",
-        subtitle: "Roblox Game",
-        tech: ["Luau", "Roblox Studio"],
-        date: "Sep 2024 – Present",
+        title: "SLAM in one week",
+        subtitle: "Build18 · Carnegie Mellon",
+        date: "Jan 2026",
+        image: "/build-18-thumbnail.png",
+        description: "Implemented SLAM in a week for a robotics project at CMU's Build18 showcase.",
+        tags: ["Robotics", "SLAM"],
+        links: [{ label: "Write-up", href: "/blog/implementing-slam-in-1-week" }],
+    },
+    {
+        title: "Find the Toons",
+        subtitle: "Cartoon Creation Club · Roblox",
+        date: "2024 – Present",
+        image: "/images/previews/roblox-preview.jpg",
         stats: "6M+ sessions · 175k+ players · Top 500 on Roblox",
-        blurb: "Two Roblox games with scalable data persistence — zero data loss across 2M+ monthly users — grown through data-driven updates.",
-        link: { label: "Play", href: "https://www.roblox.com/games/114162328499203/Find-the-Toons" },
-        description: [
-            "Released 2 games with 6M+ sessions and high monetary conversion.",
-            "Built scalable data persistence with 0 data loss for 2M+ monthly users.",
-            "Cultivated a community of 175k+ players through data-driven updates.",
-            "Top 500 game on Roblox (Peak: 111k active players).",
-        ],
+        description: "Two Roblox games with scalable data persistence (zero data loss across 2M+ monthly users), grown to a 175k-player community through data-driven updates.",
+        tags: ["Luau", "Roblox Studio"],
+        links: [{ label: "Play", href: "https://www.roblox.com/games/114162328499203/Find-the-Toons" }],
     },
     {
         title: "OptiBox",
-        subtitle: "High School Capstone",
-        tech: ["Python", "C++", "Flask", "Raspberry Pi", "LiDAR"],
-        date: "Aug 2024 – May 2025",
-        stats: "~20% packaging volume reduction",
-        blurb: "LiDAR-driven box sizing for measured payloads, with a real-time dashboard on Raspberry Pi.",
-        description: [
-            "Software to optimize cardboard box size for measured payloads using LiDAR (reduced volume by ~20%).",
-            "Built a responsive dashboard on Raspberry Pi for real-time visualization and control.",
-        ],
+        subtitle: "High school capstone",
+        date: "2024 – 2025",
+        image: null,
+        stats: "~20% less packaging volume",
+        description: "LiDAR-based sizing of the smallest cardboard box for a measured payload, with a real-time Raspberry Pi dashboard for visualization and control.",
+        tags: ["Python", "C++", "Flask", "Raspberry Pi", "LiDAR"],
+    },
+];
+
+export const honors = [
+    { date: "Feb 2026", title: "1st Place, Product Track & People's Choice Award", event: "ProdHacks 2026 (BTG @ CMU)" },
+    { date: "Jan 2026", title: "Winner, Advanced Track", event: "Algorithms with a Purpose (ACM@CMU)" },
+    { date: "Jan 2026", title: "Top 10", event: "Databricks × UN Datathon @ CMU" },
+    { date: "Jan 2026", title: "Winner", event: "NexHacks 2026" },
+    { date: "2021 – 25", title: "Control Award Finalist & World Championship Finalist", event: "FIRST Tech Challenge" },
+    { date: "2021 – 25", title: "3× Illinois State Champion", event: "FIRST Tech Challenge" },
+];
+
+export const education = [
+    {
+        school: "Carnegie Mellon University",
+        degree: "B.S. Electrical & Computer Engineering",
+        date: "2025 – 2029",
+        detail: "Coursework: Concepts of Mathematics, Matrices & Linear Transformations, Principles of Imperative Computation, Vector Calculus, Intro to ECE.",
+        link: { label: "Course reviews", href: "/courses" },
+    },
+    {
+        school: "Carmel Catholic High School",
+        degree: "Valedictorian (1/263)",
+        date: "2025",
     },
 ];

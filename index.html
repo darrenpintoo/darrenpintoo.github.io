@@ -8,11 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" id="theme-color-meta" content="#121212" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="Darren Pinto's personal portfolio. Undergraduate student and robotics researcher at Carnegie Mellon University building intelligent systems." />
+    <meta name="description" content="Darren Pinto is an Electrical & Computer Engineering student at Carnegie Mellon University researching reinforcement learning for robot manipulation in the CMU Biorobotics Lab." />
     <link rel="preconnect" href="https://cloud.umami.is" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet" />
     <title>Darren Pinto</title>
     <meta name="keywords"
         content="Darren Pinto, Carnegie Mellon University, CMU, Robotics, Engineering, Computer Engineering, Portfolio, Embedded Systems, Reinforcement Learning" />
@@ -38,16 +38,17 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": "Person",
         "name": "Darren Pinto",
         "url": "https://darrenpinto.me/",
-        "description": "Darren Pinto's Personal Portfolio. Undergraduate Student & Robotics Researcher at Carnegie Mellon University.",
-        "author": {
-          "@type": "Person",
-          "name": "Darren Pinto",
-          "url": "https://darrenpinto.me/"
-        },
-        "image": "https://darrenpinto.me/preview.png"
+        "image": "https://darrenpinto.me/darren.jpg",
+        "description": "Electrical & Computer Engineering student and robotics researcher at Carnegie Mellon University.",
+        "affiliation": { "@type": "CollegeOrUniversity", "name": "Carnegie Mellon University" },
+        "knowsAbout": ["Robotics", "Reinforcement learning", "Embedded systems", "Robot perception"],
+        "sameAs": [
+          "https://github.com/darrenpintoo",
+          "https://www.linkedin.com/in/darrpinto"
+        ]
       }
     </script>
     <script>
@@ -63,7 +64,7 @@
             var theme = saved || (prefersDark ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.getElementById('theme-color-meta');
-            if (meta) meta.setAttribute('content', theme === 'dark' ? '#121212' : '#ffffff');
+            if (meta) meta.setAttribute('content', theme === 'dark' ? '#121212' : '#fcfbf9');
         })();
     </script>
 </head>

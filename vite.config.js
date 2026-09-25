@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   clearScreen: false,
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+  },
   server: {
     // Honor the PORT env when provided (e.g. by the preview harness); Vite
     // otherwise ignores it and picks its own port, which the harness can't reach.
