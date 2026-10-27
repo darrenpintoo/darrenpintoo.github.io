@@ -44,6 +44,8 @@ function PortraitLab() {
                         <DepthPortrait
                             src={`${BASE}/p9394-square.jpg`}
                             depth={`${BASE}/p9394-square-depth.png`}
+                            matte={`${BASE}/p9394-square-matte.png`}
+                            fill={`${BASE}/p9394-square-bg.jpg`}
                             mode="parallax"
                             alt="Darren Pinto, 3D depth tilt"
                             className="lab-media"
@@ -51,7 +53,7 @@ function PortraitLab() {
                         />
                         <figcaption>
                             <strong>Depth tilt</strong>
-                            <span>Move over the photo: each pixel shifts by its measured depth, so you separate from the pavilion. Candidate for the headshot itself.</span>
+                            <span>Move over the photo: you (cut out using the phone’s depth map) slide against the pavilion behind you. Candidate for the headshot itself.</span>
                         </figcaption>
                     </figure>
                     <figure className="lab-card">

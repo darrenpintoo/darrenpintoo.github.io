@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Interactive portrait driven by the real iPhone Portrait-mode depth map (no AI).
-//   mode="parallax": a 2.5D tilt; each pixel shifts by its measured depth as the
-//                    pointer moves, like a window onto the scene
+//   mode="parallax": a 2.5D tilt. With `matte` + `fill` it slides two layers (you,
+//                    cut out by the depth map, over an inpainted background plate)
+//                    so nothing stretches; without them it warps by raw depth
 //   mode="points":   the photo as a 3D point cloud that orbits with the pointer
 // Plain WebGL1, no dependencies. Falls back to the still image when WebGL is
 // unavailable, and holds still for reduced-motion visitors.
@@ -31,6 +32,26 @@ void main() {
     uv = vUv + uOffset * (d - 0.45);
   }
   gl_FragColor = texture2D(uColor, clamp(uv, 0.0, 1.0));
+}`;
+
+// Two-layer version: the subject moves with the pointer, the background plate
+// moves against it, composited through the depth-derived matte
+const LAYERED_FS = `
+precision mediump float;
+uniform sampler2D uColor;
+uniform sampler2D uMatte;
+uniform sampler2D uFill;
+uniform vec2 uOffset;
+varying vec2 vUv;
+void main() {
+  // 6% zoom keeps the shifted layers from running past the photo's edges
+  vec2 uv = 0.5 + (vUv - 0.5) * 0.94;
+  vec2 fgUv = clamp(uv + uOffset * 0.55, 0.0, 1.0);
+  vec2 bgUv = clamp(uv - uOffset * 0.45, 0.0, 1.0);
+  vec3 fg = texture2D(uColor, fgUv).rgb;
+  vec3 bg = texture2D(uFill, bgUv).rgb;
+  float a = texture2D(uMatte, fgUv).r;
+  gl_FragColor = vec4(mix(bg, fg, a), 1.0);
 }`;
 
 const POINTS_VS = `
@@ -133,7 +154,7 @@ function buildCloud(colorImg, depthImg, step) {
     return { pos: new Float32Array(pos), rgb: new Float32Array(rgb) };
 }
 
-function DepthPortrait({ src, depth, mode = 'parallax', alt = '', strength = 0.045, background = '#121212', className = '', autoplay = false }) {
+function DepthPortrait({ src, depth, matte, fill, mode = 'parallax', alt = '', strength = 0.045, background = '#121212', className = '', autoplay = false }) {
     const wrapRef = useRef(null);
     const canvasRef = useRef(null);
     const [ready, setReady] = useState(false);
@@ -179,7 +200,8 @@ function DepthPortrait({ src, depth, mode = 'parallax', alt = '', strength = 0.0
             raf = requestAnimationFrame(loop);
         };
 
-        Promise.all([loadImage(src), loadImage(depth)]).then(([colorImg, depthImg]) => {
+        const extra = matte && fill ? [loadImage(matte), loadImage(fill)] : [];
+        Promise.all([loadImage(src), loadImage(depth), ...extra]).then(([colorImg, depthImg, matteImg, fillImg]) => {
             if (!alive) return;
             resize();
             if (mode === 'points') {
@@ -212,7 +234,8 @@ function DepthPortrait({ src, depth, mode = 'parallax', alt = '', strength = 0.0
                     gl.drawArrays(gl.POINTS, 0, n);
                 };
             } else {
-                const prog = compile(gl, PARALLAX_VS, PARALLAX_FS);
+                const layered = Boolean(matteImg && fillImg);
+                const prog = compile(gl, PARALLAX_VS, layered ? LAYERED_FS : PARALLAX_FS);
                 gl.useProgram(prog);
                 const b = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, b);
@@ -224,8 +247,16 @@ function DepthPortrait({ src, depth, mode = 'parallax', alt = '', strength = 0.0
                 texture(gl, colorImg);
                 gl.uniform1i(gl.getUniformLocation(prog, 'uColor'), 0);
                 gl.activeTexture(gl.TEXTURE1);
-                texture(gl, depthImg);
-                gl.uniform1i(gl.getUniformLocation(prog, 'uDepth'), 1);
+                if (layered) {
+                    texture(gl, matteImg);
+                    gl.uniform1i(gl.getUniformLocation(prog, 'uMatte'), 1);
+                    gl.activeTexture(gl.TEXTURE2);
+                    texture(gl, fillImg);
+                    gl.uniform1i(gl.getUniformLocation(prog, 'uFill'), 2);
+                } else {
+                    texture(gl, depthImg);
+                    gl.uniform1i(gl.getUniformLocation(prog, 'uDepth'), 1);
+                }
                 const uOffset = gl.getUniformLocation(prog, 'uOffset');
                 draw = (c) => {
                     gl.uniform2f(uOffset, -c.x * strength, -c.y * strength);
@@ -250,7 +281,7 @@ function DepthPortrait({ src, depth, mode = 'parallax', alt = '', strength = 0.0
             wrap.removeEventListener('pointermove', onMove);
             wrap.removeEventListener('pointerleave', onLeave);
         };
-    }, [src, depth, mode, strength, background, autoplay]);
+    }, [src, depth, matte, fill, mode, strength, background, autoplay]);
 
     return (
         <div ref={wrapRef} className={`depth-portrait ${ready ? 'is-ready' : ''} ${className}`}>
