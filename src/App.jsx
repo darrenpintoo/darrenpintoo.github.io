@@ -12,6 +12,7 @@ import { profile } from './data';
 const Blog = lazy(() => import('./pages/Blog'));
 const CourseReviews = lazy(() => import('./pages/CourseReviews'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const PortraitLab = lazy(() => import('./pages/PortraitLab'));
 
 const SCAN_REVEAL_KEY = 'scan_reveal_played';
 
@@ -49,6 +50,7 @@ function AnimatedRoutes() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<Blog />} />
           <Route path="/courses" element={<CourseReviews />} />
+          <Route path="/portrait-lab" element={<PortraitLab />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
